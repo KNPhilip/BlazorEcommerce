@@ -4,15 +4,25 @@
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private static readonly List<Product> Products = new()
+        private readonly EcommerceContext _context;
+
+        public ProductController(EcommerceContext context)
         {
-            
-        };
+            _context = context;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetAllProducts()
         {
-            return Ok(await Task.Run(() => Products));
+            try
+            {
+                var products = await _context.Products.ToListAsync();
+                return Ok(products);
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
     }
 }
