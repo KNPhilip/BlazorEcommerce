@@ -1,4 +1,6 @@
-﻿<ul class="list-unstyled">
+﻿@inject HttpClient Http
+
+<ul class="list-unstyled">
     @foreach(var product in Products)
     {
         <li class="media my-3">
