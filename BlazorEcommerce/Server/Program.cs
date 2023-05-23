@@ -1,3 +1,6 @@
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using BlazorEcommerce.Shared;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
