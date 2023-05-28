@@ -12,17 +12,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetAllProducts()
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAllProducts()
         {
-            try
+            var products = await _context.Products.ToListAsync();
+            var response = new ServiceResponse<List<Product>>()
             {
-                var products = await _context.Products.ToListAsync();
-                return Ok(products);
-            }
-            catch (Exception e)
-            {
-                return BadRequest($"Something went wrong: {e.Message}");
-            }
+                Data = products
+            };
+            return Ok(response);
         }
     }
 }
