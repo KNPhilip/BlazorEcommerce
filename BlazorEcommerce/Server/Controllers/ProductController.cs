@@ -4,22 +4,18 @@
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly EcommerceContext _context;
+        private readonly IProductService _productService;
 
-        public ProductController(EcommerceContext context)
+        public ProductController(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAllProducts()
         {
-            var products = await _context.Products.ToListAsync();
-            var response = new ServiceResponse<List<Product>>()
-            {
-                Data = products
-            };
-            return Ok(response);
+            var result = await _productService.GetProductsAsync();
+            return Ok(result);
         }
     }
 }
