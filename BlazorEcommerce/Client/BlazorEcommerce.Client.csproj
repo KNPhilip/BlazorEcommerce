@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DartSassBuilder" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
@@ -14,6 +18,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\BlazorEcommerce.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\Search.razor" />
   </ItemGroup>
 
 </Project>

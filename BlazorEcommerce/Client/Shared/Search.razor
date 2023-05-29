@@ -1,0 +1,16 @@
+﻿@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+
+@code {
+    private string SearchTerm = string.Empty;
+    private List<string> suggestions = new List<string>();
+    protected ElementReference searchInput;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await searchInput.FocusAsync();
+        }
+    }
+}
