@@ -32,10 +32,10 @@
             return Ok(result);
         }
 
-        [HttpGet("search/{searchTerm}")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> SearchProducts(string searchTerm)
+        [HttpGet("search/{searchTerm}/{page}")]
+        public async Task<ActionResult<ServiceResponse<ProductSearchResultDto>>> SearchProducts(string searchTerm, int page = 1)
         {
-            var result = await _productService.SearchProducts(searchTerm);
+            var result = await _productService.SearchProducts(searchTerm, page);
             return Ok(result);
         }
 
