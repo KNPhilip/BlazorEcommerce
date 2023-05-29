@@ -113,7 +113,7 @@ namespace BlazorEcommerce.Server.Services.ProductService
                 .ToListAsync();
         }
 
-        public async Task<ServiceResponse<List<Product>>> GetFeatures()
+        public async Task<ServiceResponse<List<Product>>> GetFeaturedProducts()
         {
             var response = new ServiceResponse<List<Product>>
             {
