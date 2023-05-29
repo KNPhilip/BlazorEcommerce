@@ -2,5 +2,6 @@
 {
     public interface IAuthService
     {
+        Task<bool> UserExists(string email);
     }
 }
