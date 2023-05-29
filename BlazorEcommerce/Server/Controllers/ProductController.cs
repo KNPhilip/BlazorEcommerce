@@ -38,5 +38,12 @@
             var result = await _productService.SearchProducts(searchTerm);
             return Ok(result);
         }
+
+        [HttpGet("search/suggestions/{searchTerm}")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm)
+        {
+            var result = await _productService.GetProductSearchSuggestions(searchTerm);
+            return Ok(result);
+        }
     }
 }
