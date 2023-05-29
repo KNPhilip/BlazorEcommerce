@@ -13,7 +13,7 @@
         {
             var response = new ServiceResponse<Product>();
             var product = await _context.Products.FindAsync(productId);
-            if (product is null)
+            if (product == null)
             {
                 response.Success = false;
                 response.Message = "This product does not exist.";
