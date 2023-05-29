@@ -135,7 +135,8 @@
                 {
                     ProductId = 1,
                     ProductTypeId = 3,
-                    Price = 7.99m
+                    Price = 7.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
@@ -155,37 +156,43 @@
                 {
                     ProductId = 3,
                     ProductTypeId = 2,
-                    Price = 6.99m
+                    Price = 6.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
                     ProductId = 4,
                     ProductTypeId = 5,
-                    Price = 3.99m
+                    Price = 3.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
                     ProductId = 4,
                     ProductTypeId = 6,
-                    Price = 9.99m
+                    Price = 9.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
                     ProductId = 4,
                     ProductTypeId = 7,
-                    Price = 19.99m
+                    Price = 19.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
                     ProductId = 5,
                     ProductTypeId = 5,
                     Price = 3.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
                     ProductId = 6,
                     ProductTypeId = 5,
-                    Price = 2.99m
+                    Price = 2.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
@@ -198,7 +205,8 @@
                 {
                     ProductId = 7,
                     ProductTypeId = 9,
-                    Price = 69.99m
+                    Price = 69.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
@@ -212,13 +220,14 @@
                     ProductId = 8,
                     ProductTypeId = 8,
                     Price = 9.99m,
-                    OriginalPrice = 24.99m,
+                    OriginalPrice = 24.99m
                 },
                 new
                 {
                     ProductId = 9,
                     ProductTypeId = 8,
-                    Price = 14.99m
+                    Price = 14.99m,
+                    OriginalPrice = 0m
                 },
                 new
                 {
