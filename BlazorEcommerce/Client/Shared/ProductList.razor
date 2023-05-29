@@ -28,7 +28,7 @@ else
             </li>
         }
     </ul>
-    for (var i = 1; i < ProductService.PageCount; i++)
+    for (var i = 1; i <= ProductService.PageCount; i++)
     {
         <a class="btn 
             @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline")
