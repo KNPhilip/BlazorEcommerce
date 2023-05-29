@@ -56,14 +56,14 @@ namespace BlazorEcommerce.Server.Services.ProductService
             return response;
         }
 
-        public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string searchText)
+        public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string searchTerm)
         {
-            var products = await FindProductsBySearchText(searchText);
+            var products = await FindProductsBySearchText(searchTerm);
             List<string> result = new List<string>();
 
             foreach (var product in products)
             {
-                if(product.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                if(product.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add(product.Title);
                 }
@@ -79,7 +79,7 @@ namespace BlazorEcommerce.Server.Services.ProductService
 
                     foreach (var word in words)
                     {
-                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
+                        if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
                         {
                             result.Add(word);
                         }
@@ -93,22 +93,22 @@ namespace BlazorEcommerce.Server.Services.ProductService
             };
         }
 
-        public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
+        public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchTerm)
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await FindProductsBySearchText(searchText)
+                Data = await FindProductsBySearchText(searchTerm)
             };
 
             return response;
         }
 
-        public async Task<List<Product>> FindProductsBySearchText(string searchText)
+        public async Task<List<Product>> FindProductsBySearchText(string searchTerm)
         {
             return await _context.Products
-                .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+                .Where(p => p.Title.ToLower().Contains(searchTerm.ToLower())
                 ||
-                p.Description.ToLower().Contains(searchText.ToLower()))
+                p.Description.ToLower().Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
                 .ToListAsync();
         }
