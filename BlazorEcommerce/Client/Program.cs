@@ -2,6 +2,7 @@ global using BlazorEcommerce.Shared;
 global using System.Net.Http.Json;
 global using BlazorEcommerce.Client.Services.ProductService;
 global using BlazorEcommerce.Client.Services.CategoryService;
+global using BlazorEcommerce.Client.Services.CartService;
 global using Microsoft.AspNetCore.Components.Web;
 global using Blazored.LocalStorage;
 using BlazorEcommerce.Client;
