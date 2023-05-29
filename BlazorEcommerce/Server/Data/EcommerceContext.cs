@@ -123,17 +123,170 @@
             modelBuilder.Entity<ProductVariant>()
                 .HasKey(p => new { p.ProductId, p.ProductTypeId });
 
+            modelBuilder.Entity<ProductVariant>().HasData(
+                new
+                {
+                    ProductId = 1,
+                    ProductTypeId = 2,
+                    Price = 9.99m,
+                    OriginalPrice = 19.99m
+                },
+                new
+                {
+                    ProductId = 1,
+                    ProductTypeId = 3,
+                    Price = 7.99m
+                },
+                new
+                {
+                    ProductId = 1,
+                    ProductTypeId = 4,
+                    Price = 19.99m,
+                    OriginalPrice = 29.99m
+                },
+                new
+                {
+                    ProductId = 2,
+                    ProductTypeId = 2,
+                    Price = 7.99m,
+                    OriginalPrice = 14.99m
+                },
+                new
+                {
+                    ProductId = 3,
+                    ProductTypeId = 2,
+                    Price = 6.99m
+                },
+                new
+                {
+                    ProductId = 4,
+                    ProductTypeId = 5,
+                    Price = 3.99m
+                },
+                new
+                {
+                    ProductId = 4,
+                    ProductTypeId = 6,
+                    Price = 9.99m
+                },
+                new
+                {
+                    ProductId = 4,
+                    ProductTypeId = 7,
+                    Price = 19.99m
+                },
+                new
+                {
+                    ProductId = 5,
+                    ProductTypeId = 5,
+                    Price = 3.99m,
+                },
+                new
+                {
+                    ProductId = 6,
+                    ProductTypeId = 5,
+                    Price = 2.99m
+                },
+                new
+                {
+                    ProductId = 7,
+                    ProductTypeId = 8,
+                    Price = 19.99m,
+                    OriginalPrice = 29.99m
+                },
+                new
+                {
+                    ProductId = 7,
+                    ProductTypeId = 9,
+                    Price = 69.99m
+                },
+                new
+                {
+                    ProductId = 7,
+                    ProductTypeId = 10,
+                    Price = 49.99m,
+                    OriginalPrice = 59.99m
+                },
+                new
+                {
+                    ProductId = 8,
+                    ProductTypeId = 8,
+                    Price = 9.99m,
+                    OriginalPrice = 24.99m,
+                },
+                new
+                {
+                    ProductId = 9,
+                    ProductTypeId = 8,
+                    Price = 14.99m
+                },
+                new
+                {
+                    ProductId = 10,
+                    ProductTypeId = 1,
+                    Price = 159.99m,
+                    OriginalPrice = 299m
+                },
+                new
+                {
+                    ProductId = 11,
+                    ProductTypeId = 1,
+                    Price = 79.99m,
+                    OriginalPrice = 399m
+                }
+            );
+
             modelBuilder.Entity<ProductType>().HasData(
-                    new { Id = 1, Name = "Default" },
-                    new { Id = 2, Name = "Paperback" },
-                    new { Id = 3, Name = "E-Book" },
-                    new { Id = 4, Name = "Audiobook" },
-                    new { Id = 5, Name = "Stream" },
-                    new { Id = 6, Name = "Blu-ray" },
-                    new { Id = 7, Name = "VHS" },
-                    new { Id = 8, Name = "PC" },
-                    new { Id = 9, Name = "PlayStation" },
-                    new { Id = 10, Name = "Xbox" }
+                new 
+                {
+                    Id = 1, 
+                    Name = "Default" 
+                },
+                new 
+                {
+                    Id = 2, 
+                    Name = "Paperback" 
+                },
+                new 
+                {
+                    Id = 3, 
+                    Name = "E-Book" 
+                },
+                new 
+                {
+                    Id = 4, 
+                    Name = "Audiobook" 
+                },
+                new 
+                {
+                    Id = 5, 
+                    Name = "Stream" 
+                },
+                new 
+                {
+                    Id = 6, 
+                    Name = "Blu-ray" 
+                },
+                new 
+                {
+                    Id = 7, 
+                    Name = "VHS" 
+                },
+                new 
+                {
+                    Id = 8, 
+                    Name = "PC" 
+                },
+                new 
+                {
+                    Id = 9, 
+                    Name = "PlayStation" 
+                },
+                new 
+                {
+                    Id = 10, 
+                    Name = "Xbox" 
+                }
             );
         }
 
