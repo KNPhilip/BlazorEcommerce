@@ -22,7 +22,7 @@ else
                     </a>
                     <p>@product.Description</p>
                     <h5 class="price">
-                        $@product.Price
+                        @*$@product.Price*@
                     </h5>
                 </div>
             </li>
@@ -33,11 +33,11 @@ else
 @code {
     protected override void OnInitialized()
     {
-        ProductService.ProductsChanged += StateHasChanged;
+        ProductService.OnProductsChanged += StateHasChanged;
     }
 
     public void Dispose()
     {
-        ProductService.ProductsChanged -= StateHasChanged;
+        ProductService.OnProductsChanged -= StateHasChanged;
     }
 }
