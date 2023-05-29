@@ -17,7 +17,7 @@ else
             @if (product.Variants is not null && product.Variants.Count > 1)
             {
                 <div class="mb-3">
-                    <select class="form-control" @bind="currentTypeId">
+                    <select class="form-select" @bind="currentTypeId">
                         @foreach (var variant in product.Variants)
                         {
                             <option value="@variant.ProductTypeId">@variant.ProductType.Name</option>
