@@ -16,11 +16,21 @@
         public async Task AddToCart(CartItem cartItem)
         {
             var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-            if (cart == null)
+            if (cart is null)
             {
                 cart = new List<CartItem>();
             }
-            cart.Add(cartItem);
+
+            var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
+            && x.ProductTypeId == cartItem.ProductTypeId);
+            if (sameItem is null) 
+            {
+                cart.Add(cartItem);
+            }
+            else
+            {
+                sameItem.Quantity += cartItem.Quantity;
+            }
 
             await _localStorage.SetItemAsync("cart", cart);
             OnChange.Invoke();
@@ -29,7 +39,7 @@
         public async Task<List<CartItem>> GetCartItems()
         {
             var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-            if (cart == null)
+            if (cart is null)
             {
                 cart = new List<CartItem>();
             }
