@@ -33,11 +33,11 @@ else
 @code {
     protected override void OnInitialized()
     {
-        ProductService.ProductsChanged += StateHasChanged;
+        ProductService.OnProductsChanged += StateHasChanged;
     }
 
     public void Dispose()
     {
-        ProductService.ProductsChanged -= StateHasChanged;
+        ProductService.OnProductsChanged -= StateHasChanged;
     }
 }

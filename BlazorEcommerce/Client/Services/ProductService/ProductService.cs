@@ -11,7 +11,7 @@
 
         public List<Product> Products { get; set; } = new List<Product>();
 
-        public event Action ProductsChanged;
+        public event Action OnProductsChanged;
 
         public async Task<ServiceResponse<Product>> GetProduct(int productId)
         {
@@ -28,7 +28,7 @@
             if (result is not null && result.Data is not null)
                 Products = result.Data;
 
-            ProductsChanged.Invoke();
+            OnProductsChanged.Invoke();
         }
     }
 }
