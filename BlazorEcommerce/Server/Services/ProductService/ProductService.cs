@@ -67,6 +67,24 @@ namespace BlazorEcommerce.Server.Services.ProductService
                 {
                     result.Add(product.Title);
                 }
+
+                if(product.Description is not null)
+                {
+                    var punctuation = product.Description
+                        .Where(char.IsPunctuation)
+                        .Distinct().ToArray();
+                    var words = product.Description
+                        .Split()
+                        .Select(s => s.Trim(punctuation));
+
+                    foreach (var word in words)
+                    {
+                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
+                        {
+                            result.Add(word);
+                        }
+                    }
+                }
             }
 
             return new ServiceResponse<List<string>>
