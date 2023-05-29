@@ -18,7 +18,7 @@
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{productId}")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
         {
             var result = await _productService.GetProductAsync(productId);
