@@ -23,7 +23,7 @@
         {
             var result = categoryUrl is null ? 
                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product") :
-                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product/category/{categoryUrl}");
+                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/category/{categoryUrl}");
 
             if (result is not null && result.Data is not null)
                 Products = result.Data;
