@@ -4,7 +4,10 @@
     {
         event Action OnProductsChanged;
         List<Product> Products { get; set; }
+        string Message { get; set; }
         Task GetProducts(string? categoryUrl = null);
-        Task <ServiceResponse<Product>> GetProduct(int productId);
+        Task<ServiceResponse<Product>> GetProduct(int productId);
+        Task SearchProducts(string searchTerm);
+        Task<List<string>> GetProductSearchSuggestions(string searchTerm);
     }
 }
