@@ -1,0 +1,14 @@
+﻿@inject IProductService ProductService
+@implements IDisposable
+
+@code {
+    protected override void OnInitialized()
+    {
+        ProductService.OnProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.OnProductsChanged -= StateHasChanged;
+    }
+}
