@@ -10,21 +10,16 @@
     }
 }
 
-.media {
-    display: flex;
-    align-items: flex-start;
-}
-
-.media-body {
-    flex: 1;
-}
-
 .media-img-wrapper {
     width: 200px;
     text-align: center;
 }
 
-@media (max-width: 1012.98px) {
+@media (max-width: 1023.98px) {
+    .media {
+        flex-direction: column;
+    }
+
     .media {
         flex-direction: column;
     }
