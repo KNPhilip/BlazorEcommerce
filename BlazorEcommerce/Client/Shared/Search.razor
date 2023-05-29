@@ -13,4 +13,21 @@
             await searchInput.FocusAsync();
         }
     }
+
+    public void SearchProducts()
+    {
+        NavigationManager.NavigateTo($"search/{SearchTerm}");
+    }
+
+    public async Task HandleSearch(KeyboardEventArgs args)
+    {
+        if (args.Key is null || args.Key.Equals("Enter"))
+        {
+            SearchProducts();
+        }
+        else if (SearchTerm.Length > 1)
+        {
+            suggestions = await ProductService.GetProductSearchSuggestions(SearchTerm);
+        }
+    }
 }
