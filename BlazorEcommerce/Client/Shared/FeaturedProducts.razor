@@ -2,7 +2,7 @@
 @implements IDisposable
 
 <center><h2>Current Top Products:</h2></center>
-@if (ProductService.Products == null || ProductService.Products.Count == 0)
+@if (ProductService.Products is null || ProductService.Products.Count == 0)
 {
     <span>@ProductService.Message</span>
 }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Shared\BlazorEcommerce.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <SassFilesToCompile Remove="Shared\MainLayout.razor.scss" />
+  </ItemGroup>
+
 </Project>
