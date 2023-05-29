@@ -1,8 +1,30 @@
 ﻿@inject NavigationManager NavigationManager
 @inject IProductService ProductService
 
+<div class="input-group">
+    <input @bind-value="searchTerm"
+           @bind-value:event="oninput"
+           type="search"
+           list="products"
+           @onkeyup="HandleSearch"
+           class="form-control"
+           placeholder="Search..."
+           @ref="searchInput" />
+    <datalist id="products">
+        @foreach (var suggestion in suggestions)
+        {
+            <option>@suggestion</option>
+        }
+    </datalist>
+    <div class="input-group-append">
+        <button class="btn btn-primary" @onclick="SearchProducts">
+            <span class="oi oi-magnifying-glass"></span>
+        </button>
+    </div>
+</div>
+
 @code {
-    private string SearchTerm = string.Empty;
+    private string searchTerm = string.Empty;
     private List<string> suggestions = new List<string>();
     protected ElementReference searchInput;
 
@@ -16,7 +38,7 @@
 
     public void SearchProducts()
     {
-        NavigationManager.NavigateTo($"search/{SearchTerm}");
+        NavigationManager.NavigateTo($"search/{searchTerm}");
     }
 
     public async Task HandleSearch(KeyboardEventArgs args)
@@ -25,9 +47,9 @@
         {
             SearchProducts();
         }
-        else if (SearchTerm.Length > 1)
+        else if (searchTerm.Length > 1)
         {
-            suggestions = await ProductService.GetProductSearchSuggestions(SearchTerm);
+            suggestions = await ProductService.GetProductSearchSuggestions(searchTerm);
         }
     }
 }
