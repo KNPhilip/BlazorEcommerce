@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.AuthService
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Server.Services.AuthService
 {
     public class AuthService : IAuthService
     {
@@ -7,6 +9,29 @@
         public AuthService(EcommerceContext context)
         {
             _context = context;
+        }
+
+        public async Task<ServiceResponse<string>> Login(string email, string password)
+        {
+            var response = new ServiceResponse<string>();
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user is null)
+            {
+                response.Success = false;
+                response.Message = "User not found.";
+            }
+            else if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                response.Success = false;
+                response.Message = "Incorrect password.";
+            }
+            else
+            {
+                response.Data = "JWT";
+            }
+
+            return response;
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)

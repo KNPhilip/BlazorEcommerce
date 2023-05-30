@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Data
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Server.Data
 {
     public class EcommerceContext : DbContext
     {

@@ -7,6 +7,7 @@ global using BlazorEcommerce.Server.Services.ProductService;
 global using BlazorEcommerce.Server.Services.CategoryService;
 global using BlazorEcommerce.Server.Services.CartService;
 global using BlazorEcommerce.Server.Services.AuthService;
+global using BlazorEcommerce.Shared.Models;
 global using BlazorEcommerce.Shared.Dtos;
 using Microsoft.AspNetCore.ResponseCompression;
 

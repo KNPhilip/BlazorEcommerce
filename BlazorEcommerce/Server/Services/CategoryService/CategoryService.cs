@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+﻿using BlazorEcommerce.Shared.Models;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace BlazorEcommerce.Server.Services.CategoryService
 {
