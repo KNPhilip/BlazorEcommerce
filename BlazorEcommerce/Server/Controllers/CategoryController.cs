@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

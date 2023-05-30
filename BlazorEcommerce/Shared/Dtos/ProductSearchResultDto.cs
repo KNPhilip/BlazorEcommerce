@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Shared.Dtos
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Shared.Dtos
 {
     public class ProductSearchResultDto
     {

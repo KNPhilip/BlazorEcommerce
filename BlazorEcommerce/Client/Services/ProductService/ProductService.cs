@@ -1,4 +1,5 @@
 ﻿using BlazorEcommerce.Shared.Dtos;
+using BlazorEcommerce.Shared.Models;
 
 namespace BlazorEcommerce.Client.Services.ProductService
 {

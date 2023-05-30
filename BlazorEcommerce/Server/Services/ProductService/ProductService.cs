@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlazorEcommerce.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorEcommerce.Server.Services.ProductService
 {

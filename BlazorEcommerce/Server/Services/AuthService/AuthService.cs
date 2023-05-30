@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.AuthService
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Server.Services.AuthService
 {
     public class AuthService : IAuthService
     {

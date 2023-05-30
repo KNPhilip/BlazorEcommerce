@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorEcommerce.Shared
+namespace BlazorEcommerce.Shared.Dtos
 {
-    public class UserRegister
+    public class UserRegisterDto
     {
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
