@@ -2,5 +2,6 @@
 {
     public interface IAuthService
     {
+        Task<ServiceResponse<int>> Register(UserRegister request);
     }
 }
