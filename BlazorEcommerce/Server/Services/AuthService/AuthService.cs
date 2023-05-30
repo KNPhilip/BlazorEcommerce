@@ -1,14 +1,14 @@
-﻿using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Server.Services.AuthService
+﻿namespace BlazorEcommerce.Server.Services.AuthService
 {
     public class AuthService : IAuthService
     {
         private readonly EcommerceContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(EcommerceContext context)
+        public AuthService(EcommerceContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -28,7 +28,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             }
             else
             {
-                response.Data = "JWT";
+                response.Data = CreateJWT(user);
             }
 
             return response;
@@ -59,6 +59,31 @@ namespace BlazorEcommerce.Server.Services.AuthService
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
+        }
+
+        private string CreateJWT(User user)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, "Member")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                signingCredentials: creds,
+                expires: DateTime.Now.AddDays(2)
+            );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
     }
 }
