@@ -9,7 +9,10 @@ global using BlazorEcommerce.Server.Services.CartService;
 global using BlazorEcommerce.Server.Services.AuthService;
 global using BlazorEcommerce.Shared.Models;
 global using BlazorEcommerce.Shared.Dtos;
-using Microsoft.AspNetCore.ResponseCompression;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
