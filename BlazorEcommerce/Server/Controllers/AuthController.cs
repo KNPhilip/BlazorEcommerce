@@ -15,7 +15,7 @@
         public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegister request)
         {
             var response = await _authService.Register(
-                new Shared.User 
+                new User 
                 { 
                     Email = request.Email
                 }, 
