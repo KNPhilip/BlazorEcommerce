@@ -13,10 +13,23 @@ namespace BlazorEcommerce.Server.Services.AuthService
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
-            var response = new ServiceResponse<string>
+            var response = new ServiceResponse<string>();
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (user is null)
             {
-                Data = "JWT"
-            };
+                response.Success = false;
+                response.Message = "User not found.";
+            }
+            else if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                response.Success = false;
+                response.Message = "Incorrect password.";
+            }
+            else
+            {
+                response.Data = "JWT";
+            }
 
             return response;
         }
