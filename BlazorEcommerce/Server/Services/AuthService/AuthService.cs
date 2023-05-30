@@ -21,7 +21,7 @@
                 response.Success = false;
                 response.Message = "User not found.";
             }
-            else if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            else if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 response.Success = false;
                 response.Message = "Incorrect password.";
