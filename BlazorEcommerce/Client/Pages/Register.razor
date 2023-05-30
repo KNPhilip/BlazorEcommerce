@@ -1,10 +1,12 @@
 ﻿@page "/register"
+@inject IAuthService AuthService
 
 <PageTitle>Register</PageTitle>
 
 <h3>Register</h3>
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
+    <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="email">Email</label>
         <InputText id="email" @bind-Value="user.Email" class="form-control" />
@@ -21,13 +23,20 @@
         <ValidationMessage For="@(() => user.ConfirmPassword)" />
     </div>
     <button type="submit" class="btn btn-primary mb-2">Register</button>
+    <div class="@resultMessageCssClass">
+        <span>@resultMessage</span>
+    </div>
 </EditForm>
 
 @code {
-    UserRegister user = new UserRegister();
+    UserRegister user = new();
+    string resultMessage = string.Empty;
+    string resultMessageCssClass = string.Empty;
 
-    void HandleRegistration()
+    async Task HandleRegistration()
     {
-        Console.WriteLine($"Register User with the Email: {user.Email}");
+        var result = await AuthService.Register(user);
+        resultMessage = result.Message;
+        resultMessageCssClass = result.Success ? "text-success" : "text-danger";
     }
 }
