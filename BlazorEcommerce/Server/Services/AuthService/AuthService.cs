@@ -85,5 +85,28 @@
 
             return jwt;
         }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user is null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> 
+            {
+                Data = true,
+                Message = "Password has been changed."
+            };
+        }
     }
 }
