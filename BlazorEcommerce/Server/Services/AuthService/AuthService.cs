@@ -4,11 +4,16 @@
     {
         private readonly EcommerceContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(EcommerceContext context, IConfiguration configuration)
+        public AuthService(
+            EcommerceContext context, 
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -108,5 +113,9 @@
                 Message = "Password has been changed."
             };
         }
+
+        public int GetNameIdFromClaims() =>
+            int.Parse(_httpContextAccessor.HttpContext.User
+            .FindFirstValue(ClaimTypes.NameIdentifier));
     }
 }

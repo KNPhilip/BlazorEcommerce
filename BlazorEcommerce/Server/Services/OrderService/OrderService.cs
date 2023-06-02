@@ -4,20 +4,17 @@
     {
         private readonly EcommerceContext _context;
         private readonly ICartService _cartService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthService _authService;
 
         public OrderService(
             EcommerceContext context,
             ICartService cartService,
-            IHttpContextAccessor httpContextAccessor )
+            IAuthService authService )
         {
             _context = context;
             _cartService = cartService;
-            _httpContextAccessor = httpContextAccessor;
+            _authService = authService;
         }
-
-        private int GetNameIdFromClaims() =>
-            int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<bool>> PlaceOrder()
         {
@@ -36,7 +33,7 @@
 
             var order = new Order
             {
-                UserId = GetNameIdFromClaims(),
+                UserId = _authService.GetNameIdFromClaims(),
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
                 OrderItems = orderItems
@@ -44,7 +41,7 @@
 
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(_context.CartItems
-                .Where(ci => ci.UserId == GetNameIdFromClaims()));
+                .Where(ci => ci.UserId == _authService.GetNameIdFromClaims()));
 
             await _context.SaveChangesAsync();
 
