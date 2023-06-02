@@ -76,9 +76,10 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                 if(stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {
                     var session = stripeEvent.Data.Object as Session;
-                    var user = " User ";
-                    // -- Place order here --
+                    var user = await _authService.GetUserByEmail(session.CustomerEmail);
+                    await _orderService.PlaceOrder(user.Id);
                 }
+
                 return new ServiceResponse<bool>
                 {
                     Data = true
