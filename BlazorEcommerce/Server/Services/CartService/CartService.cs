@@ -66,6 +66,12 @@ namespace BlazorEcommerce.Server.Services.CartService
                 .ToListAsync());
         }
 
+        public async Task<ServiceResponse<int>> GetCartItemsCount()
+        {
+            var count = (await _context.CartItems.Where(ci => ci.UserId == GetNameIdFromClaims()).ToListAsync()).Count();
+            return new ServiceResponse<int> { Data = count };
+        }
+
         private int GetNameIdFromClaims() =>
             int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
     }
