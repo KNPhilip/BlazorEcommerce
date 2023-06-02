@@ -21,7 +21,7 @@ namespace BlazorEcommerce.Client.Services.CartService
         {
             if ((await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
             {
-
+                Console.WriteLine("User is authenticated");
             }
             else
             {
