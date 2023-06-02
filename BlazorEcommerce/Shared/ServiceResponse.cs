@@ -1,4 +1,7 @@
-﻿namespace BlazorEcommerce.Shared
+﻿global using System.ComponentModel.DataAnnotations.Schema;
+global using System.Text.Json.Serialization;
+
+namespace BlazorEcommerce.Shared
 {
     public class ServiceResponse<T>
     {
