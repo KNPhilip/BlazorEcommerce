@@ -7,7 +7,9 @@
 }
 else
 {
-    <h3>Order from @order.OrderDate</h3>
+    <div class="container">
+        <h3>Order from @order.OrderDate</h3>
+    </div>
 
     <div>
         @foreach (var product in order.Products)
@@ -24,7 +26,7 @@ else
                 <div class="product-price">$@product.TotalPrice</div>
             </div>
         }
-        <div class="product-price">
+        <div class="product-price container">
             Total: $@order.TotalPrice
         </div>
     </div>
