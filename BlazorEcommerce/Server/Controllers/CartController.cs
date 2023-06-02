@@ -30,5 +30,12 @@
         {
             return await _cartService.GetCartItemsCountAsync();
         }
+
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> GetDbCartItems()
+        {
+            var result = await _cartService.GetDbCartItems();
+            return Ok(result);
+        }
     }
 }
