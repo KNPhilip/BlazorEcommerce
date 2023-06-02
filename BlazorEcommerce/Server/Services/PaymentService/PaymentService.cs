@@ -8,14 +8,14 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
 
-        const string secret = " *Secret key here* ";
+        const string secret = "*Stripe secret key*";
 
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
             IOrderService orderService ) 
         {
-            StripeConfiguration.ApiKey = "*Stripe API key here*";
+            StripeConfiguration.ApiKey = "*Stripe test API key*";
 
             _cartService = cartService;
             _authService = authService;
@@ -53,8 +53,8 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                 },
                 LineItems = lineItems,
                 Mode = "payment",
-                SuccessUrl = "https://localhost:5100/order-success",
-                CancelUrl = "https://localhost:5100/cart"
+                SuccessUrl = "https://localhost:7010/order-success",
+                CancelUrl = "https://localhost:7010/cart"
             };
 
             var service = new SessionService();
