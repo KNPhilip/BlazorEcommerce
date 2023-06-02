@@ -108,7 +108,7 @@ namespace BlazorEcommerce.Server.Services.CartService
             var dbCartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                 ci.ProductTypeId == cartItem.ProductTypeId &&
-                ci.UserId == cartItem.UserId);
+                ci.UserId == GetNameIdFromClaims());
             if (dbCartItem is null)
             {
                 return new ServiceResponse<bool> 
