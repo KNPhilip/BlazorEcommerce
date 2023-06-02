@@ -67,10 +67,13 @@
             return new ServiceResponse<int> { Data = count };
         }
 
-        public async Task<ServiceResponse<List<CartProductResponseDto>>> GetDbCartItems()
+        public async Task<ServiceResponse<List<CartProductResponseDto>>> GetDbCartItems(int? userId = null)
         {
+            if (userId is null)
+                userId = _authService.GetNameIdFromClaims();
+
             return await GetCartProductsAsync(await _context.CartItems
-                .Where(ci => ci.UserId == _authService.GetNameIdFromClaims()).ToListAsync());
+                .Where(ci => ci.UserId == userId).ToListAsync());
         }
 
         public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)

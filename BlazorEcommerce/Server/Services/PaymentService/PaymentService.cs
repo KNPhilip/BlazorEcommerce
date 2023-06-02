@@ -8,7 +8,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
 
-        const string secret = "whsec_8911bf7fc4dd35c31d7360d8cbd61237eca088a2b72cbf187e0aae0c8ef0b750";
+        const string secret = " *Secret key here* ";
 
         public PaymentService(
             ICartService cartService,
