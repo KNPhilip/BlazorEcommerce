@@ -1,6 +1,4 @@
-﻿using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Server.Data
+﻿namespace BlazorEcommerce.Server.Data
 {
     public class EcommerceContext : DbContext
     {
@@ -313,6 +311,9 @@ namespace BlazorEcommerce.Server.Data
 
             modelBuilder.Entity<CartItem>()
                 .HasKey(ci => new { ci.UserId, ci.ProductId, ci.ProductTypeId });
+
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
         }
 
         public DbSet<Product> Products { get; set; }
@@ -321,5 +322,7 @@ namespace BlazorEcommerce.Server.Data
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }
