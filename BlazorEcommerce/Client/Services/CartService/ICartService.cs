@@ -1,6 +1,4 @@
-﻿using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Client.Services.CartService
+﻿namespace BlazorEcommerce.Client.Services.CartService
 {
     public interface ICartService
     {
@@ -11,5 +9,6 @@ namespace BlazorEcommerce.Client.Services.CartService
         Task RemoveProductFromCart(int productId, int productTypeId);
         Task UpdateQuantity(CartProductResponseDto product);
         Task StoreCartItems(bool emptyLocalCart);
+        Task GetCartItemsCount();
     }
 }
