@@ -42,7 +42,7 @@
 
             var options = new SessionCreateOptions
             {
-                CustomerEmail = "Email",
+                CustomerEmail = _authService.GetUserEmail(),
                 PaymentMethodTypes = new List<string>
                 {
                     "card"
