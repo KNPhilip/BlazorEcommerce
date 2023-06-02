@@ -22,7 +22,7 @@ namespace BlazorEcommerce.Client.Services.CartService
         {
             if (await IsUserAuthenticated())
             {
-                Console.WriteLine("User is authenticated");
+                await _http.PostAsJsonAsync("api/cart/add", cartItem);
             }
             else
             {
@@ -44,8 +44,8 @@ namespace BlazorEcommerce.Client.Services.CartService
                 }
 
                 await _localStorage.SetItemAsync("cart", cart);
-                await GetCartItemsCount();
             }
+            await GetCartItemsCount();
         }
 
         public async Task GetCartItemsCount()
