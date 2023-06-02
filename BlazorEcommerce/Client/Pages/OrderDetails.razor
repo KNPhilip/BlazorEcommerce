@@ -1,15 +1,16 @@
 ﻿@page "/orders/{orderId:int}"
 @inject IOrderService OrderService
 
-@if (order == null)
+@if (order is null)
 {
     <span>Loading order details...</span>
 }
 else
 {
     <h3>Order from @order.OrderDate</h3>
+
     <div>
-        @foreach(var product in order.Products)
+        @foreach (var product in order.Products)
         {
             <div class="container">
                 <div class="image-wrapper">
@@ -17,7 +18,7 @@ else
                 </div>
                 <div class="name">
                     <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
-                    <span>@product.ProductType</span>
+                    <span>@product.ProductType</span><br />
                     <span>Quantity: @product.Quantity</span>
                 </div>
                 <div class="product-price">$@product.TotalPrice</div>

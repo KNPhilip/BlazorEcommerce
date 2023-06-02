@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\OrderDetails.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="DartSassBuilder" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.5" />
@@ -25,18 +21,6 @@
 
   <ItemGroup>
     <SassFilesToCompile Remove="Shared\MainLayout.razor.scss" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\OrderDetails.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\OrderDetails.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\OrderDetails.razor" />
   </ItemGroup>
 
 </Project>
