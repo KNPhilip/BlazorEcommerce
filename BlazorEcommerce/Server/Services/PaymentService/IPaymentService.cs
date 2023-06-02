@@ -2,6 +2,6 @@
 {
     public interface IPaymentService
     {
-        
+        Task<Session> CreateCheckoutSession();
     }
 }

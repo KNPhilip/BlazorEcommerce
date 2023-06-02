@@ -15,6 +15,8 @@ global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
+global using Stripe;
+global using Stripe.Checkout;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
