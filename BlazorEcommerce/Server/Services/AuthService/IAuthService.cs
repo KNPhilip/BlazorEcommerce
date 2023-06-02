@@ -8,5 +8,6 @@
         Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
         int GetNameIdFromClaims();
         string GetUserEmail();
+        Task<User> GetUserByEmail(string email);
     }
 }
