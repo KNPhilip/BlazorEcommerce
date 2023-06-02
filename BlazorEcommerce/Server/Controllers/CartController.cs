@@ -19,5 +19,13 @@ namespace BlazorEcommerce.Server.Controllers
             var result = await _cartService.GetCartProductsAsync(cartItems);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> StoreCartItems(List<CartItem> cartItems)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = await _cartService.StoreCartItemsAsync(cartItems, userId);
+            return Ok(result);
+        }
     }
 }

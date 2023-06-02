@@ -133,9 +133,6 @@ namespace BlazorEcommerce.Server.Data
                 }
             );
 
-            modelBuilder.Entity<ProductVariant>()
-                .HasKey(p => new { p.ProductId, p.ProductTypeId });
-
             modelBuilder.Entity<ProductVariant>().HasData(
                 new
                 {
@@ -310,6 +307,12 @@ namespace BlazorEcommerce.Server.Data
                     Name = "Xbox" 
                 }
             );
+
+            modelBuilder.Entity<ProductVariant>()
+                .HasKey(p => new { p.ProductId, p.ProductTypeId });
+
+            modelBuilder.Entity<CartItem>()
+                .HasKey(ci => new { ci.UserId, ci.ProductId, ci.ProductTypeId });
         }
 
         public DbSet<Product> Products { get; set; }
@@ -317,5 +320,6 @@ namespace BlazorEcommerce.Server.Data
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }
