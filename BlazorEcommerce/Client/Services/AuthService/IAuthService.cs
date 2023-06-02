@@ -5,5 +5,6 @@
         Task<ServiceResponse<int>> Register(UserRegisterDto request);
         Task<ServiceResponse<string>> Login(UserLoginDto request);
         Task<ServiceResponse<bool>> ChangePassword(UserChangePasswordDto request);
+        Task<bool> IsUserAuthenticated();
     }
 }
