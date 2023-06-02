@@ -1,0 +1,15 @@
+﻿@page "/order-success"
+@inject CartService CartService
+
+<PageTitle>Thank you!</PageTitle>
+
+<h3>You just purchased some products!</h3>
+
+<span>Thank you for your order! You can check your orders <a href="orders">here</a>.</span>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CartService.GetCartItemsCount();
+    }
+}
