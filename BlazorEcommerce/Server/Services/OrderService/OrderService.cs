@@ -16,7 +16,7 @@
             _authService = authService;
         }
 
-        public async Task<ServiceResponse<OrderDetailsDto>> GetOrdersDetailsAsync(int orderId)
+        public async Task<ServiceResponse<OrderDetailsDto>> GetOrderDetailsAsync(int orderId)
         {
             var response = new ServiceResponse<OrderDetailsDto>();
             var order = await _context.Orders
