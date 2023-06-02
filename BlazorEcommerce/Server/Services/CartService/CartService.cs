@@ -132,7 +132,7 @@ namespace BlazorEcommerce.Server.Services.CartService
         public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int productTypeId)
         {
             var dbCartItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.ProductId == productId.ProductId &&
+                .FirstOrDefaultAsync(ci => ci.ProductId == productId &&
                 ci.ProductTypeId == productTypeId &&
                 ci.UserId == GetNameIdFromClaims());
             if (dbCartItem is null)
