@@ -13,6 +13,7 @@ global using Blazored.LocalStorage;
 global using System.Security.Claims;
 global using System.Net.Http.Headers;
 global using System.Text.Json;
+global using Microsoft.AspNetCore.Components;
 using BlazorEcommerce.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
