@@ -17,5 +17,22 @@ namespace BlazorEcommerce.Client.Services.OrderService
             _authStateProvider = authStateProvider;
             _navigationManager = navigationManager;
         }
+
+        public async Task PlaceOrder()
+        {
+            if (await IsUserAuthenticated())
+            {
+                await _http.PostAsync("api/order", null);
+            }
+            else
+            {
+                _navigationManager.NavigateTo("login");
+            }
+        }
+
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+        }
     }
 }
