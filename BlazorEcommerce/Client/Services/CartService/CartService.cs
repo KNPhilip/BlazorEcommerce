@@ -6,36 +6,45 @@ namespace BlazorEcommerce.Client.Services.CartService
     {
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _http;
+        private readonly AuthenticationStateProvider _authStateProvider;
 
-        public CartService(ILocalStorageService localStorage, HttpClient http)
+        public CartService(ILocalStorageService localStorage, HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _localStorage = localStorage;
             _http = http;
+            _authStateProvider = authStateProvider;
         }
 
         public event Action OnChange;
 
         public async Task AddToCart(CartItem cartItem)
         {
-            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-            if (cart is null)
+            if ((await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
             {
-                cart = new List<CartItem>();
-            }
 
-            var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
-            && x.ProductTypeId == cartItem.ProductTypeId);
-            if (sameItem is null) 
-            {
-                cart.Add(cartItem);
             }
             else
             {
-                sameItem.Quantity += cartItem.Quantity;
-            }
+                var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+                if (cart is null)
+                {
+                    cart = new List<CartItem>();
+                }
 
-            await _localStorage.SetItemAsync("cart", cart);
-            OnChange.Invoke();
+                var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
+                && x.ProductTypeId == cartItem.ProductTypeId);
+                if (sameItem is null)
+                {
+                    cart.Add(cartItem);
+                }
+                else
+                {
+                    sameItem.Quantity += cartItem.Quantity;
+                }
+
+                await _localStorage.SetItemAsync("cart", cart);
+                OnChange.Invoke();
+            }
         }
 
         public async Task<List<CartItem>> GetCartItems()
