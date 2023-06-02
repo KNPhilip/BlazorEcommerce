@@ -43,6 +43,9 @@
             };
 
             _context.Orders.Add(order);
+            _context.CartItems.RemoveRange(_context.CartItems
+                .Where(ci => ci.UserId == GetNameIdFromClaims()));
+
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool>
