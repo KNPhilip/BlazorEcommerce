@@ -1,4 +1,5 @@
-﻿using BlazorEcommerce.Shared.Models;
+﻿using BlazorEcommerce.Client.Pages;
+using BlazorEcommerce.Shared.Models;
 
 namespace BlazorEcommerce.Client.Services.CartService
 {
@@ -83,6 +84,18 @@ namespace BlazorEcommerce.Client.Services.CartService
                 await _localStorage.SetItemAsync("cart", cart);
                 OnChange.Invoke();
             }
+        }
+
+        public async Task StoreCartItems(bool emptyLocalCart)
+        {
+            var localCart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+            if (localCart is null)
+                return;
+
+            await _http.PostAsJsonAsync("api/cart", localCart);
+
+            if (emptyLocalCart)
+                await _localStorage.RemoveItemAsync("cart");
         }
 
         public async Task UpdateQuantity(CartProductResponseDto product)
