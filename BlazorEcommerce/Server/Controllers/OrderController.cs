@@ -24,5 +24,12 @@
             var result = await _orderService.GetOrders();
             return Ok(result);
         }
+
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId)
+        {
+            var result = await _orderService.GetOrderDetailsAsync(orderId);
+            return Ok(result);
+        }
     }
 }
