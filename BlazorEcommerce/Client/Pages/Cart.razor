@@ -1,5 +1,6 @@
 ﻿@page "/cart"
 @inject ICartService CartService
+@inject IOrderService OrderService
 
 <PageTitle>Shopping Cart</PageTitle>
 
@@ -32,9 +33,12 @@ else
                 <div class="cart-product-price">$@(product.Price * product.Quantity)</div>
             </div>
         }
-        <div class="cart-product-price">
-            Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
-        </div>
+            <div class="cart-product-price container">
+                Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
+            </div>
+            <div class="container">
+                <button @onclick="PlaceOrder" class="btn btn-success mt-1">Checkout</button>
+            </div>
     </div>
 }
 
@@ -67,5 +71,10 @@ else
         if (product.Quantity < 1)
             product.Quantity = 1;
         await CartService.UpdateQuantity(product);
+    }
+
+    private async Task PlaceOrder()
+    {
+        await OrderService.PlaceOrder();
     }
 }
