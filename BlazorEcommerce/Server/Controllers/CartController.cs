@@ -24,5 +24,11 @@
             var result = await _cartService.StoreCartItemsAsync(cartItems);
             return Ok(result);
         }
+
+        [HttpGet("count")]
+        public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount()
+        {
+            return await _cartService.GetCartItemsCountAsync();
+        }
     }
 }
