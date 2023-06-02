@@ -1,4 +1,5 @@
-﻿using BlazorEcommerce.Shared.Models;
+﻿using BlazorEcommerce.Server.Migrations;
+using BlazorEcommerce.Shared.Models;
 
 namespace BlazorEcommerce.Server.Services.CartService
 {
@@ -125,6 +126,31 @@ namespace BlazorEcommerce.Server.Services.CartService
             return new ServiceResponse<bool>
             {
                 Data = true
+            };
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int productTypeId)
+        {
+            var dbCartItem = await _context.CartItems
+                .FirstOrDefaultAsync(ci => ci.ProductId == productId.ProductId &&
+                ci.ProductTypeId == productTypeId &&
+                ci.UserId == GetNameIdFromClaims());
+            if (dbCartItem is null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "Cart item does not exist."
+                };
+            }
+
+            _context.CartItems.Remove(dbCartItem);
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> 
+            { 
+                Data = true 
             };
         }
     }
