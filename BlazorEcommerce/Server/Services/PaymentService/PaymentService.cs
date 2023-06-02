@@ -8,6 +8,8 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
 
+        const string secret = "whsec_8911bf7fc4dd35c31d7360d8cbd61237eca088a2b72cbf187e0aae0c8ef0b750";
+
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
@@ -58,6 +60,39 @@ namespace BlazorEcommerce.Server.Services.PaymentService
             var service = new SessionService();
             Session session = service.Create(options);
             return session;
+        }
+
+        public async Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request)
+        {
+            var json = await new StreamReader(request.Body).ReadToEndAsync();
+            try
+            {
+                var stripeEvent = EventUtility.ConstructEvent(
+                        json,
+                        request.Headers["Stripe-Signature"],
+                        secret
+                    );
+
+                if(stripeEvent.Type == Events.CheckoutSessionCompleted)
+                {
+                    var session = stripeEvent.Data.Object as Session;
+                    var user = " User ";
+                    // -- Place order here --
+                }
+                return new ServiceResponse<bool>
+                {
+                    Data = true
+                };
+            }
+            catch(StripeException se)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = se.Message
+                };
+            }
         }
     }
 }
