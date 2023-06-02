@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.PaymentService
+﻿using Stripe;
+
+namespace BlazorEcommerce.Server.Services.PaymentService
 {
     public class PaymentService : IPaymentService
     {
