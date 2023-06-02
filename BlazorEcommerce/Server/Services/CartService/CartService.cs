@@ -1,17 +1,14 @@
-﻿using BlazorEcommerce.Server.Migrations;
-using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Server.Services.CartService
+﻿namespace BlazorEcommerce.Server.Services.CartService
 {
     public class CartService : ICartService
     {
         private readonly EcommerceContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthService _authService;
 
-        public CartService(EcommerceContext context, IHttpContextAccessor httpContextAccessor)
+        public CartService(EcommerceContext context, IAuthService authService)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _authService = authService;
         }
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> GetCartProductsAsync(List<CartItem> cartItems)
@@ -57,7 +54,7 @@ namespace BlazorEcommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> StoreCartItemsAsync(List<CartItem> cartItems)
         {
-            cartItems.ForEach(cartItem => cartItem.UserId = GetNameIdFromClaims());
+            cartItems.ForEach(cartItem => cartItem.UserId = _authService.GetNameIdFromClaims());
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
 
@@ -66,22 +63,19 @@ namespace BlazorEcommerce.Server.Services.CartService
 
         public async Task<ServiceResponse<int>> GetCartItemsCountAsync()
         {
-            var count = (await _context.CartItems.Where(ci => ci.UserId == GetNameIdFromClaims()).ToListAsync()).Count();
+            var count = (await _context.CartItems.Where(ci => ci.UserId == _authService.GetNameIdFromClaims()).ToListAsync()).Count();
             return new ServiceResponse<int> { Data = count };
         }
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> GetDbCartItems()
         {
             return await GetCartProductsAsync(await _context.CartItems
-                .Where(ci => ci.UserId == GetNameIdFromClaims()).ToListAsync());
+                .Where(ci => ci.UserId == _authService.GetNameIdFromClaims()).ToListAsync());
         }
-
-        private int GetNameIdFromClaims() =>
-            int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
         {
-            cartItem.UserId = GetNameIdFromClaims();
+            cartItem.UserId = _authService.GetNameIdFromClaims();
 
             var sameItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
@@ -109,7 +103,7 @@ namespace BlazorEcommerce.Server.Services.CartService
             var dbCartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                 ci.ProductTypeId == cartItem.ProductTypeId &&
-                ci.UserId == GetNameIdFromClaims());
+                ci.UserId == _authService.GetNameIdFromClaims());
             if (dbCartItem is null)
             {
                 return new ServiceResponse<bool> 
@@ -134,7 +128,7 @@ namespace BlazorEcommerce.Server.Services.CartService
             var dbCartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == productId &&
                 ci.ProductTypeId == productTypeId &&
-                ci.UserId == GetNameIdFromClaims());
+                ci.UserId == _authService.GetNameIdFromClaims());
             if (dbCartItem is null)
             {
                 return new ServiceResponse<bool>
