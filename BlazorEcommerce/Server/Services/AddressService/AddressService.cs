@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.AddressService
+﻿using Microsoft.AspNetCore.Connections.Features;
+
+namespace BlazorEcommerce.Server.Services.AddressService
 {
     public class AddressService : IAddressService
     {
@@ -11,9 +13,30 @@
             _authService = authService;
         }
 
-        public Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
+        public async Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<Address>();
+            var dbAddress = (await GetAddress()).Data;
+            if (dbAddress is null)
+            {
+                address.UserId = _authService.GetNameIdFromClaims();
+                _context.Addresses.Add(address);
+                response.Data = address;
+            }
+            else
+            {
+                dbAddress.FirstName = address.FirstName;
+                dbAddress.LastName = address.LastName;
+                dbAddress.Street = address.Street;
+                dbAddress.Zip = address.Zip;
+                dbAddress.City = address.City;
+                dbAddress.State = address.State;
+                dbAddress.Country = address.Country;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return response;
         }
 
         public async Task<ServiceResponse<Address>> GetAddress()
