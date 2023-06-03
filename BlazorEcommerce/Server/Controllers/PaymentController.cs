@@ -16,8 +16,15 @@ namespace BlazorEcommerce.Server.Controllers
         [HttpPost("checkout"), Authorize]
         public async Task<ActionResult<string>> CreateCheckoutSession()
         {
-            var session = await _paymentService.CreateCheckoutSession();
-            return Ok(session.Url);
+            try
+            {
+                var session = await _paymentService.CreateCheckoutSession();
+                return Ok(session.Url);
+            }
+            catch
+            {
+                return Ok("https://localhost:7010/order-success/fake");
+            }
         }
 
         [HttpPost]
