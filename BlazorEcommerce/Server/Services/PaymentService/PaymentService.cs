@@ -8,7 +8,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
 
-        const string secret = "*Stripe secret key*";
+        const string secret = "*Stripe webhook signing secret*";
 
         public PaymentService(
             ICartService cartService,
