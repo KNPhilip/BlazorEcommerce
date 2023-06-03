@@ -10,5 +10,21 @@
             _context = context;
             _authService = authService;
         }
+
+        public Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ServiceResponse<Address>> GetAddress()
+        {
+            int userId = _authService.GetNameIdFromClaims();
+            var address = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+            return new ServiceResponse<Address>
+            {
+                Data = address
+            };
+        }
     }
 }
