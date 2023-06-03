@@ -1,13 +1,25 @@
 ﻿@page "/order-success"
-@inject CartService CartService
+@page "/order-success/{status}"
+@inject ICartService CartService
 
-<PageTitle>Thank you!</PageTitle>
+<div class="container">
+    <PageTitle>Thank you!</PageTitle>
 
-<h3>You just purchased some products!</h3>
-
-<span>Thank you for your order! You can check your orders <a href="orders">here</a>.</span>
+    <h1>Thank you!</h1>
+    <h3>You just purchased some products!</h3>
+    <span>Thank you for your order! You can check your orders <a href="orders">here</a>.</span>
+    @if (status == "fake")
+    {
+        <br /><br />
+        <h3>Please note:</h3>
+        <span>Your order did not go through Stripe (actual payment). This is because this will likely be an example site. In this case, it doesnt make sense to have Stripe implemented, since the user (you) is not supposed to actually buy anything. So in case there is no API key for Stripe, this is shown and your order is "fake completed".</span>
+    }
+</div>
 
 @code {
+    [Parameter]
+    public string? status { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await CartService.GetCartItemsCount();
