@@ -32,6 +32,7 @@ namespace BlazorEcommerce.Server.Services.AddressService
                 dbAddress.City = address.City;
                 dbAddress.State = address.State;
                 dbAddress.Country = address.Country;
+                response.Data = dbAddress;
             }
 
             await _context.SaveChangesAsync();

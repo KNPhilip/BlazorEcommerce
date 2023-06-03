@@ -1,10 +1,12 @@
 ﻿@page "/cart"
 @inject ICartService CartService
 @inject IOrderService OrderService
+@inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Shopping Cart</PageTitle>
 
+<div class="container">
 <h3>Shopping Cart</h3>
 
 @if (cartProducts is null || cartProducts.Count == 0)
@@ -16,7 +18,7 @@ else
     <div>
         @foreach (var product in cartProducts)
         {
-            <div class="container">
+            <div class="wrapper">
                 <div class="image-wrapper">
                     <img src="@product.ImageUrl" class="image" />
                 </div>
@@ -34,21 +36,28 @@ else
                 <div class="cart-product-price">$@(product.Price * product.Quantity)</div>
             </div>
         }
-            <div class="cart-product-price container">
+            <div class="cart-product-price wrapper">
                 Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
             </div>
-            <div class="container">
-                <button @onclick="PlaceOrder" class="btn btn-success mt-1">Checkout</button>
-            </div>
+            @if (isAuthenticated)
+            {
+                <br />
+                <h5>Delivery Address</h5>
+                <AddressForm />
+            }
+        <button @onclick="PlaceOrder" class="btn btn-success mt-2 mb-2">Checkout</button>
     </div>
 }
+</div>
 
 @code {
     List<CartProductResponseDto> cartProducts = null;
     string message = "Loading cart...";
+    bool isAuthenticated = false;
 
     protected override async Task OnInitializedAsync()
     {
+        isAuthenticated = await AuthService.IsUserAuthenticated();
         await LoadCart();
     }
 
