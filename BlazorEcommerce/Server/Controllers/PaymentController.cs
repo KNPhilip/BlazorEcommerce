@@ -23,7 +23,8 @@ namespace BlazorEcommerce.Server.Controllers
             }
             catch
             {
-                return Ok("https://localhost:7010/order-success/fake");
+                var url = await _paymentService.FakeOrderCompletion();
+                return Ok(url);
             }
         }
 
