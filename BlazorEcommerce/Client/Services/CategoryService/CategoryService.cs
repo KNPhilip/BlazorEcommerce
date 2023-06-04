@@ -41,6 +41,18 @@
             OnChange.Invoke();
         }
 
+        public Category CreateNewCategory()
+        {
+            var newCategory = new Category()
+            {
+                IsNew = true,
+                Editing = true
+            };
+            AdminCategories.Add(newCategory);
+            OnChange.Invoke();
+            return newCategory;
+        }
+
         public async Task GetAdminCategories()
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category/admin");
