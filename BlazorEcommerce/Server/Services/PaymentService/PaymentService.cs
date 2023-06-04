@@ -7,19 +7,32 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
-
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         const string secret = "*Stripe webhook signing secret*";
 
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
-            IOrderService orderService ) 
+            IOrderService orderService, 
+            IHttpContextAccessor httpContextAccessor ) 
         {
             StripeConfiguration.ApiKey = "*Stripe test API key*";
 
             _cartService = cartService;
             _authService = authService;
             _orderService = orderService;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<string> FakeOrderCompletion()
+        {
+            var userId = int.Parse
+                (_httpContextAccessor.HttpContext.User
+                .FindFirstValue(ClaimTypes.NameIdentifier));
+
+            await _orderService.PlaceOrder(userId);
+
+            return "https://localhost:7010/order-success/fake";
         }
 
         public async Task<Session> CreateCheckoutSession()
