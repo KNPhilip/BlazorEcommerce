@@ -14,7 +14,8 @@ namespace BlazorEcommerce.Server.Services.CategoryService
 
         public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories
+                .Where(c => !c.IsDeleted && c.Visible).ToListAsync();
             return new ServiceResponse<List<Category>>
             {
                 Data = categories 
