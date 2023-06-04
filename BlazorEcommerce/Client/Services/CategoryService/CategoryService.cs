@@ -23,6 +23,15 @@
             OnChange.Invoke();
         }
 
+        public async Task DeleteCategory(int categoryId)
+        {
+            var response = await _http.DeleteAsync($"api/category/admin/{categoryId}");
+            AdminCategories = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
+            await GetCategories();
+            OnChange.Invoke();
+        }
+
         public async Task GetAdminCategories()
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category/admin");

@@ -8,5 +8,6 @@
         Task GetCategories();
         Task GetAdminCategories();
         Task AddCategory(Category category);
+        Task DeleteCategory(int categoryId);
     }
 }
