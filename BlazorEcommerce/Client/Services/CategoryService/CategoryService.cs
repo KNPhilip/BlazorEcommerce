@@ -14,18 +14,27 @@
 
         public event Action OnChange;
 
-        public async Task AddCategory(Category category)
+        public async Task DeleteCategory(int categoryId)
         {
-            var response = await _http.PostAsJsonAsync("api/category/admin", category);
+            var response = await _http.DeleteAsync($"api/category/admin/{categoryId}");
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
             await GetCategories();
             OnChange.Invoke();
         }
 
-        public async Task DeleteCategory(int categoryId)
+        public async Task UpdateCategory(Category category)
         {
-            var response = await _http.DeleteAsync($"api/category/admin/{categoryId}");
+            var response = await _http.PutAsJsonAsync("api/category/admin", category);
+            AdminCategories = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
+            await GetCategories();
+            OnChange.Invoke();
+        }
+
+        public async Task AddCategory(Category category)
+        {
+            var response = await _http.PostAsJsonAsync("api/category/admin", category);
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
             await GetCategories();
