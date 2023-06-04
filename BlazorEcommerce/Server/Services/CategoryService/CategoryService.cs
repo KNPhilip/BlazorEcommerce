@@ -40,5 +40,7 @@ namespace BlazorEcommerce.Server.Services.CategoryService
                 Data = categories 
             };
         }
+
+        private async Task<Category> GetCategoryById(int id) => await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
     }
 }
