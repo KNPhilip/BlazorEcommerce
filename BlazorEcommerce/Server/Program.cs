@@ -1,4 +1,3 @@
-global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using BlazorEcommerce.Shared;
 global using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
 global using Stripe.Checkout;
+global using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
