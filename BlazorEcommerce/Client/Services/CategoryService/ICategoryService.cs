@@ -7,5 +7,6 @@
         List<Category> AdminCategories { get; set; }
         Task GetCategories();
         Task GetAdminCategories();
+        Task AddCategory(Category category);
     }
 }

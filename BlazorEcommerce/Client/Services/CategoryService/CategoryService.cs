@@ -14,11 +14,20 @@
 
         public event Action OnChange;
 
+        public async Task AddCategory(Category category)
+        {
+            var response = await _http.PostAsJsonAsync("api/category/admin", category);
+            AdminCategories = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
+            await GetCategories();
+            OnChange.Invoke();
+        }
+
         public async Task GetAdminCategories()
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category/admin");
             if (response is not null && response.Data != null)
-                Categories = response.Data;
+                AdminCategories = response.Data;
         }
 
         public async Task GetCategories()
