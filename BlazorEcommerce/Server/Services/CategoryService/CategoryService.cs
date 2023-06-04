@@ -12,6 +12,17 @@ namespace BlazorEcommerce.Server.Services.CategoryService
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<Category>>> GetAdminCategoriesAsync()
+        {
+            var categories = await _context.Categories
+                .Where(c => !c.IsDeleted).ToListAsync();
+
+            return new ServiceResponse<List<Category>>
+            {
+                Data = categories
+            };
+        }
+
         public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
             var categories = await _context.Categories
