@@ -12,6 +12,27 @@ namespace BlazorEcommerce.Server.Services.CategoryService
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<Category>>> UpdateCategoryAsync(Category category)
+        {
+            var dbCategory = await GetCategoryById(category.Id);
+            if (dbCategory is null)
+            {
+                return new ServiceResponse<List<Category>>
+                {
+                    Success = false,
+                    Message = "Category not found."
+                };
+            }
+
+            dbCategory.Name = category.Name;
+            dbCategory.Url = category.Url;
+            dbCategory.Visible = category.Visible;
+
+            await _context.SaveChangesAsync();
+
+            return await GetAdminCategoriesAsync();
+        }
+
         public async Task<ServiceResponse<List<Category>>> AddCategoryAsync(Category category)
         {
             category.Editing = category.IsNew = false;
