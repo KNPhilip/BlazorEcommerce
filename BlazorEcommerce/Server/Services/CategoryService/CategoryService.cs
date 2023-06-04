@@ -1,7 +1,4 @@
-﻿using BlazorEcommerce.Shared.Models;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-
-namespace BlazorEcommerce.Server.Services.CategoryService
+﻿namespace BlazorEcommerce.Server.Services.CategoryService
 {
     public class CategoryService : ICategoryService
     {
@@ -10,6 +7,24 @@ namespace BlazorEcommerce.Server.Services.CategoryService
         public CategoryService(EcommerceContext context)
         {
             _context = context;
+        }
+
+        public async Task<ServiceResponse<List<Category>>> DeleteCategoryAsync(int categoryId)
+        {
+            var dbCategory = await GetCategoryById(categoryId);
+            if (dbCategory is null)
+            {
+                return new ServiceResponse<List<Category>>
+                {
+                    Success = false,
+                    Message = "Category not found."
+                };
+            }
+
+            dbCategory.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return await GetAdminCategoriesAsync();
         }
 
         public async Task<ServiceResponse<List<Category>>> UpdateCategoryAsync(Category category)
