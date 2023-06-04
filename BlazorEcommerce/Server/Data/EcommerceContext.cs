@@ -115,19 +115,25 @@
                 {
                     Id = 1,
                     Name = "Books",
-                    Url = "books"
+                    Url = "books",
+                    Visible = true,
+                    IsDeleted = false
                 },
                 new
                 {
                     Id = 2,
                     Name = "Movies",
-                    Url = "movies"
+                    Url = "movies",
+                    Visible = true,
+                    IsDeleted = false
                 },
                 new
                 {
                     Id = 3,
                     Name = "Video Games",
-                    Url = "video-games"
+                    Url = "video-games",
+                    Visible = true,
+                    IsDeleted = false
                 }
             );
 
