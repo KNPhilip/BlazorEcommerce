@@ -9,6 +9,14 @@
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<ProductType>>> AddProductType(ProductType productType)
+        {
+            _context.ProductTypes.Add(productType);
+            await _context.SaveChangesAsync();
+
+            return await GetProductTypesAsync();
+        }
+
         public async Task<ServiceResponse<List<ProductType>>> GetProductTypesAsync()
         {
             var productTypes = await _context.ProductTypes.ToListAsync();
