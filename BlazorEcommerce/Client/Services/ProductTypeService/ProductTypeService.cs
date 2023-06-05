@@ -13,6 +13,19 @@
 
         public event Action OnChange;
 
+        public ProductType CreateNewProductType()
+        {
+            var newProductType = new ProductType
+            {
+                IsNew = true,
+                Editing = true,
+            };
+
+            ProductTypes.Add(newProductType);
+            OnChange.Invoke();
+            return newProductType;
+        }
+
         public async Task GetProductTypes()
         {
             var result = await _http

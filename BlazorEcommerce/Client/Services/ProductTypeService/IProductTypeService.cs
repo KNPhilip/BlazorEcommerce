@@ -5,5 +5,6 @@
         event Action OnChange;
         public List<ProductType> ProductTypes { get; set; }
         Task GetProductTypes();
+        ProductType CreateNewProductType();
     }
 }
