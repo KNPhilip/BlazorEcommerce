@@ -13,6 +13,14 @@
 
         public event Action OnChange;
 
+        public async Task AddProductType(ProductType productType)
+        {
+            var response = await _http.PostAsJsonAsync("api/producttype", productType);
+            ProductTypes = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
+            OnChange.Invoke();
+        }
+
         public ProductType CreateNewProductType()
         {
             var newProductType = new ProductType
