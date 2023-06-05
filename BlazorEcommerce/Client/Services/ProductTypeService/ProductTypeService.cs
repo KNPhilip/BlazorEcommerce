@@ -40,5 +40,13 @@
                 .GetFromJsonAsync<ServiceResponse<List<ProductType>>>("api/producttype");
             ProductTypes = result.Data;
         }
+
+        public async Task UpdateProductType(ProductType productType)
+        {
+            var response = await _http.PutAsJsonAsync("api/producttype", productType);
+            ProductTypes = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
+            OnChange.Invoke();
+        }
     }
 }
