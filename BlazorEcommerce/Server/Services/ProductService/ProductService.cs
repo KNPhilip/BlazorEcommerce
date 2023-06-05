@@ -57,9 +57,9 @@
             return response;
         }
 
-        public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string searchTerm)
+        public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestionsAsync(string searchTerm)
         {
-            var products = await FindProductsBySearchText(searchTerm);
+            var products = await FindProductsBySearchTextAsync(searchTerm);
             List<string> result = new List<string>();
 
             foreach (var product in products)
@@ -94,10 +94,10 @@
             };
         }
 
-        public async Task<ServiceResponse<ProductSearchResultDto>> SearchProducts(string searchTerm, int page)
+        public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
         {
             var pageResults = 2f;
-            var pageCount = Math.Ceiling((await FindProductsBySearchText(searchTerm)).Count / pageResults);
+            var pageCount = Math.Ceiling((await FindProductsBySearchTextAsync(searchTerm)).Count / pageResults);
             var products = await _context.Products
                 .Where(p => 
                     p.Visible
@@ -124,7 +124,7 @@
             return response;
         }
 
-        public async Task<List<Product>> FindProductsBySearchText(string searchTerm)
+        public async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm)
         {
             return await _context.Products
                 .Where(p =>
@@ -139,13 +139,27 @@
                 .ToListAsync();
         }
 
-        public async Task<ServiceResponse<List<Product>>> GetFeaturedProducts()
+        public async Task<ServiceResponse<List<Product>>> GetFeaturedProductsAsync()
         {
             var response = new ServiceResponse<List<Product>>
             {
                 Data = await _context.Products
                     .Where(p => p.Featured && p.Visible && !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                    .ToListAsync()
+            };
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<Product>>> GetAdminProductsAsync()
+        {
+            var response = new ServiceResponse<List<Product>>()
+            {
+                Data = await _context.Products
+                    .Where(p => !p.IsDeleted)
+                    .Include(p => p.Variants.Where(v => !v.IsDeleted))
+                    .ThenInclude(v => v.ProductType)
                     .ToListAsync()
             };
 
