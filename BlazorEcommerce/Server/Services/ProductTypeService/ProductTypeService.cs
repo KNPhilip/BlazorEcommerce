@@ -9,6 +9,14 @@
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<ProductType>>> AddProductType(ProductType productType)
+        {
+            _context.ProductTypes.Add(productType);
+            await _context.SaveChangesAsync();
+
+            return await GetProductTypesAsync();
+        }
+
         public async Task<ServiceResponse<List<ProductType>>> GetProductTypesAsync()
         {
             var productTypes = await _context.ProductTypes.ToListAsync();
@@ -16,6 +24,24 @@
             {
                 Data = productTypes
             };
+        }
+
+        public async Task<ServiceResponse<List<ProductType>>> UpdateProductType(ProductType productType)
+        {
+            var dbProductType = await _context.ProductTypes.FindAsync(productType.Id);
+            if (dbProductType is null) 
+            {
+                new ServiceResponse<List<ProductType>>
+                {
+                    Success = false,
+                    Message = "Product Type not found."
+                };
+            }
+
+            dbProductType.Name = productType.Name;
+            await _context.SaveChangesAsync();
+
+            return await GetProductTypesAsync();
         }
     }
 }
