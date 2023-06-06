@@ -196,5 +196,51 @@
                 Data = product
             };
         }
+
+        public async Task<ServiceResponse<Product>> UpdateProductsAsync(Product product)
+        {
+            var dbProduct = await _context.Products.FindAsync(product.Id);
+            if (dbProduct is null)
+            {
+                return new ServiceResponse<Product>
+                {
+                    Success = false,
+                    Message = "Product not found."
+                };
+            }
+
+            dbProduct.Title = product.Title;
+            dbProduct.Description = product.Description;
+            dbProduct.ImageUrl = product.ImageUrl;
+            dbProduct.CategoryId = product.CategoryId;
+            dbProduct.Visible = product.Visible;
+
+            foreach (var variant in product.Variants)
+            {
+                var dbVariants = await _context.ProductVariants
+                    .SingleOrDefaultAsync(v => v.ProductId == variant.ProductId &&
+                    v.ProductTypeId == variant.ProductTypeId);
+                if (dbVariants is null)
+                {
+                    variant.ProductType = null;
+                    _context.ProductVariants.Add(variant);
+                }
+                else
+                {
+                    dbVariants.ProductTypeId = variant.ProductTypeId;
+                    dbVariants.Price = variant.Price;
+                    dbVariants.OriginalPrice = variant.OriginalPrice;
+                    dbVariants.Visible = variant.Visible;
+                    dbVariants.IsDeleted = variant.IsDeleted;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Product>
+            {
+                Data = product
+            };
+        }
     }
 }

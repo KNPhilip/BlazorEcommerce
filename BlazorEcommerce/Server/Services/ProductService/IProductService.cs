@@ -10,5 +10,6 @@
         Task<ServiceResponse<List<Product>>> GetFeaturedProductsAsync();
         Task<ServiceResponse<List<Product>>> GetAdminProductsAsync();
         Task<ServiceResponse<Product>> CreateProductsAsync(Product product);
+        Task<ServiceResponse<Product>> UpdateProductsAsync(Product product);
     }
 }
