@@ -2,8 +2,66 @@
 @inject IProductService ProductService
 @attribute [Authorize(Roles = "Admin")]
 
-<h3>Products</h3>
+<div class="container">
+    <h3>Products</h3>
+
+    @if(ProductService.AdminProducts == null)
+    {
+        <span>Loading Products...</span>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>Price</th>
+                    <th>Visible</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <Virtualize Items="ProductService.AdminProducts" Context="product">
+                    <tr>
+                        <td><img src="@product.ImageUrl" /></td>
+                        <td>@product.Title</td>
+                        <td>
+                            @foreach(var variant in product.Variants)
+                            {
+                                <span>@variant.ProductType.Name</span><br />
+                            }
+                        </td>
+                        <td>
+                            @foreach (var variant in product.Variants)
+                            {
+                                <span>@variant.Price</span>
+
+                                <br />
+                            }
+                        </td>
+                        <td>@(product.Visible ? "✔️" : "")</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="(() => EditProduct(product.Id))">
+                                <i class="oi oi-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </Virtualize>
+            </tbody>
+        </table>
+    }
+</div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.GetAdminProducts();
+    }
 
+    void EditProduct(int productId)
+    {
+        
+    }
 }
