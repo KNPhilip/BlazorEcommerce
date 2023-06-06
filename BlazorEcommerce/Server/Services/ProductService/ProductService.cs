@@ -180,5 +180,21 @@
 
             return response;
         }
+
+        public async Task<ServiceResponse<Product>> CreateProductsAsync(Product product)
+        {
+            foreach (var variant in product.Variants)
+            {
+                variant.ProductType = null;
+            }
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Product>
+            {
+                Data = product
+            };
+        }
     }
 }
