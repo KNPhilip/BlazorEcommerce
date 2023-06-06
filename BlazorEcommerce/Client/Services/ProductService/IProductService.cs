@@ -1,11 +1,10 @@
-﻿using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Client.Services.ProductService
+﻿namespace BlazorEcommerce.Client.Services.ProductService
 {
     public interface IProductService
     {
         event Action OnProductsChanged;
         List<Product> Products { get; set; }
+        List<Product> AdminProducts { get; set; }
         string Message { get; set; }
         int CurrentPage { get; set; }
         int PageCount { get; set; }
@@ -14,5 +13,6 @@ namespace BlazorEcommerce.Client.Services.ProductService
         Task<ServiceResponse<Product>> GetProduct(int productId);
         Task SearchProducts(string searchTerm, int page);
         Task<List<string>> GetProductSearchSuggestions(string searchTerm);
+        Task GetAdminProducts();
     }
 }

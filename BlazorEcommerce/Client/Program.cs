@@ -11,6 +11,7 @@ global using BlazorEcommerce.Client.Services.AddressService;
 global using BlazorEcommerce.Client.Services.ProductTypeService;
 global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.AspNetCore.Components.Authorization;
+global using Microsoft.AspNetCore.Authorization;
 global using Blazored.LocalStorage;
 global using System.Security.Claims;
 global using System.Net.Http.Headers;
