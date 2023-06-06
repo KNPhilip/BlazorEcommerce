@@ -157,4 +157,13 @@ else
             variant.IsDeleted = true;
         }
     }
+
+    void AddVariant()
+    {
+        product.Variants.Add(new ProductVariant
+        {
+            IsNew = true,
+            ProductId = product.Id
+        });
+    }
 }
