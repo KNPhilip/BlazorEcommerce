@@ -166,4 +166,19 @@ else
             ProductId = product.Id
         });
     }
+
+    async void AddOrUpdateProduct()
+    {
+        if (product.IsNew)
+        {
+            var result = await ProductService.CreateProduct(product);
+            NavigationManager.NavigateTo($"admin/product/{result.Id}");
+        }
+        else
+        {
+            product.IsNew = false;
+            product = await ProductService.UpdateProduct(product);
+            NavigationManager.NavigateTo($"admin/product/{product.Id}", true);
+        }
+    }
 }
