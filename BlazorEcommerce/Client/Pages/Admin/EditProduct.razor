@@ -8,5 +8,43 @@
 <h3>EditProduct</h3>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    Product product = new();
+    bool loading = true;
+    string btnText = "";
+    string msg = "Loading...";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductTypeService.GetProductTypes();
+        await CategoryService.GetAdminCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(Id == 0)
+        {
+            product = new()
+            {
+                IsNew = true
+            };
+            btnText = "Create Product";
+        }
+        else
+        {
+            Product dbProduct = (await ProductService.GetProduct(Id)).Data;
+            if (dbProduct is null)
+            {
+                msg = $"Product with Id '{Id}' does not exist.";
+                return;
+            }
+
+            product = dbProduct;
+            product.Editing = true;
+            btnText = "Update Product";
+        }
+        loading = false;
+    }
 }
