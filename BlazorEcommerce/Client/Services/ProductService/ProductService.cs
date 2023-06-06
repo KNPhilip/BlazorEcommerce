@@ -1,7 +1,4 @@
-﻿using BlazorEcommerce.Shared.Dtos;
-using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Client.Services.ProductService
+﻿namespace BlazorEcommerce.Client.Services.ProductService
 {
     public class ProductService : IProductService
     {
@@ -20,6 +17,14 @@ namespace BlazorEcommerce.Client.Services.ProductService
         public List<Product> AdminProducts { get; set; }
 
         public event Action OnProductsChanged;
+
+        public async Task<Product> CreateProduct(Product product)
+        {
+            var result = await _http.PostAsJsonAsync("api/product/admin", product);
+            var newProduct = (await result.Content.ReadFromJsonAsync<ServiceResponse<Product>>()).Data;
+
+            return newProduct;
+        }
 
         public async Task GetAdminProducts()
         {

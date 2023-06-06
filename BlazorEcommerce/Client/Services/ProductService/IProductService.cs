@@ -14,5 +14,6 @@
         Task SearchProducts(string searchTerm, int page);
         Task<List<string>> GetProductSearchSuggestions(string searchTerm);
         Task GetAdminProducts();
+        Task<Product> CreateProduct(Product product);
     }
 }
