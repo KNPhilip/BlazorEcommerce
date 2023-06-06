@@ -66,13 +66,13 @@ else
                     <InputCheckbox @bind-Value="variant.Visible" style="transform:scale(1.5,1.5);" disabled="@variant.IsDeleted"></InputCheckbox>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" disabled="@variant.IsDeleted" @onclick="@(() => RemoveVariant(variant.ProductTypeId))">
+                    <button type="button" class="btn btn-primary" disabled="@variant.IsDeleted" @onclick="@(() => RemoveVariant(variant.ProductTypeId))">
                         <i class="oi oi-trash"></i>
                     </button>
                 </div>
             </div>
         }
-        <button class="btn btn-primary" @onclick="AddVariant">
+        <button type="button" class="btn btn-primary" @onclick="AddVariant">
             <i class="oi oi-plus"></i> Add Variant
         </button>
         <hr />
@@ -139,5 +139,22 @@ else
             btnText = "Update Product";
         }
         loading = false;
+    }
+
+    void RemoveVariant(int productTypeId)
+    {
+        var variant = product.Variants.Find(v => v.ProductTypeId == productTypeId);
+        if (variant is null)
+        {
+            return;
+        }
+        if (variant.IsNew)
+        {
+            product.Variants.Remove(variant);
+        }
+        else
+        {
+            variant.IsDeleted = true;
+        }
     }
 }
