@@ -242,5 +242,27 @@
                 Data = product
             };
         }
+
+        public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
+        {
+            var dbProducts = await _context.Products.FindAsync(productId);
+            if (dbProducts is null)
+            {
+                return new ServiceResponse<bool> 
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Product not found."
+                };
+            }
+
+            dbProducts.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> 
+            { 
+                Data = true 
+            };
+        }
     }
 }
