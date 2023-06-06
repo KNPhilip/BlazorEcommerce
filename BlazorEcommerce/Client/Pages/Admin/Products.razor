@@ -1,5 +1,6 @@
 ﻿@page "/admin/products"
 @inject IProductService ProductService
+@inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container">
@@ -11,6 +12,9 @@
     }
     else
     {
+        <button class="btn btn-primary float-end" @onclick="CreateProduct">
+            <i class="oi oi-plus"></i> Add new Product
+        </button>
         <table class="table">
             <thead>
                 <tr>
@@ -62,6 +66,11 @@
 
     void EditProduct(int productId)
     {
-        
+        NavigationManager.NavigateTo($"admin/product/{productId}");
+    }
+
+    void CreateProduct()
+    {
+        NavigationManager.NavigateTo($"admin/product");
     }
 }
