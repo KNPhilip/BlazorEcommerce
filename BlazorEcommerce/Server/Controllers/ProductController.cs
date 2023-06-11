@@ -34,7 +34,7 @@ namespace BlazorEcommerce.Server.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("admin/{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId)
         {
             var result = await _productService.DeleteProductsAsync(productId);
