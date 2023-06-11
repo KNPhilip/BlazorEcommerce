@@ -4,6 +4,7 @@
 @inject IProductService ProductService
 @inject IProductTypeService ProductTypeService
 @inject ICategoryService CategoryService
+@inject IJSRuntime JSRuntime
 
 <div class="container">
     @if (loading)
@@ -192,7 +193,14 @@
 
     async void DeleteProduct()
     {
-        await ProductService.DeleteProduct(product);
-        NavigationManager.NavigateTo("admin/products");
+        bool confirmed = await JSRuntime
+            .InvokeAsync<bool>("confirm",
+            $"Are you sure you want to delete '{product.Title}'?");
+
+        if (confirmed)
+        {
+            await ProductService.DeleteProduct(product);
+            NavigationManager.NavigateTo("admin/products");
+        }
     }
 }
