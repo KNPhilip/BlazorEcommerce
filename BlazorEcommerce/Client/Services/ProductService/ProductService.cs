@@ -29,8 +29,7 @@
 
         public async Task DeleteProduct(Product product)
         {
-            var result = await
-                _http.DeleteAsync($"api/product/admin/{product.Id}");
+            await _http.DeleteAsync($"api/product/admin/{product.Id}");
         }
 
         public async Task GetAdminProducts()

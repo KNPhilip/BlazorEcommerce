@@ -24,7 +24,7 @@
 
         <EditForm Model="product" OnValidSubmit="AddOrUpdateProduct">
             <DataAnnotationsValidator />
-            <div class="mb-0">
+            <div class="mb-2">
                 <label for="title">Title</label>
                 <InputText id="title" @bind-Value="product.Title" class="form-control"></InputText>
             </div>
@@ -32,16 +32,16 @@
                 <label for="imageUrl">Image Url</label>
                 <InputText id="imageUrl" @bind-Value="product.ImageUrl" class="form-control"></InputText>
             </div>
-            <div class="mb-0">
+            <div class="mb-2">
                 <img src="@product.ImageUrl" />
             </div>
-            <div class="mb-0">
+            <div class="mb-2">
                 <label for="description">Description</label>
                 <InputText id="description" @bind-Value="product.Description" class="form-control"></InputText>
             </div>
-            <hr />
+            <label>Variants</label>
             <div class="header">
-                <div class="col">Product Type / Variant</div>
+                <div class="col">Product Type</div>
                 <div class="col">Price</div>
                 <div class="col">Original Price</div>
                 <div class="col">Visible</div>
@@ -78,7 +78,7 @@
                 <i class="oi oi-plus"></i> Add Variant
             </button>
             <hr />
-            <div class="mb-0">
+            <div class="mb-3">
                 <label for="category">Category</label>
                 <InputSelect id="category" @bind-Value="product.CategoryId" class="form-control">
                     @foreach(var category in CategoryService.AdminCategories)
@@ -87,7 +87,6 @@
                     }
                 </InputSelect>
             </div>
-            <hr />
             <div class="form-check">
                 <InputCheckbox id="featured" @bind-Value="product.Featured" class="form-check-input"></InputCheckbox>
                 <label for="featured" class="form-check-label">Featured</label>
