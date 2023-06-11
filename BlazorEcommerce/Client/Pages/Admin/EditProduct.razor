@@ -99,6 +99,12 @@
             <button type="submit" class="btn btn-primary float-end mb-3">@btnText</button>
             <ValidationSummary></ValidationSummary>
         </EditForm>
+        @if (!product.IsNew)
+        {
+            <button type="button" class="btn btn-danger float-start" @onclick="DeleteProduct">
+                Delete Product
+            </button>
+        }
     }
 </div>
 
@@ -182,5 +188,11 @@
             product = await ProductService.UpdateProduct(product);
             NavigationManager.NavigateTo($"admin/product/{product.Id}", true);
         }
+    }
+
+    async void DeleteProduct()
+    {
+        await ProductService.DeleteProduct(product);
+        NavigationManager.NavigateTo("admin/products");
     }
 }
