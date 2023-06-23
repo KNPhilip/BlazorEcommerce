@@ -21,6 +21,7 @@
                 product = await _context.Products
                 .Include(p => p.Variants.Where(v => !v.IsDeleted))
                 .ThenInclude(v => v.ProductType)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
             }
             else
@@ -28,6 +29,7 @@
                 product = await _context.Products
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
+                    .Include(p => p.Images)
                     .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted && p.Visible);
             }
             if (product == null)
@@ -50,6 +52,7 @@
                 Data = await _context.Products
                     .Where(p => p.Visible && !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -65,6 +68,7 @@
                         && !p.IsDeleted
                         && p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
                     .Include(p => p.Variants.Where(p => p.Visible && !p.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -122,6 +126,7 @@
                     && !p.IsDeleted
                     && p.Description.ToLower().Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
+                .Include(p => p.Images)
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
                 .ToListAsync();
@@ -161,6 +166,7 @@
                 Data = await _context.Products
                     .Where(p => p.Featured && p.Visible && !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -175,6 +181,7 @@
                     .Where(p => !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
