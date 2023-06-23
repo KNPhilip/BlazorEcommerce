@@ -30,7 +30,7 @@ namespace BlazorEcommerce.Server.Controllers
         [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> EditProduct(Product product)
         {
-            var result = await _productService.UpdateProductsAsync(product);
+            var result = await _productService.UpdateProductAsync(product);
             return Ok(result);
         }
 
