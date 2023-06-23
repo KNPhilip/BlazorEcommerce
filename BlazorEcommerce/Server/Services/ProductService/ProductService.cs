@@ -204,9 +204,12 @@
             };
         }
 
-        public async Task<ServiceResponse<Product>> UpdateProductsAsync(Product product)
+        public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
         {
-            var dbProduct = await _context.Products.FindAsync(product.Id);
+            var dbProduct = await _context.Products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == product.Id);
+
             if (dbProduct is null)
             {
                 return new ServiceResponse<Product>
@@ -216,12 +219,16 @@
                 };
             }
 
+            var productImages = dbProduct.Images;
+            _context.Images.RemoveRange(productImages);
+
             dbProduct.Title = product.Title;
             dbProduct.Description = product.Description;
             dbProduct.ImageUrl = product.ImageUrl;
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Visible = product.Visible;
             dbProduct.Featured = product.Featured;
+            dbProduct.Images = product.Images;
 
             foreach (var variant in product.Variants)
             {
