@@ -5,14 +5,16 @@
 
 <PageTitle>My Shop</PageTitle>
 
-@if (SearchTerm is null && CategoryUrl is null)
-{
-    <FeaturedProducts />
-}
-else
-{
-    <ProductList />
-}
+<div class="container mt-5">
+    @if (SearchTerm is null && CategoryUrl is null)
+    {
+        <FeaturedProducts />
+    }
+    else
+    {
+        <ProductList />
+    }
+</div>
 
 @code {
     [Parameter]

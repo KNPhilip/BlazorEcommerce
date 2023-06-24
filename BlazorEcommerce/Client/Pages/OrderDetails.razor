@@ -1,43 +1,42 @@
 ﻿@page "/orders/{orderId:int}"
 @inject IOrderService OrderService
 
-@if (order is null)
-{
-    <span>Loading order details...</span>
-}
-else
-{
-    <div class="container">
+<div class="container mt-5">
+    @if (order is null)
+    {
+        <span>Loading order details...</span>
+    }
+    else
+    {
         <h3>Order from @order.OrderDate</h3>
-    </div>
-
-    <div>
-        @foreach (var product in order.Products)
-        {
-            <div class="container">
-                <div class="image-wrapper">
-                    @if(!string.IsNullOrEmpty(product.ImageUrl))
-                    {
-                        <img src="@product.ImageUrl" class="image" />
-                    }
-                    else if(product.Images.Count > 0)
-                    {
-                        <img src="@product.Images[0].Data" class="image" />
-                    }
+        <div>
+            @foreach (var product in order.Products)
+            {
+                <div class="wrapper">
+                    <div class="image-wrapper">
+                        @if(!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="image" />
+                        }
+                        else if(product.Images.Count > 0)
+                        {
+                            <img src="@product.Images[0].Data" class="image" />
+                        }
+                    </div>
+                    <div class="name">
+                        <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
+                        <span>@product.ProductType</span><br />
+                        <span>Quantity: @product.Quantity</span>
+                    </div>
+                    <div class="product-price">$@product.TotalPrice</div>
                 </div>
-                <div class="name">
-                    <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
-                    <span>@product.ProductType</span><br />
-                    <span>Quantity: @product.Quantity</span>
-                </div>
-                <div class="product-price">$@product.TotalPrice</div>
+            }
+            <div class="product-price container">
+                Total: $@order.TotalPrice
             </div>
-        }
-        <div class="product-price container">
-            Total: $@order.TotalPrice
         </div>
-    </div>
-}
+    }
+</div>
 
 @code {
     [Parameter]

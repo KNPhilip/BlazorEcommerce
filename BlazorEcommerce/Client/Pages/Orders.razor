@@ -1,10 +1,11 @@
 ﻿@page "/orders"
 @inject IOrderService OrderService
 
-<h3>Orders</h3>
+<div class="container mt-5">
+    <h3>Orders</h3>
 
 @if (orders is null) {
-    <span>Loading your orders...</span>
+    <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
 }
 else if (orders.Count <= 0) {
     <span>You have no orders, yet.</span>
@@ -13,7 +14,7 @@ else
 {
     foreach(var order in orders)
     {
-        <div class="container">
+        <div class="wrapper">
             <div class="image-wrapper">
                 @if(!string.IsNullOrEmpty(order.ProductImageUrl))
                 {
@@ -34,6 +35,7 @@ else
         </div>
     }
 }
+</div>
 
 @code {
     List<OrderOverviewDto> orders = null;

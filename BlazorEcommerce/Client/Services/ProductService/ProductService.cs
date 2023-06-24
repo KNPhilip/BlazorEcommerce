@@ -10,7 +10,7 @@
         }
 
         public List<Product> Products { get; set; } = new List<Product>();
-        public string Message { get; set; } = "Loading products...";
+        public string Message { get; set; } = string.Empty;
         public int CurrentPage { get; set; } = 1;
         public int PageCount { get; set; } = 0;
         public string LastSearchTerm { get; set; } = string.Empty;
