@@ -1,10 +1,14 @@
-﻿<CascadingAuthenticationState>
+﻿@inject NavigationManager NavigationManager
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(ShopLayout)">
                 <NotAuthorized>
-                    <h3>Whoops! You're not allowed to see this page.</h3>
-                    <h5>Please <a href="login">login</a> or <a href="register">register</a>.</h5>
+                    <div class="container mt-5">
+                        <h3>Whoops! You're not allowed to see this page.</h3>
+                        <h5>Please <a @onclick="Login" style="color:dodgerblue; cursor:pointer;">login</a> or <a href="register" style="color:dodgerblue; cursor:pointer;">register</a>.</h5>
+                    </div>
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -12,8 +16,17 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(ShopLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <div class="container mt-5">
+                    <h4 role="alert">Sorry, there's nothing at this address.</h4>
+                </div>
             </LayoutView>
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    private void Login()
+    {
+        NavigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+    }
+}

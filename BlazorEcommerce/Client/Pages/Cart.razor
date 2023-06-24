@@ -6,48 +6,48 @@
 
 <PageTitle>Shopping Cart</PageTitle>
 
-<div class="container">
-<h3>Shopping Cart</h3>
+<div class="container mt-5">
+    <h3>Shopping Cart</h3>
 
-@if (cartProducts is null || cartProducts.Count == 0)
-{
-    <span>@message</span>
-}
-else
-{
-    <div>
-        @foreach (var product in cartProducts)
-        {
-            <div class="wrapper">
-                <div class="image-wrapper">
-                    <img src="@product.ImageUrl" class="image" />
-                </div>
-                <div class="name">
-                    <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
-                    <span>@product.ProductType</span>
-                    <input type="number" value="@product.Quantity" 
-                    @onchange="@((ChangeEventArgs e) => UpdateQuantity(e, product))" 
-                    class="form-control input-quantity"
-                    min="1" />
-                    <br/>
-                    <button class="btn-delete" @onclick="@(() => 
-                        RemoveProductFromCart(product.ProductId, product.ProductTypeId))">Remove from Cart</button>
-                </div>
-                <div class="cart-product-price">$@(product.Price * product.Quantity)</div>
-            </div>
-        }
-            <div class="cart-product-price wrapper">
-                Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
-            </div>
-            @if (isAuthenticated)
+    @if (cartProducts is null || cartProducts.Count == 0)
+    {
+        <span>@message</span>
+    }
+    else
+    {
+        <div>
+            @foreach (var product in cartProducts)
             {
-                <br />
-                <h5>Delivery Address</h5>
-                <AddressForm />
+                <div class="wrapper">
+                    <div class="image-wrapper">
+                        <img src="@product.ImageUrl" class="image" />
+                    </div>
+                    <div class="name">
+                        <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
+                        <span>@product.ProductType</span>
+                        <input type="number" value="@product.Quantity" 
+                        @onchange="@((ChangeEventArgs e) => UpdateQuantity(e, product))" 
+                        class="form-control input-quantity"
+                        min="1" />
+                        <br/>
+                        <button class="btn-delete" @onclick="@(() => 
+                            RemoveProductFromCart(product.ProductId, product.ProductTypeId))">Remove from Cart</button>
+                    </div>
+                    <div class="cart-product-price">$@(product.Price * product.Quantity)</div>
+                </div>
             }
-        <button @onclick="PlaceOrder" class="btn btn-success mt-2 mb-2">Checkout</button>
-    </div>
-}
+                <div class="cart-product-price wrapper">
+                    Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
+                </div>
+                @if (isAuthenticated)
+                {
+                    <br />
+                    <h5>Delivery Address</h5>
+                    <AddressForm />
+                }
+            <button @onclick="PlaceOrder" class="btn btn-success mt-2 mb-2">Checkout</button>
+        </div>
+    }
 </div>
 
 @code {

@@ -1,24 +1,27 @@
 ﻿@inherits LayoutComponentBase
+@using BlazorEcommerce.Client.Shared
 
-<div class="page">
-    <main>
-        <div class="top-row px-2">
-            <HomeButton />
-            <Search />
-            <UserButton />
-            <CartCounter />
-        </div>
+<MudLayout>
+    <MudAppBar Elevation="1" Color="Color.Info">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <Search />
+        <CartCounter />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" Class="d-flex flex-column p-2 pt-5">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-        <div class="nav-menu">
-            <ShopNavMenu />
-        </div>
+<MudThemeProvider />
 
-        <article class="content px-2">
-            @Body
-        </article>
-    </main>
-</div>
+@code {
+    bool _drawerOpen = true;
 
-<MudThemeProvider/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

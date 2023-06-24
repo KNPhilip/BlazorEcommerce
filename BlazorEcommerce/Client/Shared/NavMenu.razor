@@ -1,44 +1,76 @@
-﻿@inject ICategoryService CategoryService
+﻿@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ICartService CartService
+@inject ICategoryService CategoryService
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorEcommerce</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                Home
-            </NavLink>
-        </div>
+<HomeButton />
+<div class="d-flex flex-column justify-content-center">
+    <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3" />
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="profile" Icon="@Icons.Material.Filled.People" IconColor="Color.Info">Your Profile</MudNavLink>
+            <MudNavLink Href="orders" Icon="@Icons.Material.Filled.Article" IconColor="Color.Info">Your Orders</MudNavLink>
+            <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Warning">Logout</MudNavLink>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink OnClick="Login" Icon="@Icons.Material.Filled.Login" IconColor="Color.Info">Login</MudNavLink>
+            <MudNavLink Href="register" Icon="@Icons.Material.Filled.AccountCircle" IconColor="Color.Info">Register</MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+    <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3"/>
+    <MudNavGroup Title="Categories" Expanded="true">
         @foreach (var category in CategoryService.Categories)
         {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="@category.Url">
-                    @category.Name
-                </NavLink>
-            </div>
+            <MudNavLink Href="@category.Url">@category.Name</MudNavLink>
         }
-    </nav>
+    </MudNavGroup>
+
+    <AuthorizeView>
+        <Authorized>
+            <AdminMenu />
+        </Authorized>
+    </AuthorizeView>
+    <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3"/>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool showUserMenu = false;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
 
     protected override async Task OnInitializedAsync()
     {
         await CategoryService.GetCategories();
+        CategoryService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CategoryService.OnChange -= StateHasChanged;
+    }
+
+    private void ToggleUserMenu()
+    {
+        showUserMenu = !showUserMenu;
+    }
+
+    private async Task HideUserMenu()
+    {
+        await Task.Delay(200);
+        showUserMenu = false;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await CartService.GetCartItemsCount();
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
     }
 }
