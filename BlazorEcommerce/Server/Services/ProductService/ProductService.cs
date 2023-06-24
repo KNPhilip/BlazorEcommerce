@@ -22,7 +22,7 @@
                 .Include(p => p.Variants.Where(v => !v.IsDeleted))
                 .ThenInclude(v => v.ProductType)
                 .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+                .FirstOrDefaultAsync(p => p.Id == productId);
             }
             else
             {
@@ -30,12 +30,17 @@
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
                     .Include(p => p.Images)
-                    .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted && p.Visible);
+                    .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
             }
-            if (product == null)
+            if (product is null)
             {
                 response.Success = false;
                 response.Message = "This product does not exist.";
+            }
+            else if (product.IsDeleted)
+            {
+                response.Success = false;
+                response.Message = $"We're sorry, but \"{product.Title}\" is not available anymore..";
             }
             else
             {

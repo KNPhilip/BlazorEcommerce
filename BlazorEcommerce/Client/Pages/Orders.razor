@@ -15,7 +15,14 @@ else
     {
         <div class="container">
             <div class="image-wrapper">
-                <img src="@order.ProductImageUrl" class="image" />
+                @if(!string.IsNullOrEmpty(order.ProductImageUrl))
+                {
+                    <img src="@order.ProductImageUrl" class="image" />
+                }
+                else if (order.Images.Count > 0)
+                {
+                    <img src="@order.Images[0].Data" class="image" />
+                }
             </div>
             <div class="details">
                 <h4>@order.Product</h4>

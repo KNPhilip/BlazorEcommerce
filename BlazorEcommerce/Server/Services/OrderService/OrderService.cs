@@ -22,6 +22,7 @@
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
+                .ThenInclude(p => p.Images)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.ProductType)
                 .Where(o => o.UserId == _authService.GetNameIdFromClaims() && o.Id == orderId)
@@ -47,6 +48,7 @@
             {
                 ProductId = item.ProductId,
                 ImageUrl = item.Product.ImageUrl,
+                Images = item.Product.Images,
                 ProductType = item.ProductType.Name,
                 Quantity = item.Quantity,
                 Title = item.Product.Title,
@@ -63,6 +65,7 @@
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
+                .ThenInclude(p => p.Images)
                 .Where(o => o.UserId == _authService.GetNameIdFromClaims())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -76,7 +79,8 @@
                     $"{o.OrderItems.First().Product.Title} and " +
                     $"{o.OrderItems.Count - 1} more..." :
                     o.OrderItems.First().Product.Title,
-                ProductImageUrl = o.OrderItems.First().Product.ImageUrl
+                ProductImageUrl = o.OrderItems.First().Product.ImageUrl,
+                Images = o.OrderItems.First().Product.Images
             }));
 
             response.Data = orderResponse;

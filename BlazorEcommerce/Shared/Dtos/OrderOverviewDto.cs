@@ -7,5 +7,6 @@
         public decimal TotalPrice { get; set; }
         public string Product { get; set; }
         public string ProductImageUrl { get; set; }
+        public List<Image> Images { get; set; }
     }
 }
