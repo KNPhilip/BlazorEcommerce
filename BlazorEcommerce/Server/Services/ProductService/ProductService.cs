@@ -21,19 +21,26 @@
                 product = await _context.Products
                 .Include(p => p.Variants.Where(v => !v.IsDeleted))
                 .ThenInclude(v => v.ProductType)
-                .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == productId);
             }
             else
             {
                 product = await _context.Products
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
-                    .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted && p.Visible);
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
             }
-            if (product == null)
+            if (product is null)
             {
                 response.Success = false;
                 response.Message = "This product does not exist.";
+            }
+            else if (product.IsDeleted)
+            {
+                response.Success = false;
+                response.Message = $"We're sorry, but \"{product.Title}\" is not available anymore..";
             }
             else
             {
@@ -50,6 +57,7 @@
                 Data = await _context.Products
                     .Where(p => p.Visible && !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -65,6 +73,7 @@
                         && !p.IsDeleted
                         && p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
                     .Include(p => p.Variants.Where(p => p.Visible && !p.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -122,6 +131,7 @@
                     && !p.IsDeleted
                     && p.Description.ToLower().Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
+                .Include(p => p.Images)
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
                 .ToListAsync();
@@ -161,6 +171,7 @@
                 Data = await _context.Products
                     .Where(p => p.Featured && p.Visible && !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -175,6 +186,7 @@
                     .Where(p => !p.IsDeleted)
                     .Include(p => p.Variants.Where(v => !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
+                    .Include(p => p.Images)
                     .ToListAsync()
             };
 
@@ -197,9 +209,12 @@
             };
         }
 
-        public async Task<ServiceResponse<Product>> UpdateProductsAsync(Product product)
+        public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
         {
-            var dbProduct = await _context.Products.FindAsync(product.Id);
+            var dbProduct = await _context.Products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == product.Id);
+
             if (dbProduct is null)
             {
                 return new ServiceResponse<Product>
@@ -209,12 +224,16 @@
                 };
             }
 
+            var productImages = dbProduct.Images;
+            _context.Images.RemoveRange(productImages);
+
             dbProduct.Title = product.Title;
             dbProduct.Description = product.Description;
             dbProduct.ImageUrl = product.ImageUrl;
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Visible = product.Visible;
             dbProduct.Featured = product.Featured;
+            dbProduct.Images = product.Images;
 
             foreach (var variant in product.Variants)
             {
