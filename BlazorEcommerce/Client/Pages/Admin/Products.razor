@@ -8,13 +8,11 @@
 
     @if(ProductService.AdminProducts == null)
     {
-        <span>Loading Products...</span>
+        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
     }
     else
     {
-        <button class="btn btn-primary float-end" @onclick="CreateProduct">
-            <i class="oi oi-plus"></i> Add new Product
-        </button>
+        <MudButton Variant="Variant.Filled" Class="float-end mb-3" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" @onclick="CreateProduct">Create new Product</MudButton>
         <table class="table">
             <thead>
                 <tr>
@@ -54,11 +52,11 @@
                                 <br />
                             }
                         </td>
-                        <td>@(product.Visible ? "✔️" : "")</td>
                         <td>
-                            <button class="btn btn-primary" @onclick="(() => EditProduct(product.Id))">
-                                <i class="oi oi-pencil"></i>
-                            </button>
+                            <MudIcon Icon="@(product.Visible ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="Color.Info"></MudIcon>
+                        </td>
+                        <td>
+                            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Color="Color.Info" aria-label="edit" OnClick="(() => EditProduct(product.Id))"></MudIconButton>
                         </td>
                     </tr>
                 </Virtualize>

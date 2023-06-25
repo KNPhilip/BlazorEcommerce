@@ -11,33 +11,21 @@
         @if (productType.Editing)
         {
             <EditForm Model="editingProductType" OnSubmit="UpdateProductType">
-                <div class="row">
-                    <div class="col">
-                        <InputText @bind-Value="editingProductType.Name" class="form-control"></InputText>
-                    </div>
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="oi oi-cloud-upload"></i>
-                        </button>
-                    </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <InputText @bind-Value="editingProductType.Name" class="form-control" style="max-width: 400px;"></InputText>
+                    <MudIconButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Save" Color="Color.Info" aria-label="save"></MudIconButton>
                 </div>
             </EditForm>
         }
         else
         {
-            <div class="row">
-                <div class="col">
-                    @productType.Name
-                </div>
-                <div class="col">
-                    <button class="btn btn-primary" @onclick="@(() => EditProductType(productType))">
-                        <i class="oi oi-pencil"></i>
-                    </button>
-                </div>
+            <div class="d-flex justify-content-between mt-3">
+                <MudText>@productType.Name</MudText>
+                <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingProductType == null)" Color="Color.Info" aria-label="edit" OnClick="@(() => EditProductType(productType))"></MudIconButton>
             </div>
         }
     }
-    <button class="btn btn-primary" @onclick="CreateNewProductType">
+    <button class="btn btn-primary" disabled="@editingProductType" @onclick="CreateNewProductType">
         <i class="oi oi-plus"></i> Add new Product Type.
     </button>
 </div>
@@ -73,6 +61,6 @@
             await ProductTypeService.AddProductType(editingProductType);
         else
             await ProductTypeService.UpdateProductType(editingProductType);
-        editingProductType = new ProductType();
+        editingProductType = null;
     }
 }

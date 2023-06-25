@@ -4,10 +4,10 @@
 @if (authorized)
 {
     <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3" />
-    <MudNavGroup Title="Admin" Icon="@Icons.Material.Filled.AdminPanelSettings">
-        <MudNavLink Href="admin/categories" Icon="@Icons.Material.Filled.DeleteForever">Categories</MudNavLink>
-        <MudNavLink Href="admin/product-types" Icon="@Icons.Material.Filled.Lock">Product Types</MudNavLink>
-        <MudNavLink Href="admin/products" Icon="@Icons.Material.Filled.Lock">Products</MudNavLink>
+    <MudNavGroup Title="Admin" Expanded="true" Icon="@Icons.Material.Filled.AdminPanelSettings">
+        <MudNavLink Href="admin/categories" Icon="@Icons.Material.Filled.Edit">Categories</MudNavLink>
+        <MudNavLink Href="admin/product-types" Icon="@Icons.Material.Filled.Edit">Product Types</MudNavLink>
+        <MudNavLink Href="admin/products" Icon="@Icons.Material.Filled.Edit">Products</MudNavLink>
     </MudNavGroup>
 }
 
