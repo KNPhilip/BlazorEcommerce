@@ -3,9 +3,16 @@
 @inject ICartService CartService
 
 <div class="container mt-5">
-    @if(product == null)
+    @if(product is null)
     {
-        <span>@message</span>
+        if(string.IsNullOrEmpty(message))
+        {
+            <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudText Typo="Typo.h5">@message</MudText>
+        }
     }
     else
     {
@@ -72,8 +79,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        message = "Loading product...";
-
         var result = await ProductService.GetProduct(Id);
         if (!result.Success)
         {
