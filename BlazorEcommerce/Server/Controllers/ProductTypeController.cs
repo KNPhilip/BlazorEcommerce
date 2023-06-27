@@ -33,7 +33,7 @@
             return Ok(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{productTypeId}")]
         public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId)
         {
             var response = await _productTypeService.DeleteProductType(productTypeId);

@@ -26,7 +26,7 @@
                 <MudText>@productType.Name</MudText>
                 <div>
                     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingProductType == null)" Color="Color.Info" aria-label="edit" OnClick="@(() => EditProductType(productType))"></MudIconButton>
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingProductType == null)" Color="Color.Error" aria-label="delete" OnClick="CancelEditing"></MudIconButton>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingProductType == null)" Color="Color.Error" aria-label="delete" OnClick="@(() => DeleteProductType(productType.Id))"></MudIconButton>
                 </div>
             </div>
         }
@@ -72,5 +72,10 @@
         else
             await ProductTypeService.UpdateProductType(editingProductType);
         editingProductType = null;
+    }
+
+    private async Task DeleteProductType(int productTypeId)
+    {
+        await ProductTypeService.DeleteProductType(productTypeId);
     }
 }
