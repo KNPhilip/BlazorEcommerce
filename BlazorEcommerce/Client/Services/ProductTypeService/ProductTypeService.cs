@@ -1,4 +1,6 @@
-﻿namespace BlazorEcommerce.Client.Services.ProductTypeService
+﻿using BlazorEcommerce.Shared.Models;
+
+namespace BlazorEcommerce.Client.Services.ProductTypeService
 {
     public class ProductTypeService : IProductTypeService
     {
@@ -45,6 +47,14 @@
         public async Task UpdateProductType(ProductType productType)
         {
             var response = await _http.PutAsJsonAsync("api/producttype", productType);
+            ProductTypes = (await response.Content
+                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
+            OnChange.Invoke();
+        }
+
+        public async Task DeleteProductType(int productTypeId)
+        {
+            var response = await _http.DeleteAsync($"api/producttype/{productTypeId}");
             ProductTypes = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();

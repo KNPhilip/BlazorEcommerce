@@ -32,5 +32,12 @@
             var response = await _productTypeService.UpdateProductType(productType);
             return Ok(response);
         }
+
+        [HttpDelete("{productTypeId}")]
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId)
+        {
+            var response = await _productTypeService.DeleteProductType(productTypeId);
+            return Ok(response);
+        }
     }
 }

@@ -7,6 +7,7 @@
         Task GetProductTypes();
         Task AddProductType(ProductType productType);
         Task UpdateProductType(ProductType productType);
+        Task DeleteProductType(int productTypeId);
         ProductType CreateNewProductType();
     }
 }
