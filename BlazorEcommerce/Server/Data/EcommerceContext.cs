@@ -318,53 +318,63 @@
             modelBuilder.Entity<ProductType>().HasData(
                 new 
                 {
-                    Id = 1, 
-                    Name = "Default" 
+                    Id = 1,
+                    Name = "Default",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 2, 
-                    Name = "Paperback" 
+                    Name = "Paperback",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 3, 
-                    Name = "E-Book" 
+                    Name = "E-Book",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 4, 
-                    Name = "Audiobook" 
+                    Name = "Audiobook",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 5, 
-                    Name = "Stream" 
+                    Name = "Stream",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 6, 
-                    Name = "Blu-ray" 
+                    Name = "Blu-ray",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 7, 
-                    Name = "VHS" 
+                    Name = "VHS",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 8, 
-                    Name = "PC" 
+                    Name = "PC",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 9, 
-                    Name = "PlayStation" 
+                    Name = "PlayStation",
+                    IsDeleted = false
                 },
                 new 
                 {
                     Id = 10, 
-                    Name = "Xbox" 
+                    Name = "Xbox",
+                    IsDeleted = false
                 }
             );
 

@@ -3,6 +3,7 @@
     public class ProductType
     {
         public int Id { get; set; }
+        public bool IsDeleted { get; set; }
         public string Name { get; set; } = string.Empty;
         [NotMapped]
         public bool Editing { get; set; } = false;
