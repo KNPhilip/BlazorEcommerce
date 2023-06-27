@@ -22,11 +22,17 @@
             {
                 try
                 {
-                    identity = new ClaimsIdentity(ParseClaimsFromJwt(authToken), "jwt");
-                    _http.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", authToken.Replace("\"", ""));
+                    var claims = ParseClaimsFromJwt(authToken);
+                    identity = new ClaimsIdentity(claims, "jwt");
+                    if (!await ExpiredToken(identity))
+                    {
+                        _http.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", authToken.Replace("\"", ""));
+                    }
+                    else
+                        throw new Exception();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     await _localStorage.RemoveItemAsync("authToken");
                     identity = new ClaimsIdentity();
@@ -41,12 +47,28 @@
             return state;
         }
 
+        private async Task<bool> ExpiredToken(ClaimsIdentity? identity)
+        {
+            if (identity is null)
+                return true;
+            var user = new ClaimsPrincipal(identity);
+            var exp = user.FindFirst("exp");
+            if (exp is null)
+                return true;
+            var expDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp.Value));
+            if (DateTime.Now > expDateTime)
+                return true;
+            return false;
+        }
+
         private byte[] ParseBase64WithoutPadding(string base64)
         {
             switch(base64.Length % 4)
             {
-                case 2: base64 += "=="; break;
-                    case 3: base64 += "="; break;
+                case 2: base64 += "==";
+                    break;
+                case 3: base64 += "=";
+                    break;
             }
             return Convert.FromBase64String(base64);
         }
