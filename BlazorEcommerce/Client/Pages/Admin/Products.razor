@@ -4,7 +4,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container mt-5">
-    <h3>Products</h3>
+    <MudText Typo="Typo.h3">Products</MudText>
 
     @if(ProductService.AdminProducts == null)
     {

@@ -107,7 +107,7 @@
                     <MudButton OnClick="ClearImages" Disabled="@(product.Images.Count == 0 && string.IsNullOrEmpty(product.ImageUrl))" Color="Color.Error" Variant="Variant.Filled">Clear Images</MudButton>
                 </MudToolBar>
             </div>
-            <MudText Class="mb-2 mt-4" Typo="Typo.h5">Variants</MudText>
+            <MudText Class="mb-2 mt-4" Typo="Typo.h5">@(product.Variants.Count > 1 ? "Variants" : "Variant")</MudText>
 
             <div class="header">
                 <div class="col">Product Type</div>

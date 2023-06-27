@@ -4,7 +4,7 @@
 @implements IDisposable
 
 <div class="container mt-5">
-    <h3>Categories</h3>
+    <MudText Typo="Typo.h3">Categories</MudText>
 
     <div class="header">
         <div class="col">Name</div>
@@ -25,16 +25,12 @@
                     <div class="col">
                         <InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
                     </div>
-                    <div class="col col-visible">
-                        <InputCheckbox @bind-Value="editingCategory.Visible" style="transform: scale(2,2);"></InputCheckbox>
+                    <div class="col d-flex justify-content-center">
+                        <MudSwitch Style="margin-left: 6px;" @bind-Checked="editingCategory.Visible" Color="Color.Info" />
                     </div>
                     <div class="col">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="oi oi-cloud-upload"></i>
-                        </button>
-                        <button class="btn btn-primary" @onclick="CancelEditing">
-                            <i class="oi oi-circle-x"></i>
-                        </button>
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Upload" Disabled="@(editingCategory.Name.Length <= 0 || editingCategory.Url.Length <= 0)" Color="Color.Info" aria-label="save" ButtonType="ButtonType.Submit" />
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Close" Color="Color.Error" aria-label="cancel" OnClick="CancelEditing" />
                     </div>
                 </div>
             </EditForm>
@@ -42,29 +38,23 @@
         else
         {
             <div class="row">
-                <div class="col">
+                <div class="col" style="text-align: center;">
                     @category.Name
                 </div>
-                <div class="col">
+                <div class="col" style="text-align: center;">
                     @category.Url
                 </div>
                 <div class="col col-visible">
-                    <span>@(category.Visible ? "✔️" : "")</span>
+                    <MudIcon Icon="@(category.Visible ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="Color.Info"></MudIcon>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" @onclick="(() => EditCategory(category))">
-                        <i class="oi oi-pencil"></i>
-                    </button>
-                    <button class="btn btn-primary" @onclick="(() => DeleteCategory(category.Id))">
-                        <i class="oi oi-trash"></i>
-                    </button>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingCategory == null)" Color="Color.Info" aria-label="edit" OnClick="(() => EditCategory(category))" />
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingCategory == null)" Color="Color.Error" aria-label="delete" OnClick="(() => DeleteCategory(category.Id))" />
                 </div>
             </div>
         }
     }
-    <button class="btn btn-primary" @onclick="CreateNewCategory">
-        <i class="oi oi-plus"></i> Add new category
-    </button>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingCategory == null)" Color="Color.Info" aria-label="create" OnClick="CreateNewCategory">Add new Category</MudButton>
 </div>
 
 @code {
@@ -99,13 +89,13 @@
         else
             await CategoryService.UpdateCategory(editingCategory);
 
-        editingCategory = new Category();
+        editingCategory = null;
     }
 
     private async Task CancelEditing()
     {
-        editingCategory = new Category();
         await CategoryService.GetAdminCategories();
+        editingCategory = null;
     }
 
     private async Task DeleteCategory(int id)
