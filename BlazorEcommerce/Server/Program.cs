@@ -10,6 +10,7 @@ global using BlazorEcommerce.Server.Services.OrderService;
 global using BlazorEcommerce.Server.Services.PaymentService;
 global using BlazorEcommerce.Server.Services.AddressService;
 global using BlazorEcommerce.Server.Services.ProductTypeService;
+global using BlazorEcommerce.Server.Services.MailService;
 global using BlazorEcommerce.Shared.Models;
 global using BlazorEcommerce.Shared.Dtos;
 global using Microsoft.IdentityModel.Tokens;

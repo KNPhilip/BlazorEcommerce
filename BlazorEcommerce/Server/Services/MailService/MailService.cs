@@ -41,13 +41,13 @@
             }
             catch (Exception e)
             {
-                var res = new ServiceResponse<bool>
+                var response = new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = e.Message.ToString()
                 };
 
-                return res;
+                return response;
             }
         }
     }
