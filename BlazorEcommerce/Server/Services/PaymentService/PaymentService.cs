@@ -102,13 +102,13 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                     Data = true
                 };
             }
-            catch(StripeException se)
+            catch(StripeException e)
             {
                 return new ServiceResponse<bool>
                 {
                     Data = false,
                     Success = false,
-                    Message = se.Message
+                    Message = e.Message
                 };
             }
         }

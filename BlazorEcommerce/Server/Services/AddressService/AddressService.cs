@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Connections.Features;
-
-namespace BlazorEcommerce.Server.Services.AddressService
+﻿namespace BlazorEcommerce.Server.Services.AddressService
 {
     public class AddressService : IAddressService
     {

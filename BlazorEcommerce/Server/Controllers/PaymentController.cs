@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -32,10 +30,7 @@ namespace BlazorEcommerce.Server.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder()
         {
             var response = await _paymentService.FulfillOrder(Request);
-            if (!response.Success)
-                return BadRequest(response.Message);
-
-            return Ok(response);
+            return response.Success ? Ok(response) : BadRequest(response.Message);
         }
     }
 }
