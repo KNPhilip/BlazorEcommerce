@@ -2,5 +2,6 @@
 {
     public interface IMailService
     {
+        Task<ServiceResponse<bool>> SendEmail(SendMail request);
     }
 }
