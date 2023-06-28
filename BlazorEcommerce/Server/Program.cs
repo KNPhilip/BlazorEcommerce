@@ -18,6 +18,8 @@ global using System.Security.Claims;
 global using System.Text;
 global using Stripe.Checkout;
 global using Microsoft.AspNetCore.Authorization;
+global using System.Net.Mail;
+global using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using BlazorEcommerce.Server.Services.MailService;
 
