@@ -33,5 +33,11 @@
             var result = await _http.PostAsJsonAsync("api/auth/register", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
+
+        public async Task<ServiceResponse<bool>> ResetPassword(PasswordResetDto request)
+        {
+            var result = await _http.PostAsJsonAsync("api/auth/reset-password", request);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+        }
     }
 }
