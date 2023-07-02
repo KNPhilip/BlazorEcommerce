@@ -46,8 +46,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
-builder.Services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettings>());
 builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettings>());
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

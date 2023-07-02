@@ -9,7 +9,7 @@
             _http = http;
         }
 
-        public async Task<ServiceResponse<bool>> SendEmail(SendMail request)
+        public async Task<ServiceResponse<bool>> SendEmail(SendMailDto request)
         {
             var response = await _http.PostAsJsonAsync("api/mail/send", request);
             return await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
