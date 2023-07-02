@@ -89,6 +89,39 @@
             return response;
         }
 
+        public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
+        {
+            var response = new ServiceResponse<bool>();
+            if (!await UserExists(email))
+            {
+                response.Message = "There's no registered users with the email " + email + ".";
+                response.Success = false;
+                return response;
+            }
+            else if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
+            {
+                response.Message = "Wrong reset token!";
+                response.Success = false;
+                return response;
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user is null)
+            {
+                response.Message = "User with email " + email + " not found.";
+                response.Success = false;
+                return response;
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.PasswordHash = string.Empty;
+
+            await _context.SaveChangesAsync();
+            response.Message = "Password reset successfully.";
+            response.Success = true;
+            return response;
+        }
+
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
