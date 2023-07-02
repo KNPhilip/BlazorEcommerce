@@ -40,5 +40,18 @@
 
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+        [HttpPost("create-password-token")]
+        public async Task<ActionResult<ServiceResponse<string>>> CreateResetToken(User request)
+        {
+            var response = await _authService.CreateResetToken(request);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<ServiceResponse<bool>>> ResetPassword(PasswordResetDto request)
+        {
+            var response = await _authService.ResetPassword(request.UserEmail, request.NewPassword, request.ResetToken);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
     }
 }
