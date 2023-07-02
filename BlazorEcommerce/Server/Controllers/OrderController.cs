@@ -14,15 +14,15 @@
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrders()
         {
-            var result = await _orderService.GetOrders();
-            return Ok(result);
+            var response = await _orderService.GetOrders();
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId)
         {
-            var result = await _orderService.GetOrderDetailsAsync(orderId);
-            return Ok(result);
+            var response = await _orderService.GetOrderDetailsAsync(orderId);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
     }
 }

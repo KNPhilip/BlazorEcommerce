@@ -10,6 +10,7 @@ global using BlazorEcommerce.Server.Services.OrderService;
 global using BlazorEcommerce.Server.Services.PaymentService;
 global using BlazorEcommerce.Server.Services.AddressService;
 global using BlazorEcommerce.Server.Services.ProductTypeService;
+global using BlazorEcommerce.Server.Services.MailService;
 global using BlazorEcommerce.Shared.Models;
 global using BlazorEcommerce.Shared.Dtos;
 global using Microsoft.IdentityModel.Tokens;
@@ -18,7 +19,10 @@ global using System.Security.Claims;
 global using System.Text;
 global using Stripe.Checkout;
 global using Microsoft.AspNetCore.Authorization;
+global using System.Net.Mail;
+global using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using BlazorEcommerce.Server.Services.MailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +46,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettings>());
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
