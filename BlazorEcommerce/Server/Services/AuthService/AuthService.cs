@@ -61,6 +61,67 @@
             };
         }
 
+        public async Task<ServiceResponse<string>> CreateResetToken(User request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var response = new ServiceResponse<string>();
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "There are no registered users with the email address " + request.Email + ".";
+                return response;
+            }
+
+            if (!String.IsNullOrEmpty(user.PasswordResetToken))
+            {
+                response.Success = false;
+                response.Message = "There is an open reset request already! Please check your inbox.";
+                return response;
+            }
+
+            var tok = Guid.NewGuid();
+            user.PasswordResetToken = tok.ToString();
+
+            await _context.SaveChangesAsync();
+            response.Data = tok.ToString();
+            response.Success = true;
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
+        {
+            var response = new ServiceResponse<bool>();
+            if (!await UserExists(email))
+            {
+                response.Message = "There's no registered users with the email " + email + ".";
+                response.Success = false;
+                return response;
+            }
+            else if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
+            {
+                response.Message = "Wrong reset token!";
+                response.Success = false;
+                return response;
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user is null)
+            {
+                response.Message = "User with email " + email + " not found.";
+                response.Success = false;
+                return response;
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.PasswordHash = string.Empty;
+
+            await _context.SaveChangesAsync();
+            response.Message = "Password reset successfully.";
+            response.Success = true;
+            return response;
+        }
+
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
