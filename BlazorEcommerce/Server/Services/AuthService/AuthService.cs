@@ -61,6 +61,34 @@
             };
         }
 
+        public async Task<ServiceResponse<string>> CreateResetToken(User request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var response = new ServiceResponse<string>();
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "There are no registered users with the email address " + request.Email + ".";
+                return response;
+            }
+
+            if (!String.IsNullOrEmpty(user.PasswordResetToken))
+            {
+                response.Success = false;
+                response.Message = "There is an open reset request already! Please check your inbox.";
+                return response;
+            }
+
+            var tok = Guid.NewGuid();
+            user.PasswordResetToken = tok.ToString();
+
+            await _context.SaveChangesAsync();
+            response.Data = tok.ToString();
+            response.Success = true;
+
+            return response;
+        }
+
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
