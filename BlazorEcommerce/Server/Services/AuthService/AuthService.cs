@@ -65,7 +65,7 @@
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
             var response = new ServiceResponse<string>();
-            if (user == null)
+            if (user is null)
             {
                 response.Success = false;
                 response.Message = "There are no registered users with the email address " + request.Email + ".";
@@ -114,7 +114,8 @@
             }
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.PasswordHash = string.Empty;
+            user.PasswordResetToken = "";
+            user.ResetTokenExpires = null;
 
             await _context.SaveChangesAsync();
             response.Message = "Password reset successfully.";

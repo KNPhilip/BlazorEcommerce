@@ -1,6 +1,6 @@
-﻿namespace BlazorEcommerce.Shared.Models
+﻿namespace BlazorEcommerce.Shared.Dtos
 {
-    public class MailSettings
+    public class MailSettingsDto
     {
         public required string Username { get; set; }
         public required string Password { get; set; }

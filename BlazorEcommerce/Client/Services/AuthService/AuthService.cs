@@ -42,7 +42,7 @@
 
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
-            var result = await _http.PostAsJsonAsync("api/Auth/CreateResetToken", request);
+            var result = await _http.PostAsJsonAsync("api/Auth/create-password-token", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
     }

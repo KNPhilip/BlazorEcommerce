@@ -23,6 +23,7 @@
             <InputText id="password" @bind-Value="user.Password" class="form-control" type="password" />
             <ValidationMessage For="@(() => user.Password)" />
         </div>
+        <MudText Class="mb-2">Forgot your password?&nbsp;<MudLink Style="font-weight:bold;" Href="/forgot-password">reset here..</MudLink></MudText>
         <button type="submit" class="btn btn-primary mb-2">Login</button>
     </EditForm>
     <div class="text-danger">

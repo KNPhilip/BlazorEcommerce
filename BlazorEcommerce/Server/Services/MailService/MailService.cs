@@ -1,10 +1,13 @@
-﻿namespace BlazorEcommerce.Server.Services.MailService
+﻿using MudBlazor.Charts;
+using MudBlazor;
+
+namespace BlazorEcommerce.Server.Services.MailService
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailConfig;
+        private readonly MailSettingsDto _mailConfig;
 
-        public MailService(MailSettings mailConfig)
+        public MailService(MailSettingsDto mailConfig)
         {
             _mailConfig = mailConfig;
         }

@@ -17,6 +17,8 @@ global using System.Security.Claims;
 global using System.Net.Http.Headers;
 global using System.Text.Json;
 global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.WebUtilities;
+global using Microsoft.Extensions.Primitives;
 using BlazorEcommerce.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;

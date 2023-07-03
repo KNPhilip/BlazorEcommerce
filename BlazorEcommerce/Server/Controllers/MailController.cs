@@ -14,9 +14,9 @@
         }
 
         [HttpPost("send")]
-        public async Task<ActionResult<ServiceResponse<bool>>> SendEmail(SendMailDto req)
+        public async Task<ActionResult<ServiceResponse<bool>>> SendEmail(SendMailDto request)
         {
-            var response = await _mailService.SendEmailAsync(req.ToEmail, req.Subject, req.HTMLBody);
+            var response = await _mailService.SendEmailAsync(request.ToEmail, request.Subject, request.HTMLBody);
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }
