@@ -53,5 +53,12 @@
             var response = await _authService.ResetPassword(request.UserEmail, request.NewPassword, request.ResetToken);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+        [HttpPost("reset-password/validate")]
+        public async Task<ActionResult<ServiceResponse<bool>>> ResetPasswordTokenValidation(TokenValidateDto request)
+        {
+            var response = await _authService.ValidateResetPasswordToken(request.UserEmail, request.ResetToken);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
     }
 }

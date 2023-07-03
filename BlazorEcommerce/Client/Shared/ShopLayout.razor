@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using BlazorEcommerce.Client.Shared
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Info" Class="d-flex justify-content-center">
@@ -17,6 +16,7 @@
 </MudLayout>
 
 <MudThemeProvider />
+<MudSnackbarProvider />
 
 @code {
     bool _drawerOpen = true;

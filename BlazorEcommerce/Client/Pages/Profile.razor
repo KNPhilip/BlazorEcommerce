@@ -2,6 +2,8 @@
 @inject IAuthService AuthService
 @attribute [Authorize]
 
+<PageTitle>Your profile</PageTitle>
+
 <div class="container mt-5">
     <AuthorizeView>
         <h3>Hi! You're logged in with @context.User.Identity.Name</h3>

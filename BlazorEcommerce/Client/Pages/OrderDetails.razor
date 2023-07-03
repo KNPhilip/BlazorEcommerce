@@ -1,6 +1,8 @@
 ﻿@page "/orders/{orderId:int}"
 @inject IOrderService OrderService
 
+<PageTitle>Order details</PageTitle>
+
 <div class="container mt-5">
     @if (order is null)
     {
