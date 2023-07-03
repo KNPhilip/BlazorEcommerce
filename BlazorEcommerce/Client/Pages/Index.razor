@@ -3,7 +3,7 @@
 @page "/{CategoryUrl}"
 @inject IProductService ProductService
 
-<PageTitle>My Shop</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <div class="container mt-5">
     @if (SearchTerm is null && CategoryUrl is null)
@@ -29,12 +29,8 @@
     protected override async Task OnParametersSetAsync()
     {
         if (SearchTerm is not null)
-        {
             await ProductService.SearchProducts(SearchTerm, Page);
-        }
-        else
-        {
+        else if (CategoryUrl is not null)
             await ProductService.GetProducts(CategoryUrl);
-        }
     }
 }

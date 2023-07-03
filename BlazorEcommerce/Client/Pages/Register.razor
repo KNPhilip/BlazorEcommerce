@@ -23,6 +23,7 @@
             <InputText id="confirmPassword" @bind-Value="user.ConfirmPassword" class="form-control" type="password" />
             <ValidationMessage For="@(() => user.ConfirmPassword)" />
         </div>
+        <MudText Class="mb-2">Already have an account?&nbsp;<MudLink Style="font-weight:bold;" Href="/login">login here!</MudLink></MudText>
         <button type="submit" class="btn btn-primary mb-2">Register</button>
         <div class="@resultMessageCssClass">
             <span>@resultMessage</span>

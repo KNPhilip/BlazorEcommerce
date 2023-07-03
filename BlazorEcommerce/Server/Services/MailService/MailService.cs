@@ -1,7 +1,4 @@
-﻿using MudBlazor.Charts;
-using MudBlazor;
-
-namespace BlazorEcommerce.Server.Services.MailService
+﻿namespace BlazorEcommerce.Server.Services.MailService
 {
     public class MailService : IMailService
     {
