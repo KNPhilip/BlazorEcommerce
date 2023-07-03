@@ -30,7 +30,7 @@
     {
         if (SearchTerm is not null)
             await ProductService.SearchProducts(SearchTerm, Page);
-        else if (CategoryUrl is not null)
+        else
             await ProductService.GetProducts(CategoryUrl);
     }
 }
