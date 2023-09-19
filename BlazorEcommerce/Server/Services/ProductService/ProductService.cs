@@ -13,7 +13,6 @@
 
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
-            var response = new ServiceResponse<Product>();
             Product product = null;
 
             if (_httpContextAccessor.HttpContext.User.IsInRole("Admin"))
@@ -33,21 +32,11 @@
                     .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
             }
             if (product is null)
-            {
-                response.Success = false;
-                response.Message = "This product does not exist.";
-            }
+                return new() { Error = "This product does not exist." };
             else if (product.IsDeleted)
-            {
-                response.Success = false;
-                response.Message = $"We're sorry, but \"{product.Title}\" is not available anymore..";
-            }
-            else
-            {
-                response.Data = product;
-            }
+                return new() { Error = $"We're sorry, but \"{product.Title}\" is not available anymore.." };
 
-            return response;
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<List<Product>>> GetProductsAsync()
@@ -111,10 +100,7 @@
                 }
             }
 
-            return new ServiceResponse<List<string>>
-            {
-                Data = result
-            };
+            return ServiceResponse<List<string>>.SuccessResponse(result);
         }
 
         public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
@@ -136,17 +122,14 @@
                 .Take((int)pageResults)
                 .ToListAsync();
 
-            var response = new ServiceResponse<ProductSearchResultDto>
+            var response = new ProductSearchResultDto
             {
-                Data = new ProductSearchResultDto
-                {
-                    Products = products,
-                    CurrentPage = page,
-                    Pages = (int)pageCount
-                }
+                Products = products,
+                CurrentPage = page,
+                Pages = (int)pageCount
             };
 
-            return response;
+            return ServiceResponse<ProductSearchResultDto>.SuccessResponse(response);
         }
 
         public async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm)
@@ -203,10 +186,7 @@
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<Product>
-            {
-                Data = product
-            };
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
@@ -216,13 +196,7 @@
                 .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (dbProduct is null)
-            {
-                return new ServiceResponse<Product>
-                {
-                    Success = false,
-                    Message = "Product not found."
-                };
-            }
+                return new ServiceResponse<Product> { Error = "Product not found." };
 
             var productImages = dbProduct.Images;
             _context.Images.RemoveRange(productImages);
@@ -257,32 +231,19 @@
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<Product>
-            {
-                Data = product
-            };
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
         {
             var dbProducts = await _context.Products.FindAsync(productId);
             if (dbProducts is null)
-            {
-                return new ServiceResponse<bool> 
-                {
-                    Success = false,
-                    Data = false,
-                    Message = "Product not found."
-                };
-            }
+                return new ServiceResponse<bool> { Error = "Product not found" };
 
             dbProducts.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> 
-            { 
-                Data = true 
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
     }
 }
