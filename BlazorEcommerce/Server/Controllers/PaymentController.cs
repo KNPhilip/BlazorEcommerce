@@ -30,7 +30,7 @@
         public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder()
         {
             var response = await _paymentService.FulfillOrder(Request);
-            return response.Success ? Ok(response) : BadRequest(response.Message);
+            return response.Success ? Ok(response) : BadRequest(response.Error);
         }
     }
 }

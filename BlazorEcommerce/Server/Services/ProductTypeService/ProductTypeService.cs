@@ -50,6 +50,7 @@
             return await GetProductTypesAsync();
         }
 
-        private async Task<ProductType> GetProductTypeByIdAsync(int productTypeId) => await _context.ProductTypes.FindAsync(productTypeId);
+        private async Task<ProductType> GetProductTypeByIdAsync(int productTypeId) => 
+            await _context.ProductTypes.FindAsync(productTypeId);
     }
 }

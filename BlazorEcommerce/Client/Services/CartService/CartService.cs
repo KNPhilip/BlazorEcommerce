@@ -1,7 +1,4 @@
-﻿using BlazorEcommerce.Client.Pages;
-using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Client.Services.CartService
+﻿namespace BlazorEcommerce.Client.Services.CartService
 {
     public class CartService : ICartService
     {

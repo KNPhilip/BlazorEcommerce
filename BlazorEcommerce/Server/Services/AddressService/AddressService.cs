@@ -13,13 +13,13 @@
 
         public async Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
         {
-            var response = new ServiceResponse<Address>();
+            Address response;
             var dbAddress = (await GetAddress()).Data;
             if (dbAddress is null)
             {
                 address.UserId = _authService.GetNameIdFromClaims();
                 _context.Addresses.Add(address);
-                response.Data = address;
+                response = address;
             }
             else
             {
@@ -30,12 +30,12 @@
                 dbAddress.City = address.City;
                 dbAddress.State = address.State;
                 dbAddress.Country = address.Country;
-                response.Data = dbAddress;
+                response = dbAddress;
             }
 
             await _context.SaveChangesAsync();
 
-            return response;
+            return ServiceResponse<Address>.SuccessResponse(response);
         }
 
         public async Task<ServiceResponse<Address>> GetAddress()
@@ -43,10 +43,10 @@
             int userId = _authService.GetNameIdFromClaims();
             var address = await _context.Addresses
                 .FirstOrDefaultAsync(a => a.UserId == userId);
-            return new ServiceResponse<Address>
-            {
-                Data = address
-            };
+
+            return address is not null 
+                ? ServiceResponse<Address>.SuccessResponse(address)
+                : new ServiceResponse<Address> { Error = "No address found." };
         }
     }
 }

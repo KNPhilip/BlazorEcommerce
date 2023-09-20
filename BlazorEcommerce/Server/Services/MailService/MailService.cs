@@ -30,24 +30,11 @@
             try
             {
                 await smtp.SendMailAsync(message);
-
-                var response = new ServiceResponse<bool>
-                {
-                    Success = true,
-                    Message = "Mail was send successfully."
-                };
-
-                return response;
+                return ServiceResponse<bool>.SuccessResponse(true);
             }
             catch (Exception e)
             {
-                var response = new ServiceResponse<bool>
-                {
-                    Success = false,
-                    Message = e.Message.ToString()
-                };
-
-                return response;
+                return new ServiceResponse<bool> { Error = e.Message.ToString() };
             }
         }
     }

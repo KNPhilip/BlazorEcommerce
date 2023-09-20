@@ -40,9 +40,7 @@
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))
-        {
             returnUrl = url;
-        }
     }
 
     private async Task HandleLogin()
@@ -58,9 +56,6 @@
             await CartService.GetCartItemsCount();
             NavigationManager.NavigateTo(returnUrl);
         }
-        else
-        {
-            errorMessage = result.Message;
-        }
+        else errorMessage = result.Error;
     }
 }
