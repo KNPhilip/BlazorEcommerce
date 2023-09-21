@@ -13,14 +13,8 @@
         {
             var dbCategory = await GetCategoryById(categoryId);
             if (dbCategory is null)
-            {
-                return new ServiceResponse<List<Category>>
-                {
-                    Success = false,
-                    Message = "Category not found."
-                };
-            }
-
+                return new ServiceResponse<List<Category>> { Error = "Category not found." }; 
+            
             dbCategory.IsDeleted = true;
             await _context.SaveChangesAsync();
 
@@ -31,13 +25,7 @@
         {
             var dbCategory = await GetCategoryById(category.Id);
             if (dbCategory is null)
-            {
-                return new ServiceResponse<List<Category>>
-                {
-                    Success = false,
-                    Message = "Category not found."
-                };
-            }
+                return new ServiceResponse<List<Category>> { Error = "Category not found." };
 
             dbCategory.Name = category.Name;
             dbCategory.Url = category.Url;
@@ -61,22 +49,18 @@
             var categories = await _context.Categories
                 .Where(c => !c.IsDeleted).ToListAsync();
 
-            return new ServiceResponse<List<Category>>
-            {
-                Data = categories
-            };
+            return ServiceResponse<List<Category>>.SuccessResponse(categories);
         }
 
         public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
             var categories = await _context.Categories
                 .Where(c => !c.IsDeleted && c.Visible).ToListAsync();
-            return new ServiceResponse<List<Category>>
-            {
-                Data = categories 
-            };
+
+            return ServiceResponse<List<Category>>.SuccessResponse(categories);
         }
 
-        private async Task<Category> GetCategoryById(int id) => await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        private async Task<Category> GetCategoryById(int id) => 
+            await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
     }
 }

@@ -18,7 +18,6 @@
 
         public async Task<ServiceResponse<OrderDetailsDto>> GetOrderDetailsAsync(int orderId)
         {
-            var response = new ServiceResponse<OrderDetailsDto>();
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
@@ -30,11 +29,7 @@
                 .FirstOrDefaultAsync();
 
             if (order is null)
-            {
-                response.Success = false;
-                response.Message = "Order not found.";
-                return response;
-            }
+                return new ServiceResponse<OrderDetailsDto> { Error = "Order not found." };
 
             var orderDetailsResponse = new OrderDetailsDto
             {
@@ -55,13 +50,11 @@
                 TotalPrice = item.TotalPrice
             }));
 
-            response.Data = orderDetailsResponse;
-            return response;
+            return ServiceResponse<OrderDetailsDto>.SuccessResponse(orderDetailsResponse);
         }
 
         public async Task<ServiceResponse<List<OrderOverviewDto>>> GetOrders()
         {
-            var response = new ServiceResponse<List<OrderOverviewDto>>();
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
@@ -83,9 +76,7 @@
                 Images = o.OrderItems.First().Product.Images
             }));
 
-            response.Data = orderResponse;
-
-            return response;
+            return ServiceResponse<List<OrderOverviewDto>>.SuccessResponse(orderResponse);
         }
 
         public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
@@ -117,10 +108,7 @@
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool>
-            {
-                Data = true
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
     }
 }

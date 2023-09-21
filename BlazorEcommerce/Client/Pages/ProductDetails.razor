@@ -83,24 +83,17 @@
     {
         var result = await ProductService.GetProduct(Id);
         if (!result.Success)
-        {
-            message = result.Message;
-        }
+            message = result.Error;
         else
         {
             product = result.Data;
             if (product.Variants.Count > 0)
-            {
                 currentTypeId = product.Variants[0].ProductTypeId;
-            }
         }
     }
 
-    private ProductVariant GetSelectedVariant()
-    {
-        var variant = product.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
-        return variant;
-    }
+    private ProductVariant GetSelectedVariant() =>
+        product.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
 
     private async Task AddToCart()
     {

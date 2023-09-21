@@ -1,9 +1,7 @@
 ﻿namespace BlazorEcommerce.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     [Authorize(Roles = "Admin")]
-    public class ProductTypeController : ControllerBase
+    public class ProductTypeController : ControllerTemplate
     {
         private readonly IProductTypeService _productTypeService;
 
@@ -13,31 +11,19 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes()
-        {
-            var response = await _productTypeService.GetProductTypesAsync();
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes() =>
+            HandleResult(await _productTypeService.GetProductTypesAsync());
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductType(ProductType productType)
-        {
-            var response = await _productTypeService.AddProductType(productType);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductType(ProductType productType) =>
+            HandleResult(await _productTypeService.AddProductType(productType));
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> CreateProductType(ProductType productType)
-        {
-            var response = await _productTypeService.UpdateProductType(productType);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> CreateProductType(ProductType productType) =>
+            HandleResult(await _productTypeService.UpdateProductType(productType));
 
         [HttpDelete("{productTypeId}")]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId)
-        {
-            var response = await _productTypeService.DeleteProductType(productTypeId);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId) =>
+            HandleResult(await _productTypeService.DeleteProductType(productTypeId));
     }
 }

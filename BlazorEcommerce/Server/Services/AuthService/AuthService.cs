@@ -27,65 +27,39 @@ namespace BlazorEcommerce.Server.Services.AuthService
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
             if (user is null)
-            {
-                response.Success = false;
-                response.Message = "User not found.";
-            }
+                return new ServiceResponse<string> { Error = "User not found." };
             else if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            {
-                response.Success = false;
-                response.Message = "Incorrect password.";
-            }
-            else
-            {
-                response.Data = CreateJWT(user);
-            }
+                return new ServiceResponse<string> { Error = "Incorrect password" };
 
-            return response;
+            return ServiceResponse<string>.SuccessResponse(CreateJWT(user));
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))
-            {
-                return new ServiceResponse<int>
-                {
-                    Success = false,
-                    Message = "User already exists."
-                };
-            }
+                return new ServiceResponse<int> { Error = "User already exists." };
             
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<int>
-            {
-                Data = user.Id,
-                Message = "Registration Successful!"
-            };
+            return ServiceResponse<int>.SuccessResponse(user.Id);
         }
 
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
             var user = await GetUserByEmail(request.Email);
-            var response = new ServiceResponse<string>();
             if (user is null)
-            {
-                response.Success = false;
-                response.Message = "There are no registered users with the email address " + request.Email;
-                return response;
-            }
+                return new ServiceResponse<string> { Error =
+                    $"There are no registered users with the email address {request.Email}" };
 
             if (!String.IsNullOrEmpty(user.PasswordResetToken) && DateTime.Now < user.ResetTokenExpires)
-            {
-                response.Success = false;
-                response.Message = "There is an open reset request already! Please check your inbox or try again later";
-                return response;
-            }
+                return new ServiceResponse<string> { Error =
+                    "There is an open reset request already! Please check your inbox or try again later"
+                };
 
             user.PasswordResetToken = CreateRandomToken();
-            user.ResetTokenExpires = DateTime.Now.AddMinutes(2); //EDIT THIS TO 2 HOURS
+            user.ResetTokenExpires = DateTime.Now.AddHours(2);
             await _context.SaveChangesAsync();
 
             var mail = new SendMailDto
@@ -100,76 +74,48 @@ namespace BlazorEcommerce.Server.Services.AuthService
             };
 
             await _mailService.SendEmailAsync(mail.ToEmail, mail.Subject, mail.HTMLBody);
-            response.Message = "Please check your inbox to reset the password.";
-            response.Success = true;
 
-            return response;
+            return ServiceResponse<string>.SuccessResponse("Please check your inbox to reset the password.");
         }
 
         public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
         {
             ServiceResponse<bool> response = await ValidateResetPasswordToken(email, resetToken);
-            if(!response.Success)
-                return response;
+            if(!response.Success) return response;
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user is null)
-            {
-                response.Message = "User with email " + email + " not found.";
-                response.Success = false;
-                return response;
-            }
+                return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
             else if (user.ResetTokenExpires < DateTime.Now)
-            {
-                response.Message = "This reset token has expired..";
-                response.Success = false;
-                return response;
-            }
+                return new ServiceResponse<bool> { Error = "This reset token has expired.." };
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.PasswordResetToken = "";
             user.ResetTokenExpires = null;
             await _context.SaveChangesAsync();
 
-            response.Message = "Password reset successfully!";
             return response;
         }
 
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(string email, string resetToken)
         {
-            var response = new ServiceResponse<bool>();
             if (!await UserExists(email))
-            {
-                response.Message = "There is no registered users with the email " + email + ".";
-                response.Success = false;
-                return response;
-            }
+                return new ServiceResponse<bool> { Error = $"There is no registered users with the email {email}." };
             else if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
-            {
-                response.Message = "Invalid reset token.";
-                response.Success = false;
-                return response;
-            }
+                return new ServiceResponse<bool> { Error = "Invalid reset token" };
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
             if (user is null)
-            {
-                response.Message = "User with email " + email + " not found.";
-                response.Success = false;
-                return response;
-            }
+                return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
             else if (user.ResetTokenExpires < DateTime.Now)
-            {
-                response.Message = "This reset token has expired..";
-                response.Success = false;
-                return response;
-            }
-            return response;
+                return new ServiceResponse<bool> { Error = "This reset token has expired.." };
+
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
 
-        public async Task<bool> UserExists(string email)
-        {
-            return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
-        }
+        public async Task<bool> UserExists(string email) =>
+            await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
 
         private string CreateJWT(User user)
         {
@@ -200,39 +146,25 @@ namespace BlazorEcommerce.Server.Services.AuthService
         {
             var user = await _context.Users.FindAsync(userId);
             if (user is null)
-            {
-                return new ServiceResponse<bool>
-                {
-                    Success = false,
-                    Message = "User not found."
-                };
-            }
+                return new ServiceResponse<bool> { Error = "User not found." };
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> 
-            {
-                Data = true,
-                Message = "Password has been changed."
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
 
         public int GetNameIdFromClaims() =>
-            int.Parse(_httpContextAccessor.HttpContext.User
-            .FindFirstValue(ClaimTypes.NameIdentifier));
+            int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public string GetUserEmail() =>
-            _httpContextAccessor.HttpContext.User
-            .FindFirstValue(ClaimTypes.Name);
+            _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
         public async Task<User> GetUserByEmail(string email) =>
-            await _context.Users
-            .FirstOrDefaultAsync(u => u.Email.Equals(email));
-        private static string CreateRandomToken()
-        {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-        }
+            await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+
+        private static string CreateRandomToken() =>
+            Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
 }

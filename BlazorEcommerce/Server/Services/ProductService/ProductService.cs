@@ -13,7 +13,6 @@
 
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
-            var response = new ServiceResponse<Product>();
             Product product = null;
 
             if (_httpContextAccessor.HttpContext.User.IsInRole("Admin"))
@@ -33,51 +32,37 @@
                     .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
             }
             if (product is null)
-            {
-                response.Success = false;
-                response.Message = "This product does not exist.";
-            }
+                return new() { Error = "This product does not exist." };
             else if (product.IsDeleted)
-            {
-                response.Success = false;
-                response.Message = $"We're sorry, but \"{product.Title}\" is not available anymore..";
-            }
-            else
-            {
-                response.Data = product;
-            }
+                return new() { Error = $"We're sorry, but \"{product.Title}\" is not available anymore.." };
 
-            return response;
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<List<Product>>> GetProductsAsync()
         {
-            var response = new ServiceResponse<List<Product>>()
-            {
-                Data = await _context.Products
-                    .Where(p => p.Visible && !p.IsDeleted)
-                    .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
-                    .Include(p => p.Images)
-                    .ToListAsync()
-            };
+            List<Product> products = await _context.Products
+                .Where(p => p.Visible && !p.IsDeleted)
+                .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                .Include(p => p.Images)
+                .ToListAsync();
 
-            return response;
+            return products.Count > 0
+                ? ServiceResponse<List<Product>>.SuccessResponse(products)
+                : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
         public async Task<ServiceResponse<List<Product>>> GetProductsByCategoryAsync(string categoryUrl)
         {
-            var response = new ServiceResponse<List<Product>>()
-            {
-                Data = await _context.Products
-                    .Where(p => p.Visible
-                        && !p.IsDeleted
-                        && p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
+            List<Product> products = await _context.Products
+                .Where(p => p.Visible && !p.IsDeleted && p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
                     .Include(p => p.Variants.Where(p => p.Visible && !p.IsDeleted))
                     .Include(p => p.Images)
-                    .ToListAsync()
-            };
+                    .ToListAsync();
 
-            return response;
+            return products.Count > 0
+                ? ServiceResponse<List<Product>>.SuccessResponse(products)
+                : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
         public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestionsAsync(string searchTerm)
@@ -111,10 +96,7 @@
                 }
             }
 
-            return new ServiceResponse<List<string>>
-            {
-                Data = result
-            };
+            return ServiceResponse<List<string>>.SuccessResponse(result);
         }
 
         public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
@@ -122,91 +104,69 @@
             var pageResults = 2f;
             var pageCount = Math.Ceiling((await FindProductsBySearchTextAsync(searchTerm)).Count / pageResults);
             var products = await _context.Products
-                .Where(p =>
-                    p.Visible
-                    && !p.IsDeleted
-                    && p.Title.ToLower().Contains(searchTerm.ToLower())
-                    ||
-                    p.Visible
-                    && !p.IsDeleted
-                    && p.Description.ToLower().Contains(searchTerm.ToLower()))
+                .Where(p => p.Visible && !p.IsDeleted && p.Title.ToLower()
+                .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
+                .Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
                 .Include(p => p.Images)
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
                 .ToListAsync();
 
-            var response = new ServiceResponse<ProductSearchResultDto>
+            var response = new ProductSearchResultDto
             {
-                Data = new ProductSearchResultDto
-                {
-                    Products = products,
-                    CurrentPage = page,
-                    Pages = (int)pageCount
-                }
+                Products = products,
+                CurrentPage = page,
+                Pages = (int)pageCount
             };
 
-            return response;
+            return ServiceResponse<ProductSearchResultDto>.SuccessResponse(response);
         }
 
-        public async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm)
-        {
-            return await _context.Products
-                .Where(p =>
-                    p.Visible
-                    && !p.IsDeleted
-                    && p.Title.ToLower().Contains(searchTerm.ToLower())
-                    ||
-                    p.Visible
-                    && !p.IsDeleted
-                    && p.Description.ToLower().Contains(searchTerm.ToLower()))
+        public async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm) =>
+            await _context.Products
+                .Where(p => p.Visible && !p.IsDeleted && p.Title.ToLower()
+                .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
+                .Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
                 .ToListAsync();
-        }
 
         public async Task<ServiceResponse<List<Product>>> GetFeaturedProductsAsync()
         {
-            var response = new ServiceResponse<List<Product>>
-            {
-                Data = await _context.Products
-                    .Where(p => p.Featured && p.Visible && !p.IsDeleted)
-                    .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
-                    .Include(p => p.Images)
-                    .ToListAsync()
-            };
+            List<Product> response = await _context.Products
+                .Where(p => p.Featured && p.Visible && !p.IsDeleted)
+                .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
+                .Include(p => p.Images)
+                .ToListAsync();
 
-            return response;
+            return response.Count > 0
+                ? ServiceResponse<List<Product>>.SuccessResponse(response)
+                : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
         public async Task<ServiceResponse<List<Product>>> GetAdminProductsAsync()
         {
-            var response = new ServiceResponse<List<Product>>()
-            {
-                Data = await _context.Products
-                    .Where(p => !p.IsDeleted)
-                    .Include(p => p.Variants.Where(v => !v.IsDeleted))
-                    .ThenInclude(v => v.ProductType)
-                    .Include(p => p.Images)
-                    .ToListAsync()
-            };
+            List<Product> response = await _context.Products
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.Variants.Where(v => !v.IsDeleted))
+                .ThenInclude(v => v.ProductType)
+                .Include(p => p.Images)
+                .ToListAsync();
 
-            return response;
+            return response.Count > 0 
+                ? ServiceResponse<List<Product>>.SuccessResponse(response)
+                : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
         public async Task<ServiceResponse<Product>> CreateProductsAsync(Product product)
         {
             foreach (var variant in product.Variants)
-            {
                 variant.ProductType = null;
-            }
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<Product>
-            {
-                Data = product
-            };
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
@@ -216,13 +176,7 @@
                 .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (dbProduct is null)
-            {
-                return new ServiceResponse<Product>
-                {
-                    Success = false,
-                    Message = "Product not found."
-                };
-            }
+                return new ServiceResponse<Product> { Error = "Product not found." };
 
             var productImages = dbProduct.Images;
             _context.Images.RemoveRange(productImages);
@@ -257,32 +211,19 @@
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<Product>
-            {
-                Data = product
-            };
+            return ServiceResponse<Product>.SuccessResponse(product);
         }
 
         public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
         {
             var dbProducts = await _context.Products.FindAsync(productId);
             if (dbProducts is null)
-            {
-                return new ServiceResponse<bool> 
-                {
-                    Success = false,
-                    Data = false,
-                    Message = "Product not found."
-                };
-            }
+                return new ServiceResponse<bool> { Error = "Product not found" };
 
             dbProducts.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> 
-            { 
-                Data = true 
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
     }
 }

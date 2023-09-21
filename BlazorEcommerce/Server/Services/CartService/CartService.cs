@@ -13,10 +13,7 @@
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> GetCartProductsAsync(List<CartItem> cartItems)
         {
-            var result = new ServiceResponse<List<CartProductResponseDto>>
-            {
-                Data = new List<CartProductResponseDto>()
-            };
+            List<CartProductResponseDto> response = new();
 
             foreach (var item in cartItems)
             {
@@ -46,10 +43,12 @@
                     Quantity = item.Quantity
                 };
 
-                result.Data.Add(cartProduct);
+                response.Add(cartProduct);
             }
 
-            return result;
+            return response.Count > 0 
+                ? ServiceResponse<List<CartProductResponseDto>>.SuccessResponse(response) 
+                : new ServiceResponse<List<CartProductResponseDto>> { Error = "No products found." };
         }
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> StoreCartItemsAsync(List<CartItem> cartItems)
@@ -61,16 +60,14 @@
             return await GetDbCartItems();
         }
 
-        public async Task<ServiceResponse<int>> GetCartItemsCountAsync()
-        {
-            var count = (await _context.CartItems.Where(ci => ci.UserId == _authService.GetNameIdFromClaims()).ToListAsync()).Count();
-            return new ServiceResponse<int> { Data = count };
-        }
+        public async Task<ServiceResponse<int>> GetCartItemsCountAsync() =>
+            ServiceResponse<int>.SuccessResponse((await _context.CartItems
+                .Where(ci => ci.UserId == _authService.GetNameIdFromClaims())
+                .ToListAsync()).Count());
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> GetDbCartItems(int? userId = null)
         {
-            if (userId is null)
-                userId = _authService.GetNameIdFromClaims();
+            userId ??= _authService.GetNameIdFromClaims();
 
             return await GetCartProductsAsync(await _context.CartItems
                 .Where(ci => ci.UserId == userId).ToListAsync());
@@ -85,20 +82,13 @@
                 ci.ProductTypeId == cartItem.ProductTypeId &&
                 ci.UserId == cartItem.UserId);
             if (sameItem is null)
-            {
                 _context.CartItems.Add(cartItem);
-            }
             else
-            {
                 sameItem.Quantity += cartItem.Quantity;
-            }
 
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool>
-            {
-                Data = true
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
 
         public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
@@ -108,22 +98,12 @@
                 ci.ProductTypeId == cartItem.ProductTypeId &&
                 ci.UserId == _authService.GetNameIdFromClaims());
             if (dbCartItem is null)
-            {
-                return new ServiceResponse<bool> 
-                { 
-                    Data = false,
-                    Success = false,
-                    Message = "Cart item does not exist."
-                };
-            }
+                return new ServiceResponse<bool> { Error = "Cart item does not exist." };
 
             dbCartItem.Quantity = cartItem.Quantity;
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool>
-            {
-                Data = true
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
 
         public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int productTypeId)
@@ -133,22 +113,12 @@
                 ci.ProductTypeId == productTypeId &&
                 ci.UserId == _authService.GetNameIdFromClaims());
             if (dbCartItem is null)
-            {
-                return new ServiceResponse<bool>
-                {
-                    Data = false,
-                    Success = false,
-                    Message = "Cart item does not exist."
-                };
-            }
+                return new ServiceResponse<bool> { Error = "Cart item does not exist." };
 
             _context.CartItems.Remove(dbCartItem);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool> 
-            { 
-                Data = true 
-            };
+            return ServiceResponse<bool>.SuccessResponse(true);
         }
     }
 }

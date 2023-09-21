@@ -97,19 +97,11 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                     await _orderService.PlaceOrder(user.Id);
                 }
 
-                return new ServiceResponse<bool>
-                {
-                    Data = true
-                };
+                return ServiceResponse<bool>.SuccessResponse(true);
             }
             catch(StripeException e)
             {
-                return new ServiceResponse<bool>
-                {
-                    Data = false,
-                    Success = false,
-                    Message = e.Message
-                };
+                return new ServiceResponse<bool> { Error = e.Message };
             }
         }
     }
