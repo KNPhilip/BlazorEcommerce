@@ -1,8 +1,6 @@
 ﻿namespace BlazorEcommerce.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : ControllerTemplate
     {
         private readonly IOrderService _orderService;
 
@@ -12,17 +10,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrders()
-        {
-            var response = await _orderService.GetOrders();
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrders() =>
+            HandleResult(await _orderService.GetOrders());
 
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId)
-        {
-            var response = await _orderService.GetOrderDetailsAsync(orderId);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId) =>
+            HandleResult(await _orderService.GetOrderDetailsAsync(orderId));
     }
 }

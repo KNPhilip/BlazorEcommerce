@@ -3,9 +3,7 @@ using BlazorEcommerce.Shared.Models;
 
 namespace BlazorEcommerce.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : ControllerTemplate
     {
         private readonly IProductService _productService;
 
@@ -15,73 +13,43 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpGet("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAdminProducts()
-        {
-            var response = await _productService.GetAdminProductsAsync();
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAdminProducts() =>
+            HandleResult(await _productService.GetAdminProductsAsync());
 
         [HttpPost("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product)
-        {
-            var response = await _productService.CreateProductsAsync(product);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product) =>
+            HandleResult(await _productService.CreateProductsAsync(product));
 
         [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> EditProduct(Product product)
-        {
-            var response = await _productService.UpdateProductAsync(product);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> EditProduct(Product product) =>
+            HandleResult(await _productService.UpdateProductAsync(product));
 
         [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId)
-        {
-            var response = await _productService.DeleteProductsAsync(productId);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId) =>
+            HandleResult(await _productService.DeleteProductsAsync(productId));
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAllProducts()
-        {
-            var response = await _productService.GetProductsAsync();
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAllProducts() =>
+            HandleResult(await _productService.GetProductsAsync());
 
         [HttpGet("{productId}")]
-        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
-        {
-            var response = await _productService.GetProductAsync(productId);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId) =>
+            HandleResult(await _productService.GetProductAsync(productId));
 
         [HttpGet("category/{categoryUrl}")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductsByCategory(string categoryUrl)
-        {
-            var response = await _productService.GetProductsByCategoryAsync(categoryUrl);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductsByCategory(string categoryUrl) =>
+            HandleResult(await _productService.GetProductsByCategoryAsync(categoryUrl));
 
         [HttpGet("search/{searchTerm}/{page}")]
-        public async Task<ActionResult<ServiceResponse<ProductSearchResultDto>>> SearchProducts(string searchTerm, int page = 1)
-        {
-            var response = await _productService.SearchProductsAsync(searchTerm, page);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<ProductSearchResultDto>>> SearchProducts(string searchTerm, int page = 1) =>
+            HandleResult(await _productService.SearchProductsAsync(searchTerm, page));
 
         [HttpGet("search/suggestions/{searchTerm}")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm)
-        {
-            var response = await _productService.GetProductSearchSuggestionsAsync(searchTerm);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm) =>
+            HandleResult(await _productService.GetProductSearchSuggestionsAsync(searchTerm));
 
         [HttpGet("featured")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts()
-        {
-            var response = await _productService.GetFeaturedProductsAsync();
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts() =>
+            HandleResult(await _productService.GetFeaturedProductsAsync());
     }
 }
