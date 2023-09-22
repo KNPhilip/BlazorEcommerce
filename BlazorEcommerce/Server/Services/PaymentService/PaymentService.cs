@@ -7,21 +7,24 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
+        private readonly IConfiguration _configuration;
         protected readonly IHttpContextAccessor _httpContextAccessor;
-        const string secret = "*Stripe webhook signing secret*";
 
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
             IOrderService orderService, 
-            IHttpContextAccessor httpContextAccessor ) 
+            IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuration ) 
         {
-            StripeConfiguration.ApiKey = "*Stripe test API key*";
-
+            _configuration = configuration;
             _cartService = cartService;
             _authService = authService;
             _orderService = orderService;
             _httpContextAccessor = httpContextAccessor;
+
+
+            StripeConfiguration.ApiKey = _configuration["StripeAPIKey"];
         }
 
         public async Task<string> FakeOrderCompletion()
@@ -87,7 +90,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                 var stripeEvent = EventUtility.ConstructEvent(
                         json,
                         request.Headers["Stripe-Signature"],
-                        secret
+                        _configuration["StripeWebhookSecret"]
                     );
 
                 if(stripeEvent.Type == Events.CheckoutSessionCompleted)
