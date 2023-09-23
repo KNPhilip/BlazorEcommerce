@@ -18,7 +18,7 @@
 
         public async Task<ServiceResponse<OrderDetailsDto>> GetOrderDetailsAsync(int orderId)
         {
-            var order = await _context.Orders
+            Order? order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .ThenInclude(p => p.Images)
@@ -31,16 +31,17 @@
             if (order is null)
                 return new ServiceResponse<OrderDetailsDto> { Error = "Order not found." };
 
-            var orderDetailsResponse = new OrderDetailsDto
+            OrderDetailsDto orderDetailsResponse = new()
             {
                 OrderDate = order.OrderDate,
                 TotalPrice = order.TotalPrice,
-                Products = new List<OrderDetailsProductDto>()
+                Products = new()
             };
 
             order.OrderItems.ForEach(item =>
             orderDetailsResponse.Products.Add(new OrderDetailsProductDto
             {
+                // TODO Might be wise to add Automapper / Mapster here
                 ProductId = item.ProductId,
                 ImageUrl = item.Product.ImageUrl,
                 Images = item.Product.Images,
@@ -55,14 +56,14 @@
 
         public async Task<ServiceResponse<List<OrderOverviewDto>>> GetOrders()
         {
-            var orders = await _context.Orders
+            List<Order> orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .ThenInclude(p => p.Images)
                 .Where(o => o.UserId == _authService.GetNameIdFromClaims())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
-            var orderResponse = new List<OrderOverviewDto>();
+            List<OrderOverviewDto> orderResponse = new();
             orders.ForEach(o => orderResponse.Add(new OrderOverviewDto
             {
                 Id = o.Id,
@@ -81,12 +82,12 @@
 
         public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
         {
-            var products = (await _cartService.GetDbCartItems(userId)).Data;
+            List<CartProductResponseDto>? products = (await _cartService.GetDbCartItems(userId)).Data;
             decimal totalPrice = 0;
-            products.ForEach(product => totalPrice += product.Price * product.Quantity);
+            products?.ForEach(product => totalPrice += product.Price * product.Quantity);
 
-            var orderItems = new List<OrderItem>();
-            products.ForEach(product => orderItems.Add(new OrderItem
+            List<OrderItem> orderItems = new();
+            products?.ForEach(product => orderItems.Add(new OrderItem
             {
                 ProductId = product.ProductId,
                 ProductTypeId = product.ProductTypeId,
@@ -94,7 +95,7 @@
                 TotalPrice = product.Price * product.Quantity
             }));
 
-            var order = new Order
+            Order order = new()
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,

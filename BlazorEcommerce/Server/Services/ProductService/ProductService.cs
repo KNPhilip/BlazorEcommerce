@@ -13,9 +13,9 @@
 
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
-            Product product = null;
+            Product? product = null;
 
-            if (_httpContextAccessor.HttpContext.User.IsInRole("Admin"))
+            if (_httpContextAccessor.HttpContext!.User.IsInRole("Admin"))
             {
                 product = await _context.Products
                 .Include(p => p.Variants.Where(v => !v.IsDeleted))
@@ -55,7 +55,7 @@
         public async Task<ServiceResponse<List<Product>>> GetProductsByCategoryAsync(string categoryUrl)
         {
             List<Product> products = await _context.Products
-                .Where(p => p.Visible && !p.IsDeleted && p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
+                .Where(p => p.Visible && !p.IsDeleted && p.Category!.Url.ToLower().Equals(categoryUrl.ToLower()))
                     .Include(p => p.Variants.Where(p => p.Visible && !p.IsDeleted))
                     .Include(p => p.Images)
                     .ToListAsync();
@@ -67,31 +67,27 @@
 
         public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestionsAsync(string searchTerm)
         {
-            var products = await FindProductsBySearchTextAsync(searchTerm);
-            List<string> result = new List<string>();
+            List<Product> products = await FindProductsBySearchTextAsync(searchTerm);
+            List<string> result = new();
 
-            foreach (var product in products)
+            foreach (Product product in products)
             {
                 if (product.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                {
                     result.Add(product.Title);
-                }
 
                 if (product.Description is not null)
                 {
-                    var punctuation = product.Description
+                    char[] punctuation = product.Description
                         .Where(char.IsPunctuation)
                         .Distinct().ToArray();
-                    var words = product.Description
+                    IEnumerable<string> words = product.Description
                         .Split()
                         .Select(s => s.Trim(punctuation));
 
-                    foreach (var word in words)
+                    foreach (string word in words)
                     {
                         if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
-                        {
                             result.Add(word);
-                        }
                     }
                 }
             }
@@ -101,9 +97,9 @@
 
         public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
         {
-            var pageResults = 2f;
-            var pageCount = Math.Ceiling((await FindProductsBySearchTextAsync(searchTerm)).Count / pageResults);
-            var products = await _context.Products
+            Single pageResults = 2f;
+            double pageCount = Math.Ceiling((await FindProductsBySearchTextAsync(searchTerm)).Count / pageResults);
+            List<Product> products = await _context.Products
                 .Where(p => p.Visible && !p.IsDeleted && p.Title.ToLower()
                 .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
                 .Contains(searchTerm.ToLower()))
@@ -113,7 +109,7 @@
                 .Take((int)pageResults)
                 .ToListAsync();
 
-            var response = new ProductSearchResultDto
+            ProductSearchResultDto response = new()
             {
                 Products = products,
                 CurrentPage = page,
@@ -160,7 +156,7 @@
 
         public async Task<ServiceResponse<Product>> CreateProductsAsync(Product product)
         {
-            foreach (var variant in product.Variants)
+            foreach (ProductVariant variant in product.Variants)
                 variant.ProductType = null;
 
             _context.Products.Add(product);
@@ -171,16 +167,17 @@
 
         public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
         {
-            var dbProduct = await _context.Products
+            Product? dbProduct = await _context.Products
                 .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (dbProduct is null)
                 return new ServiceResponse<Product> { Error = "Product not found." };
 
-            var productImages = dbProduct.Images;
+            List<Image> productImages = dbProduct.Images;
             _context.Images.RemoveRange(productImages);
 
+            // TODO Might be wise to add Automapper / Mapster here
             dbProduct.Title = product.Title;
             dbProduct.Description = product.Description;
             dbProduct.ImageUrl = product.ImageUrl;
@@ -189,23 +186,24 @@
             dbProduct.Featured = product.Featured;
             dbProduct.Images = product.Images;
 
-            foreach (var variant in product.Variants)
+            foreach (ProductVariant variant in product.Variants)
             {
-                var dbVariants = await _context.ProductVariants
+                ProductVariant? dbVariant = await _context.ProductVariants
                     .SingleOrDefaultAsync(v => v.ProductId == variant.ProductId &&
                     v.ProductTypeId == variant.ProductTypeId);
-                if (dbVariants is null)
+                if (dbVariant is null)
                 {
                     variant.ProductType = null;
                     _context.ProductVariants.Add(variant);
                 }
                 else
                 {
-                    dbVariants.ProductTypeId = variant.ProductTypeId;
-                    dbVariants.Price = variant.Price;
-                    dbVariants.OriginalPrice = variant.OriginalPrice;
-                    dbVariants.Visible = variant.Visible;
-                    dbVariants.IsDeleted = variant.IsDeleted;
+                    // TODO Might be wise to add Automapper / Mapster here
+                    dbVariant.ProductTypeId = variant.ProductTypeId;
+                    dbVariant.Price = variant.Price;
+                    dbVariant.OriginalPrice = variant.OriginalPrice;
+                    dbVariant.Visible = variant.Visible;
+                    dbVariant.IsDeleted = variant.IsDeleted;
                 }
             }
 
@@ -216,11 +214,11 @@
 
         public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
         {
-            var dbProducts = await _context.Products.FindAsync(productId);
-            if (dbProducts is null)
+            Product? dbProduct = await _context.Products.FindAsync(productId);
+            if (dbProduct is null)
                 return new ServiceResponse<bool> { Error = "Product not found" };
 
-            dbProducts.IsDeleted = true;
+            dbProduct.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return ServiceResponse<bool>.SuccessResponse(true);

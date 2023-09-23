@@ -29,9 +29,9 @@ namespace BlazorEcommerce.Server.Services.PaymentService
 
         public async Task<string> FakeOrderCompletion()
         {
-            var userId = int.Parse
-                (_httpContextAccessor.HttpContext.User
-                .FindFirstValue(ClaimTypes.NameIdentifier));
+            int userId = int.Parse
+                (_httpContextAccessor.HttpContext?.User?
+                .FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             await _orderService.PlaceOrder(userId);
 
@@ -40,18 +40,18 @@ namespace BlazorEcommerce.Server.Services.PaymentService
 
         public async Task<Session> CreateCheckoutSession()
         {
-            var products = (await _cartService.GetDbCartItems()).Data;
-            var lineItems = new List<SessionLineItemOptions>();
-            products.ForEach(product => lineItems.Add(new SessionLineItemOptions
+            List<CartProductResponseDto>? products = (await _cartService.GetDbCartItems()).Data;
+            List<SessionLineItemOptions> lineItems = new();
+            products?.ForEach(product => lineItems.Add(new()
             {
-                PriceData = new SessionLineItemPriceDataOptions
+                PriceData = new()
                 {
                     UnitAmountDecimal = product.Price * 100,
                     Currency = "usd",
-                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    ProductData = new()
                     {
                         Name = product.Title,
-                        Images = new List<string>
+                        Images = new()
                         {
                             product.ImageUrl
                         }
@@ -60,14 +60,14 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                 Quantity = product.Quantity
             }));
 
-            var options = new SessionCreateOptions
+            SessionCreateOptions options = new()
             {
                 CustomerEmail = _authService.GetUserEmail(),
-                ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+                ShippingAddressCollection = new()
                 {
-                    AllowedCountries = new List<string> { "DK" }
+                    AllowedCountries = new() { "DK" }
                 },
-                PaymentMethodTypes = new List<string>
+                PaymentMethodTypes = new()
                 {
                     "card"
                 },
@@ -77,17 +77,16 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                 CancelUrl = "https://localhost:7010/cart"
             };
 
-            var service = new SessionService();
-            Session session = service.Create(options);
-            return session;
+            SessionService service = new();
+            return service.Create(options);
         }
 
         public async Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request)
         {
-            var json = await new StreamReader(request.Body).ReadToEndAsync();
+            string json = await new StreamReader(request.Body).ReadToEndAsync();
             try
             {
-                var stripeEvent = EventUtility.ConstructEvent(
+                Event stripeEvent = EventUtility.ConstructEvent(
                         json,
                         request.Headers["Stripe-Signature"],
                         _configuration["StripeWebhookSecret"]
@@ -95,9 +94,9 @@ namespace BlazorEcommerce.Server.Services.PaymentService
 
                 if(stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {
-                    var session = stripeEvent.Data.Object as Session;
-                    var user = await _authService.GetUserByEmail(session.CustomerEmail);
-                    await _orderService.PlaceOrder(user.Id);
+                    Session? session = stripeEvent.Data.Object as Session;
+                    User? user = await _authService.GetUserByEmail(session?.CustomerEmail!);
+                    await _orderService.PlaceOrder(user!.Id);
                 }
 
                 return ServiceResponse<bool>.SuccessResponse(true);

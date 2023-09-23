@@ -11,7 +11,7 @@
 
         public async Task<ServiceResponse<List<Category>>> DeleteCategoryAsync(int categoryId)
         {
-            var dbCategory = await GetCategoryById(categoryId);
+            Category? dbCategory = await GetCategoryById(categoryId);
             if (dbCategory is null)
                 return new ServiceResponse<List<Category>> { Error = "Category not found." }; 
             
@@ -23,10 +23,11 @@
 
         public async Task<ServiceResponse<List<Category>>> UpdateCategoryAsync(Category category)
         {
-            var dbCategory = await GetCategoryById(category.Id);
+            Category? dbCategory = await GetCategoryById(category.Id);
             if (dbCategory is null)
                 return new ServiceResponse<List<Category>> { Error = "Category not found." };
 
+            // TODO Might be wise to add Automapper / Mapster here
             dbCategory.Name = category.Name;
             dbCategory.Url = category.Url;
             dbCategory.Visible = category.Visible;
@@ -46,7 +47,7 @@
 
         public async Task<ServiceResponse<List<Category>>> GetAdminCategoriesAsync()
         {
-            var categories = await _context.Categories
+            List<Category> categories = await _context.Categories
                 .Where(c => !c.IsDeleted).ToListAsync();
 
             return ServiceResponse<List<Category>>.SuccessResponse(categories);
@@ -54,13 +55,13 @@
 
         public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
-            var categories = await _context.Categories
+            List<Category> categories = await _context.Categories
                 .Where(c => !c.IsDeleted && c.Visible).ToListAsync();
 
             return ServiceResponse<List<Category>>.SuccessResponse(categories);
         }
 
-        private async Task<Category> GetCategoryById(int id) => 
+        private async Task<Category?> GetCategoryById(int id) => 
             await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
     }
 }

@@ -22,7 +22,6 @@ global using Microsoft.AspNetCore.Authorization;
 global using System.Net.Mail;
 global using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using BlazorEcommerce.Server.Services.MailService;
 
 var builder = WebApplication.CreateBuilder(args);
 

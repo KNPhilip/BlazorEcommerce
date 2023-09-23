@@ -10,7 +10,7 @@
         Task<ServiceResponse<bool>> ValidateResetPasswordToken(string email, string resetToken);
         Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken);
         int GetNameIdFromClaims();
-        string GetUserEmail();
-        Task<User> GetUserByEmail(string email);
+        string? GetUserEmail();
+        Task<User?> GetUserByEmail(string email);
     }
 }

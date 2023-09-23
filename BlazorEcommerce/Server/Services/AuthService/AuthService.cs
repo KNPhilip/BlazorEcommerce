@@ -23,8 +23,8 @@ namespace BlazorEcommerce.Server.Services.AuthService
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
-            var response = new ServiceResponse<string>();
-            var user = await _context.Users
+            ServiceResponse<string> response = new();
+            User? user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
             if (user is null)
                 return new ServiceResponse<string> { Error = "User not found." };
@@ -48,7 +48,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
 
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
-            var user = await GetUserByEmail(request.Email);
+            User? user = await GetUserByEmail(request.Email);
             if (user is null)
                 return new ServiceResponse<string> { Error =
                     $"There are no registered users with the email address {request.Email}" };
@@ -62,7 +62,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             user.ResetTokenExpires = DateTime.Now.AddHours(2);
             await _context.SaveChangesAsync();
 
-            var mail = new SendMailDto
+            SendMailDto mail = new()
             {
                 ToEmail = user.Email,
                 Subject = "Password Reset",
@@ -83,7 +83,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             ServiceResponse<bool> response = await ValidateResetPasswordToken(email, resetToken);
             if(!response.Success) return response;
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user is null)
                 return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
             else if (user.ResetTokenExpires < DateTime.Now)
@@ -104,7 +104,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             else if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
                 return new ServiceResponse<bool> { Error = "Invalid reset token" };
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user is null)
                 return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
@@ -126,24 +126,24 @@ namespace BlazorEcommerce.Server.Services.AuthService
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenKey"]));
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_configuration["TokenKey"]!));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new(
                 claims: claims,
                 signingCredentials: creds,
                 expires: DateTime.Now.AddDays(2)
             );
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            string jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
         }
 
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
-            var user = await _context.Users.FindAsync(userId);
+            User? user = await _context.Users.FindAsync(userId);
             if (user is null)
                 return new ServiceResponse<bool> { Error = "User not found." };
 
@@ -155,12 +155,12 @@ namespace BlazorEcommerce.Server.Services.AuthService
         }
 
         public int GetNameIdFromClaims() =>
-            int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        public string GetUserEmail() =>
-            _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+        public string? GetUserEmail() =>
+            _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
 
-        public async Task<User> GetUserByEmail(string email) =>
+        public async Task<User?> GetUserByEmail(string email) =>
             await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
 
         private static string CreateRandomToken() =>
