@@ -22,7 +22,6 @@ global using Microsoft.AspNetCore.Authorization;
 global using System.Net.Mail;
 global using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using BlazorEcommerce.Server.Services.MailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,9 +53,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey =
-                new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["TokenKey"]!)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
@@ -64,6 +62,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+// Referrer Policy Header - Controls included information on navigation.
+app.UseReferrerPolicy(options => options.SameOrigin());
+// X Content Type Options Header - Prevents MIME-sniffing of the content type.
+app.UseXContentTypeOptions();
+// X Frame Options Header - Defends against attacks like clickjacking by banning framing on the site.
+app.UseXfo(options => options.Deny());
+// X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff.
+app.UseXXssProtection(options => options.EnabledWithBlockMode());
+// Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection).
+app.UseCspReportOnly(options => options
+    .BlockAllMixedContent()
+    .StyleSources(s => s.Self())
+    .FontSources(s => s.Self())
+    .FormActions(s => s.Self())
+    // Frame Ancestors makes X-Frame-Options obsolete
+    .FrameAncestors(s => s.Self())
+    .ImageSources(s => s.Self())
+    .ScriptSources(s => s.Self())
+);
 
 app.UseSwaggerUI();
 
@@ -75,8 +93,13 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    // HTTP Strict Transport Security Header:
+    // Strengthens implementation of TLS by enforcing the use of HTTPS
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+        await next.Invoke();
+    });
 }
 
 app.UseSwagger();

@@ -19,7 +19,7 @@
 
         public async Task<ServiceResponse<List<ProductType>>> GetProductTypesAsync()
         {
-            var productTypes = await _context.ProductTypes
+            List<ProductType> productTypes = await _context.ProductTypes
                 .Where(pt => pt.IsDeleted == false)
                 .ToListAsync();
 
@@ -28,7 +28,7 @@
 
         public async Task<ServiceResponse<List<ProductType>>> UpdateProductType(ProductType productType)
         {
-            var dbProductType = await GetProductTypeByIdAsync(productType.Id);
+            ProductType? dbProductType = await GetProductTypeByIdAsync(productType.Id);
             if (dbProductType is null)
                 return new() { Error = "Product Type not found" };
 
@@ -40,7 +40,7 @@
 
         public async Task<ServiceResponse<List<ProductType>>> DeleteProductType(int productTypeId)
         {
-            var dbProductType = await GetProductTypeByIdAsync(productTypeId);
+            ProductType? dbProductType = await GetProductTypeByIdAsync(productTypeId);
             if (dbProductType is null)
                 return new() { Error = "Product Type not found" };
 
@@ -50,7 +50,7 @@
             return await GetProductTypesAsync();
         }
 
-        private async Task<ProductType> GetProductTypeByIdAsync(int productTypeId) => 
+        private async Task<ProductType?> GetProductTypeByIdAsync(int productTypeId) => 
             await _context.ProductTypes.FindAsync(productTypeId);
     }
 }

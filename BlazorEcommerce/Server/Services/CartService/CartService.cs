@@ -17,14 +17,14 @@
 
             foreach (var item in cartItems)
             {
-                var product = await _context.Products
+                Product? product = await _context.Products
                     .Where(p => p.Id == item.ProductId)
                     .FirstOrDefaultAsync();
 
                 if (product is null)
                     continue;
 
-                var productVariant = await _context.ProductVariants
+                ProductVariant? productVariant = await _context.ProductVariants
                     .Where(v => v.ProductId == item.ProductId && v.ProductTypeId == item.ProductTypeId)
                     .Include(v => v.ProductType)
                     .FirstOrDefaultAsync();
@@ -32,13 +32,14 @@
                 if (productVariant is null)
                     continue;
 
-                var cartProduct = new CartProductResponseDto
+                CartProductResponseDto cartProduct = new()
                 {
+                    // TODO Might be wise to add AutoMapper / Mapster here
                     ProductId = product.Id,
                     Title = product.Title,
                     ImageUrl = product.ImageUrl,
                     Price = productVariant.Price,
-                    ProductType = productVariant.ProductType.Name,
+                    ProductType = productVariant.ProductType!.Name,
                     ProductTypeId = productVariant.ProductTypeId,
                     Quantity = item.Quantity
                 };
@@ -63,7 +64,7 @@
         public async Task<ServiceResponse<int>> GetCartItemsCountAsync() =>
             ServiceResponse<int>.SuccessResponse((await _context.CartItems
                 .Where(ci => ci.UserId == _authService.GetNameIdFromClaims())
-                .ToListAsync()).Count());
+                .ToListAsync()).Count);
 
         public async Task<ServiceResponse<List<CartProductResponseDto>>> GetDbCartItems(int? userId = null)
         {
@@ -77,7 +78,7 @@
         {
             cartItem.UserId = _authService.GetNameIdFromClaims();
 
-            var sameItem = await _context.CartItems
+            CartItem? sameItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                 ci.ProductTypeId == cartItem.ProductTypeId &&
                 ci.UserId == cartItem.UserId);
@@ -93,7 +94,7 @@
 
         public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
         {
-            var dbCartItem = await _context.CartItems
+            CartItem? dbCartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                 ci.ProductTypeId == cartItem.ProductTypeId &&
                 ci.UserId == _authService.GetNameIdFromClaims());
@@ -108,7 +109,7 @@
 
         public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int productTypeId)
         {
-            var dbCartItem = await _context.CartItems
+            CartItem? dbCartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.ProductId == productId &&
                 ci.ProductTypeId == productTypeId &&
                 ci.UserId == _authService.GetNameIdFromClaims());

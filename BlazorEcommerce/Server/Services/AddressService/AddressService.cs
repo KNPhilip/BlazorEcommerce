@@ -14,7 +14,7 @@
         public async Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
         {
             Address response;
-            var dbAddress = (await GetAddress()).Data;
+            Address? dbAddress = (await GetAddress()).Data;
             if (dbAddress is null)
             {
                 address.UserId = _authService.GetNameIdFromClaims();
@@ -23,6 +23,7 @@
             }
             else
             {
+                // TODO Might be wise to introduce AutoMapper / Mapster here
                 dbAddress.FirstName = address.FirstName;
                 dbAddress.LastName = address.LastName;
                 dbAddress.Street = address.Street;
@@ -41,7 +42,7 @@
         public async Task<ServiceResponse<Address>> GetAddress()
         {
             int userId = _authService.GetNameIdFromClaims();
-            var address = await _context.Addresses
+            Address? address = await _context.Addresses
                 .FirstOrDefaultAsync(a => a.UserId == userId);
 
             return address is not null 

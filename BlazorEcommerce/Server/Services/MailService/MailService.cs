@@ -14,8 +14,8 @@
             MailMessage message = new();
             SmtpClient smtp = new();
 
-            message.From = new MailAddress(_mailConfig.FromEmail);
-            message.To.Add(new MailAddress(ToEmail));
+            message.From = new(_mailConfig.FromEmail);
+            message.To.Add(new(ToEmail));
             message.Subject = Subject;
             message.IsBodyHtml = true;
             message.Body = HTMLBody;
