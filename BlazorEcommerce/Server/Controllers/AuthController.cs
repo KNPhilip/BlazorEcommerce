@@ -1,7 +1,13 @@
 ﻿namespace BlazorEcommerce.Server.Controllers
 {
+    /// <summary>
+    /// Auth Controller - Contains all endpoints regarding token-based authentication and authorization.
+    /// </summary>
     public class AuthController : ControllerTemplate
     {
+        /// <summary>
+        /// IAuthService instance. This accesses the implementation class of the AuthService through the IoC container.
+        /// </summary>
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
@@ -9,28 +15,58 @@
             _authService = authService;
         }
 
+        /// <summary>
+        /// Endpoint to register a new user.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>The ID of the new registered user or an error in case of failure.</returns>
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegisterDto request) =>
             HandleResult(await _authService.Register(new User 
                 { Email = request.Email }, request.Password));
 
+        /// <summary>
+        /// Endpoint for login.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A new valid JWT for future authentication and authorization.</returns>
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(UserLoginDto request) =>
             HandleResult(await _authService.Login(request.Email, request.Password));
 
+        /// <summary>
+        /// Endpoint for changing the authenticated users current password.
+        /// </summary>
+        /// <param name="newPassword"></param>
+        /// <returns>True/False depending on the success.</returns>
         [HttpPost("change-password"), Authorize]
         public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword([FromBody] string newPassword) =>
             HandleResult(await _authService.ChangePassword(int.Parse(User
                 .FindFirstValue(ClaimTypes.NameIdentifier)!), newPassword));
 
+        /// <summary>
+        /// Endpoint for the user to request a password reset.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A string with instructions for the user on what to do next.</returns>
         [HttpPost("create-password-token")]
         public async Task<ActionResult<ServiceResponse<string>>> CreateResetToken(User request) =>
             HandleResult(await _authService.CreateResetToken(request));
 
+        /// <summary>
+        /// Endpoint for resetting the authenticated users password if they have the valid Password Reset Token.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>True/False depending on the success.</returns>
         [HttpPost("reset-password")]
         public async Task<ActionResult<ServiceResponse<bool>>> ResetPassword(PasswordResetDto request) =>
             HandleResult(await _authService.ResetPassword(request.UserEmail!, request.NewPassword, request.ResetToken!));
 
+        /// <summary>
+        /// Endpoint for validating the given Password Reset Token.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>True/False depending on the success.</returns>
         [HttpPost("reset-password/validate")]
         public async Task<ActionResult<ServiceResponse<bool>>> ResetPasswordTokenValidation(TokenValidateDto request) =>
             HandleResult(await _authService.ValidateResetPasswordToken(request.UserEmail!, request.ResetToken!));

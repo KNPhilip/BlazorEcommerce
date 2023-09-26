@@ -1,8 +1,17 @@
 ﻿namespace BlazorEcommerce.Server.Services.ProductService
 {
+    /// <summary>
+    /// Implementation class of IProductService.
+    /// </summary>
     public class ProductService : IProductService
     {
+        /// <summary>
+        /// Instance of EcommerceContext (EF Data Context)
+        /// </summary>
         private readonly EcommerceContext _context;
+        /// <summary>
+        /// Instance of the HTTP Context.
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ProductService(EcommerceContext context, IHttpContextAccessor httpContextAccessor)
@@ -11,26 +20,27 @@
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Recieves a product from the database matching the given ID.
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>The product, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
             Product? product = null;
 
             if (_httpContextAccessor.HttpContext!.User.IsInRole("Admin"))
-            {
                 product = await _context.Products
-                .Include(p => p.Variants.Where(v => !v.IsDeleted))
-                .ThenInclude(v => v.ProductType)
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == productId);
-            }
-            else
-            {
+                    .Include(p => p.Variants.Where(v => !v.IsDeleted))
+                    .ThenInclude(v => v.ProductType)
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == productId);
+            else 
                 product = await _context.Products
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
                     .Include(p => p.Images)
                     .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
-            }
             if (product is null)
                 return new() { Error = "This product does not exist." };
             else if (product.IsDeleted)
@@ -39,6 +49,10 @@
             return ServiceResponse<Product>.SuccessResponse(product);
         }
 
+        /// <summary>
+        /// Recieves a list of all available products in the database.
+        /// </summary>
+        /// <returns>A list of products, or an error message on failure.</returns>
         public async Task<ServiceResponse<List<Product>>> GetProductsAsync()
         {
             List<Product> products = await _context.Products
@@ -52,6 +66,11 @@
                 : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
+        /// <summary>
+        /// Recieves a list of products within the specified category name.
+        /// </summary>
+        /// <param name="categoryUrl"></param>
+        /// <returns>A list of products or an appropriate error message on failure.</returns>
         public async Task<ServiceResponse<List<Product>>> GetProductsByCategoryAsync(string categoryUrl)
         {
             List<Product> products = await _context.Products
@@ -65,6 +84,11 @@
                 : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
+        /// <summary>
+        /// Recieves a list of suggested product titles based on search text.
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns>A list of strings (product title suggestions)</returns>
         public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestionsAsync(string searchTerm)
         {
             List<Product> products = await FindProductsBySearchTextAsync(searchTerm);
@@ -85,16 +109,21 @@
                         .Select(s => s.Trim(punctuation));
 
                     foreach (string word in words)
-                    {
-                        if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
+                        if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) 
+                            && !result.Contains(word))
                             result.Add(word);
-                    }
                 }
             }
 
             return ServiceResponse<List<string>>.SuccessResponse(result);
         }
 
+        /// <summary>
+        /// Recieves paginated list of products matching the given search text, on the given page.
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <param name="page"></param>
+        /// <returns>A list of paginated products</returns>
         public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
         {
             Single pageResults = 2f;
@@ -119,14 +148,10 @@
             return ServiceResponse<ProductSearchResultDto>.SuccessResponse(response);
         }
 
-        public async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm) =>
-            await _context.Products
-                .Where(p => p.Visible && !p.IsDeleted && p.Title.ToLower()
-                .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
-                .Contains(searchTerm.ToLower()))
-                .Include(p => p.Variants)
-                .ToListAsync();
-
+        /// <summary>
+        /// Recieves a list of all products marked as "Featured Products"
+        /// </summary>
+        /// <returns>A list of products on success, or an appropriate error message on failure</returns>
         public async Task<ServiceResponse<List<Product>>> GetFeaturedProductsAsync()
         {
             List<Product> response = await _context.Products
@@ -140,6 +165,10 @@
                 : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
+        /// <summary>
+        /// Recieves a list of all products for admins, meaning also the ones that are marked as invisible.
+        /// </summary>
+        /// <returns>A list of products on success, or an appropriate error message on failure</returns>
         public async Task<ServiceResponse<List<Product>>> GetAdminProductsAsync()
         {
             List<Product> response = await _context.Products
@@ -154,7 +183,12 @@
                 : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
 
-        public async Task<ServiceResponse<Product>> CreateProductsAsync(Product product)
+        /// <summary>
+        /// Creates a new Product in the database.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns>The given body on success, or an appropriate error message on failure.</returns>
+        public async Task<ServiceResponse<Product>> CreateProductAsync(Product product)
         {
             foreach (ProductVariant variant in product.Variants)
                 variant.ProductType = null;
@@ -165,6 +199,11 @@
             return ServiceResponse<Product>.SuccessResponse(product);
         }
 
+        /// <summary>
+        /// Updates a Product with the matching ID, replacing the old body with the given.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns>The given body on success, or an appropriate error message on failure.</returns>
         public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
         {
             Product? dbProduct = await _context.Products
@@ -212,6 +251,11 @@
             return ServiceResponse<Product>.SuccessResponse(product);
         }
 
+        /// <summary>
+        /// Deletes the Product with the given ID from the database.
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>True/False depending on the success.</returns>
         public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
         {
             Product? dbProduct = await _context.Products.FindAsync(productId);
@@ -223,5 +267,18 @@
 
             return ServiceResponse<bool>.SuccessResponse(true);
         }
+
+        /// <summary>
+        /// Extracted method to recieve a list of all products matching the given search text.
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns>A list of products on success, or an appropriate error message on failure</returns>
+        private async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm) =>
+            await _context.Products
+                .Where(p => p.Visible && !p.IsDeleted && p.Title.ToLower()
+                .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
+                .Contains(searchTerm.ToLower()))
+                .Include(p => p.Variants)
+                .ToListAsync();
     }
 }

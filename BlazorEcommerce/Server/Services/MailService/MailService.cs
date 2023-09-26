@@ -1,5 +1,8 @@
 ﻿namespace BlazorEcommerce.Server.Services.MailService
 {
+    /// <summary>
+    /// Implementation class of IMailService.
+    /// </summary>
     public class MailService : IMailService
     {
         private readonly MailSettingsDto _mailConfig;
@@ -9,6 +12,14 @@
             _mailConfig = mailConfig;
         }
 
+        /// <summary>
+        /// Sends an email to the given email, with the title of the given subject.
+        /// The email itself simply contains the given HTML body.
+        /// </summary>
+        /// <param name="ToEmail"></param>
+        /// <param name="Subject"></param>
+        /// <param name="HTMLBody"></param>
+        /// <returns>True/False depending on the response, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<bool>> SendEmailAsync(string ToEmail, string Subject, string HTMLBody)
         {
             MailMessage message = new();

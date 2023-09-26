@@ -1,8 +1,17 @@
 ﻿namespace BlazorEcommerce.Server.Services.AddressService
 {
+    /// <summary>
+    /// Implementation class of IAddressService.
+    /// </summary>
     public class AddressService : IAddressService
     {
+        /// <summary>
+        /// Instance of EcommerceContext (EF Data Context)
+        /// </summary>
         private readonly EcommerceContext _context;
+        /// <summary>
+        /// IAuthService instance. This accesses the implementation class of the AuthService through the IoC container.
+        /// </summary>
         private readonly IAuthService _authService;
 
         public AddressService(EcommerceContext context, IAuthService authService)
@@ -11,6 +20,26 @@
             _authService = authService;
         }
 
+        /// <summary>
+        /// Recieves the address of the currently authenticated user.
+        /// </summary>
+        /// <returns>Address object.</returns>
+        public async Task<ServiceResponse<Address>> GetAddress()
+        {
+            int userId = _authService.GetNameIdFromClaims();
+            Address? address = await _context.Addresses
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            return address is not null
+                ? ServiceResponse<Address>.SuccessResponse(address)
+                : new ServiceResponse<Address> { Error = "No address found." };
+        }
+
+        /// <summary>
+        /// Adds or updates the address of the currently authenticated user.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns>The added or updated address.</returns>
         public async Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
         {
             Address response;
@@ -37,17 +66,6 @@
             await _context.SaveChangesAsync();
 
             return ServiceResponse<Address>.SuccessResponse(response);
-        }
-
-        public async Task<ServiceResponse<Address>> GetAddress()
-        {
-            int userId = _authService.GetNameIdFromClaims();
-            Address? address = await _context.Addresses
-                .FirstOrDefaultAsync(a => a.UserId == userId);
-
-            return address is not null 
-                ? ServiceResponse<Address>.SuccessResponse(address)
-                : new ServiceResponse<Address> { Error = "No address found." };
         }
     }
 }

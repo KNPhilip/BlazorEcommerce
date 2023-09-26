@@ -1,5 +1,9 @@
 ﻿namespace BlazorEcommerce.Server.Data
 {
+    /// <summary>
+    /// A database context instance, representing a session with the database and can be used to query and save instances of the entities.
+    /// EcommerceContext derives from DbContext, which is a combination of the UoW and Repository patterns.
+    /// </summary>
     public class EcommerceContext : DbContext
     {
         public EcommerceContext(DbContextOptions<EcommerceContext> options) : base(options)

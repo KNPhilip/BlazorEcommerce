@@ -2,11 +2,26 @@
 
 namespace BlazorEcommerce.Server.Services.AuthService
 {
+    /// <summary>
+    /// Implementation class of IAuthService.
+    /// </summary>
     public class AuthService : IAuthService
     {
+        /// <summary>
+        /// Instance of EcommerceContext (EF Data Context)
+        /// </summary>
         private readonly EcommerceContext _context;
+        /// <summary>
+        /// IConfiguration instance - Represents a set of key/value application configuration properties.
+        /// </summary>
         private readonly IConfiguration _configuration;
+        /// <summary>
+        /// Instance of the HTTP Context.
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
+        /// <summary>
+        /// IMailService instance. This accesses the implementation class of the MailService through the IoC container.
+        /// </summary>
         private readonly IMailService _mailService;
 
         public AuthService(
@@ -21,6 +36,12 @@ namespace BlazorEcommerce.Server.Services.AuthService
             _mailService = mailService;
         }
 
+        /// <summary>
+        /// Request to login to the application with a given email address and password.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns>A newly issued JWT for future authentication and authorization.</returns>
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
             ServiceResponse<string> response = new();
@@ -34,6 +55,12 @@ namespace BlazorEcommerce.Server.Services.AuthService
             return ServiceResponse<string>.SuccessResponse(CreateJWT(user));
         }
 
+        /// <summary>
+        /// Registers a new User with the info of the given input.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns>Returns the newly registered user's ID, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))
@@ -46,6 +73,12 @@ namespace BlazorEcommerce.Server.Services.AuthService
             return ServiceResponse<int>.SuccessResponse(user.Id);
         }
 
+        /// <summary>
+        /// Creates a new password reset token for the user matching the email from the body.
+        /// After that, sending the reset token to the users email address.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Instructions on what to do next, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
             User? user = await GetUserByEmail(request.Email);
@@ -78,6 +111,14 @@ namespace BlazorEcommerce.Server.Services.AuthService
             return ServiceResponse<string>.SuccessResponse("Please check your inbox to reset the password.");
         }
 
+        /// <summary>
+        /// Resets the password of the user from the database with the given email address,
+        /// changing it to the new given password, if the given password reset token is valid.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="resetToken"></param>
+        /// <returns>True/False depending on the response.</returns>
         public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
         {
             ServiceResponse<bool> response = await ValidateResetPasswordToken(email, resetToken);
@@ -97,11 +138,16 @@ namespace BlazorEcommerce.Server.Services.AuthService
             return response;
         }
 
+        /// <summary>
+        /// Validates the given password reset token for the given email address.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="resetToken"></param>
+        /// <returns>True/False depending on the response,
+        /// or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(string email, string resetToken)
         {
-            if (!await UserExists(email))
-                return new ServiceResponse<bool> { Error = $"There is no registered users with the email {email}." };
-            else if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
+            if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
                 return new ServiceResponse<bool> { Error = "Invalid reset token" };
 
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -114,9 +160,70 @@ namespace BlazorEcommerce.Server.Services.AuthService
             return ServiceResponse<bool>.SuccessResponse(true);
         }
 
+        /// <summary>
+        /// Checks if a user with the given email address is registered.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>True/False depending on the response.</returns>
         public async Task<bool> UserExists(string email) =>
             await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
 
+        /// <summary>
+        /// Changes the password of the user with the given ID to the new given password.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="newPassword"></param>
+        /// <returns>True/False depending on the outcome, or an appropriate error message in case of failure.</returns>
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        {
+            User? user = await _context.Users.FindAsync(userId);
+            if (user is null)
+                return new ServiceResponse<bool> { Error = "User not found." };
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            await _context.SaveChangesAsync();
+
+            return ServiceResponse<bool>.SuccessResponse(true);
+        }
+
+        /// <summary>
+        /// Recieves the currently authenticated users name identifier from the claims of the JWT.
+        /// </summary>
+        /// <returns>An integer containing the name identifier.</returns>
+        public int GetNameIdFromClaims() =>
+            int.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        /// <summary>
+        /// Recieves the currently authenticated users email from the claims of the JWT.
+        /// </summary>
+        /// <returns>A string containing the email.</returns>
+        public string? GetUserEmail() =>
+            _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
+
+        /// <summary>
+        /// Recieves a user from the database with the given email address.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>A User object.</returns>
+        public async Task<User?> GetUserByEmail(string email) =>
+            await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+
+        /// <summary>
+        /// Private method to create a random token.
+        /// </summary>
+        /// <returns>A string with the token.</returns>
+        private static string CreateRandomToken() =>
+            Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+
+        /// <summary>
+        /// Private method to create a new JSON Web Token with claims based on the given
+        /// User object as an input. It uses a symmetric security key with the secret key
+        /// from the configuration, and the HMAC SHA512 Signature security algorithm.
+        /// The token expires after 2 days.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>A newly issued JWT for authentication and authorization.</returns>
         private string CreateJWT(User user)
         {
             List<Claim> claims = new()
@@ -140,30 +247,5 @@ namespace BlazorEcommerce.Server.Services.AuthService
 
             return jwt;
         }
-
-        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
-        {
-            User? user = await _context.Users.FindAsync(userId);
-            if (user is null)
-                return new ServiceResponse<bool> { Error = "User not found." };
-
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-
-            await _context.SaveChangesAsync();
-
-            return ServiceResponse<bool>.SuccessResponse(true);
-        }
-
-        public int GetNameIdFromClaims() =>
-            int.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-        public string? GetUserEmail() =>
-            _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
-
-        public async Task<User?> GetUserByEmail(string email) =>
-            await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
-
-        private static string CreateRandomToken() =>
-            Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
 }
