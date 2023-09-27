@@ -6,10 +6,12 @@
     public class PaymentController : ControllerTemplate
     {
         /// <summary>
-        /// IPaymentService instance. This accesses the implementation class of the PaymentService through the IoC container.
+        /// IPaymentService field. Used to access the Payment Services.
         /// </summary>
         private readonly IPaymentService _paymentService;
 
+        /// <param name="paymentService">IPaymentService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;

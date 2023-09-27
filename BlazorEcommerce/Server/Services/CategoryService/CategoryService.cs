@@ -6,10 +6,12 @@
     public class CategoryService : ICategoryService
     {
         /// <summary>
-        /// Instance of EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the
+        /// field, containing the correct implementation through the IoC container.</param>
         public CategoryService(EcommerceContext context)
         {
             _context = context;
@@ -43,7 +45,7 @@
         /// <summary>
         /// Adds the given Category to the database.
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="category">Represents the given category to add to the database.</param>
         /// <returns>A list of all categories, also those marked as invisible.</returns>
         public async Task<ServiceResponse<List<Category>>> AddCategoryAsync(Category category)
         {
@@ -56,7 +58,7 @@
         /// <summary>
         /// Updates a category in the database.
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="category">Represents the given category to update (Id must be included)</param>
         /// <returns>A list of all categories, also those marked as invisible.</returns>
         public async Task<ServiceResponse<List<Category>>> UpdateCategoryAsync(Category category)
         {
@@ -77,7 +79,7 @@
         /// <summary>
         /// Deletes the category from the database matching the given ID.
         /// </summary>
-        /// <param name="categoryId"></param>
+        /// <param name="categoryId">Represents the ID of the category to delete from the database.</param>
         /// <returns>A list of all categories, also those marked as invisible.</returns>
         public async Task<ServiceResponse<List<Category>>> DeleteCategoryAsync(int categoryId)
         {
@@ -94,7 +96,7 @@
         /// <summary>
         /// Extracted method to recieve a category from the database with the given ID.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Represents the ID of the category to recieve.</param>
         /// <returns>A Category.</returns>
         private async Task<Category?> GetCategoryById(int id) => 
             await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);

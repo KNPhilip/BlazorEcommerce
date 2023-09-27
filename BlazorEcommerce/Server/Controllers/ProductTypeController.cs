@@ -7,10 +7,12 @@
     public class ProductTypeController : ControllerTemplate
     {
         /// <summary>
-        /// IProductTypeService instance. This accesses the implementation class of the ProductTypeService through the IoC container.
+        /// IProductTypeService field. Used to access the Product Type Services.
         /// </summary>
         private readonly IProductTypeService _productTypeService;
 
+        /// <param name="productTypeService">IProductTypeService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public ProductTypeController(IProductTypeService productTypeService)
         {
             _productTypeService = productTypeService;
@@ -27,7 +29,7 @@
         /// <summary>
         /// Endpoint to create a new Product Type.
         /// </summary>
-        /// <param name="productType"></param>
+        /// <param name="productType">Represents the given product type to be added to the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductType(ProductType productType) =>
@@ -36,16 +38,17 @@
         /// <summary>
         /// Endpoint to update the Product Type from the database.
         /// </summary>
-        /// <param name="productType"></param>
+        /// <param name="productType">Represents the given product type
+        /// to be updated in the database (ID must be included)</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> CreateProductType(ProductType productType) =>
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> UpdateProductType(ProductType productType) =>
             HandleResult(await _productTypeService.UpdateProductType(productType));
 
         /// <summary>
         /// Endpoint to delete the Product Type from the database with the given ID.
         /// </summary>
-        /// <param name="productTypeId"></param>
+        /// <param name="productTypeId">Represents the ID of the product type to delete from the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpDelete("{productTypeId}")]
         public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId) =>

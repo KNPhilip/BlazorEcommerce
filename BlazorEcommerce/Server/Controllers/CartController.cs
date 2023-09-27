@@ -6,10 +6,12 @@
     public class CartController : ControllerTemplate
     {
         /// <summary>
-        /// ICartService instance. This accesses the implementation class of the CartService through the IoC container.
+        /// ICartService field. Used to access the Cart Services.
         /// </summary>
         private readonly ICartService _cartService;
 
+        /// <param name="cartService">ICartService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public CartController(ICartService cartService)
         {
             _cartService = cartService;
@@ -18,7 +20,7 @@
         /// <summary>
         /// Endpoint to recieve the actual products from the cart.
         /// </summary>
-        /// <param name="cartItems"></param>
+        /// <param name="cartItems">Represents the given list of cart items.</param>
         /// <returns>List of products in the cart.</returns>
         [HttpPost("products")]
         public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> GetCartProducts(List<CartItem> cartItems) =>
@@ -27,7 +29,7 @@
         /// <summary>
         /// Stores the given cart items for the user in the database.
         /// </summary>
-        /// <param name="cartItems"></param>
+        /// <param name="cartItems">Represents the given list of cart items.</param>
         /// <returns>A list of the products in the users cart.</returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> StoreCartItems(List<CartItem> cartItems) =>
@@ -36,7 +38,7 @@
         /// <summary>
         /// Endpoint for adding an item to the cart.
         /// </summary>
-        /// <param name="cartItem"></param>
+        /// <param name="cartItem">Represents the given cart item to add to the cart.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpPost("add")]
         public async Task<ActionResult<ServiceResponse<bool>>> AddToCart(CartItem cartItem) =>
@@ -45,7 +47,7 @@
         /// <summary>
         /// Endpoint to update the quantity of a item in the cart.
         /// </summary>
-        /// <param name="cartItem"></param>
+        /// <param name="cartItem">Represents the given cart item, used to update the quantity.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpPut("update-quantity")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateQuantity(CartItem cartItem) =>
@@ -54,8 +56,8 @@
         /// <summary>
         /// Endpoint that removes a specific item with the given Product ID, with the type of the given Product Type ID from the database.
         /// </summary>
-        /// <param name="productId"></param>
-        /// <param name="productTypeId"></param>
+        /// <param name="productId">Represents the given product ID.</param>
+        /// <param name="productTypeId">Represents the given product type ID.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpDelete("{productId}/{productTypeId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> RemoveItemFromCart(int productId, int productTypeId) =>

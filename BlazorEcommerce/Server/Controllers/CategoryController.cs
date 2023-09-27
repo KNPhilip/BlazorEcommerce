@@ -6,10 +6,12 @@
     public class CategoryController : ControllerTemplate
     {
         /// <summary>
-        /// ICategoryService instance. This accesses the implementation class of the CategoryService through the IoC container.
+        /// ICategoryService field. Used to access the Category Services.
         /// </summary>
         private readonly ICategoryService _categoryService;
 
+        /// <param name="categoryService">ICategoryService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
@@ -34,7 +36,7 @@
         /// <summary>
         /// Endpoint for administrators to create a new category.
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="category">Represents the given category to be added.</param>
         /// <returns>A list of all categories.</returns>
         [HttpPost("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategory(Category category) =>
@@ -43,7 +45,9 @@
         /// <summary>
         /// Endpoint for administrators to update a category.
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="category">Represents the given category, used to update the existing one.
+        /// The existing one is found by taking the given id within the given category and finding
+        /// the matching category from the database.</param>
         /// <returns>A list of all categories.</returns>
         [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(Category category) =>
@@ -52,7 +56,7 @@
         /// <summary>
         /// Endpoint for administrators to delete the category from the database with the given ID.
         /// </summary>
-        /// <param name="categoryId"></param>
+        /// <param name="categoryId">Represents the given ID of the category to be deleted from the database.</param>
         /// <returns>A list of all categories.</returns>
         [HttpDelete("admin/{categoryId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int categoryId) =>

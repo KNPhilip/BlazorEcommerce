@@ -8,26 +8,36 @@ namespace BlazorEcommerce.Server.Services.PaymentService
     public class PaymentService : IPaymentService
     {
         /// <summary>
-        /// ICartService instance. This accesses the implementation class of the CartService through the IoC container.
+        /// ICartService field. Used to access the Cart Services.
         /// </summary>
         private readonly ICartService _cartService;
         /// <summary>
-        /// IAuthService instance. This accesses the implementation class of the AuthService through the IoC container.
+        /// IAuthService field. Used to access the Auth Services.
         /// </summary>
         private readonly IAuthService _authService;
         /// <summary>
-        /// IOrderService instance. This accesses the implementation class of the OrderService through the IoC container.
+        /// IOrderService field. Used to access the Order Services.
         /// </summary>
         private readonly IOrderService _orderService;
         /// <summary>
-        /// IConfiguration instance - Represents a set of key/value application configuration properties.
+        /// IConfiguration field - Used to access the key/value application configuration properties.
         /// </summary>
         private readonly IConfiguration _configuration;
         /// <summary>
-        /// Instance of the HTTP Context.
+        /// IHttpContextAccessor field. Used to access the current HTTP context.
         /// </summary>
         protected readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <param name="cartService">ICartService instance to be passed on to the
+        /// correct field, containing the correct implementation class through the IoC container.</param>
+        /// <param name="authService">IAuthService instance to be passed on to the
+        /// correct field, containing the correct implementation class through the IoC container.</param>
+        /// <param name="orderService">IOrderService instance to be passed on to the
+        /// correct field, containing the correct implementation class through the IoC container.</param>
+        /// <param name="configuration">IConfiguration instance to be passed on to the
+        /// correct field, containing the correct implementation through the IoC container.</param>
+        /// <param name="httpContextAccessor">IHttpContextAccessor instance to be passed on to the
+        /// correct field, containing the correct implementation through the IoC container.</param>
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
@@ -110,6 +120,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         /// <summary>
         /// Completes the Stripe order.
         /// </summary>
+        /// <param name="request">Represents the HttpRequest sent by Stripe.</param>
         /// <returns>True/False depending on the success of the order fulfillment.</returns>
         public async Task<ServiceResponse<bool>> FulfillOrder(HttpRequest request)
         {

@@ -8,7 +8,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
     public class AuthService : IAuthService
     {
         /// <summary>
-        /// Instance of EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
         /// <summary>
@@ -20,10 +20,18 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
         /// <summary>
-        /// IMailService instance. This accesses the implementation class of the MailService through the IoC container.
+        /// IMailService field. Used to access the Mail Services.
         /// </summary>
         private readonly IMailService _mailService;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the correct
+        /// field, containing the correct implementation through the IoC container.</param>
+        /// <param name="configuration">IConfiguration instance to be passed on to the correct
+        /// correct field, containing the correct implementation through the IoC container.</param>
+        /// <param name="httpContextAccessor">IHttpContextAccessor instance to be passed on to the
+        /// correct field, containing the correct implementation through the IoC container.</param>
+        /// <param name="mailService">IMailService instance to be passed on to the correct
+        /// field, containing the correct implementation class through the IoC container.</param>
         public AuthService(
             EcommerceContext context, 
             IConfiguration configuration,
@@ -39,8 +47,8 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Request to login to the application with a given email address and password.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
+        /// <param name="email">Represents the given email address to login to.</param>
+        /// <param name="password">Represents the given password for the login.</param>
         /// <returns>A newly issued JWT for future authentication and authorization.</returns>
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
@@ -58,8 +66,8 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Registers a new User with the info of the given input.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="user">Represents the given user to register.</param>
+        /// <param name="password">Represents the given password of the to-be registered user.</param>
         /// <returns>Returns the newly registered user's ID, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
@@ -77,7 +85,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// Creates a new password reset token for the user matching the email from the body.
         /// After that, sending the reset token to the users email address.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Represents the given user to create a reset token for.</param>
         /// <returns>Instructions on what to do next, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
@@ -115,9 +123,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// Resets the password of the user from the database with the given email address,
         /// changing it to the new given password, if the given password reset token is valid.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="newPassword"></param>
-        /// <param name="resetToken"></param>
+        /// <param name="email">Represents the given email address to reset the password for.</param>
+        /// <param name="newPassword">Represents the given new password.</param>
+        /// <param name="resetToken">Represents the (hopyfully) valid Password Reset Token.</param>
         /// <returns>True/False depending on the response.</returns>
         public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
         {
@@ -141,8 +149,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Validates the given password reset token for the given email address.
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="resetToken"></param>
+        /// <param name="email">Represents the given email address to validate the
+        /// Password Reset Token for.</param>
+        /// <param name="resetToken">Represents the (hopefully) valid Password Refresh Token.</param>
         /// <returns>True/False depending on the response,
         /// or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(string email, string resetToken)
@@ -163,7 +172,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Checks if a user with the given email address is registered.
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="email">Represents the given email address of the (hopefully) existing user.</param>
         /// <returns>True/False depending on the response.</returns>
         public async Task<bool> UserExists(string email) =>
             await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
@@ -171,8 +180,8 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Changes the password of the user with the given ID to the new given password.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="newPassword"></param>
+        /// <param name="userId">Represents the given user ID of the user to update the password for.</param>
+        /// <param name="newPassword">Represents the given new password for the user.</param>
         /// <returns>True/False depending on the outcome, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
@@ -204,7 +213,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <summary>
         /// Recieves a user from the database with the given email address.
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="email">Represents the given email address used to recieve the user.</param>
         /// <returns>A User object.</returns>
         public async Task<User?> GetUserByEmail(string email) =>
             await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
@@ -222,7 +231,8 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// from the configuration, and the HMAC SHA512 Signature security algorithm.
         /// The token expires after 2 days.
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">Represents the user to create the JWT for. Meaning the properties of
+        /// this object (Id, Email, Role) will be added to the list of claims in the JWT.</param>
         /// <returns>A newly issued JWT for authentication and authorization.</returns>
         private string CreateJWT(User user)
         {

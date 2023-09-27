@@ -6,10 +6,12 @@
     public class ProductController : ControllerTemplate
     {
         /// <summary>
-        /// IProductService instance. This accesses the implementation class of the ProductService through the IoC container.
+        /// IProductService field. Used to access the Product Services.
         /// </summary>
         private readonly IProductService _productService;
 
+        /// <param name="productService">IProductService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public ProductController(IProductService productService)
         {
             _productService = productService;
@@ -26,7 +28,7 @@
         /// <summary>
         /// Endpoint for administrators to create a new product.
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="product">Represents the given product to be created in the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPost("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product) =>
@@ -35,16 +37,16 @@
         /// <summary>
         /// Endpoint for administrators to update a product.
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="product">Represents the given product to be updated (ID must be included)</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> EditProduct(Product product) =>
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> UpdateProduct(Product product) =>
             HandleResult(await _productService.UpdateProductAsync(product));
 
         /// <summary>
         /// Endpoint for administrators to delete a product from the database with the given ID.
         /// </summary>
-        /// <param name="productId"></param>
+        /// <param name="productId">Represents the ID of the product to be deleted from the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId) =>
@@ -61,7 +63,7 @@
         /// <summary>
         /// Endpoint to get a product with the given ID.
         /// </summary>
-        /// <param name="productId"></param>
+        /// <param name="productId">Represents the ID of the product to be recieved.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("{productId}")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId) =>
@@ -70,7 +72,7 @@
         /// <summary>
         /// Endpoint to get a list of products, that is within a specific category.
         /// </summary>
-        /// <param name="categoryUrl"></param>
+        /// <param name="categoryUrl">Represents the name of the category URL to get products within.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("category/{categoryUrl}")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductsByCategory(string categoryUrl) =>
@@ -79,8 +81,8 @@
         /// <summary>
         /// Endpoint to get a list of paginated products, that matches the given search text, on the specific page.
         /// </summary>
-        /// <param name="searchTerm"></param>
-        /// <param name="page"></param>
+        /// <param name="searchTerm">Represents the search text to recieve products.</param>
+        /// <param name="page">Represents the page number to recieve products from.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("search/{searchTerm}/{page}")]
         public async Task<ActionResult<ServiceResponse<ProductSearchResultDto>>> SearchProducts(string searchTerm, int page = 1) =>
@@ -89,7 +91,7 @@
         /// <summary>
         /// Endpoint to recieve search suggestions from a string input.
         /// </summary>
-        /// <param name="searchTerm"></param>
+        /// <param name="searchTerm">Represents the search text to recieve product suggestions.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("search/suggestions/{searchTerm}")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm) =>

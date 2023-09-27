@@ -6,18 +6,24 @@
     public class OrderService : IOrderService
     {
         /// <summary>
-        /// Instance of EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
         /// <summary>
-        /// ICartService instance. This accesses the implementation class of the CartService through the IoC container.
+        /// ICartService field. Used to access the Cart Services.
         /// </summary>
         private readonly ICartService _cartService;
         /// <summary>
-        /// IAuthService instance. This accesses the implementation class of the AuthService through the IoC container.
+        /// IAuthService field. Used to access the Auth Services.
         /// </summary>
         private readonly IAuthService _authService;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the correct
+        /// field, containing the correct implementation through the IoC container.</param>
+        /// <param name="cartService">ICartService instance to be passed on to the correct
+        /// field, containing the correct implementation class through the IoC container.</param>
+        /// <param name="authService">IAuthService instance to be passed on to the correct
+        /// field, containing the correct implementation class through the IoC container.</param>
         public OrderService(
             EcommerceContext context,
             ICartService cartService,
@@ -33,7 +39,7 @@
         /// all the cart items the current user has. This method also deletes those
         /// database cart items after the order is placed.
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userId">Represents the ID of the user to have placed an order.</param>
         /// <returns>True/False depending on the response.</returns>
         public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
         {
@@ -70,7 +76,7 @@
         /// <summary>
         /// Recieves a list of the details of an order with the given ID.
         /// </summary>
-        /// <param name="orderId"></param>
+        /// <param name="orderId">Represents the given order ID to get the order details from.</param>
         /// <returns>OrderDetailsDto with all of the order details.</returns>
         public async Task<ServiceResponse<OrderDetailsDto>> GetOrderDetailsAsync(int orderId)
         {

@@ -7,10 +7,12 @@
     public class AddressController : ControllerTemplate
     {
         /// <summary>
-        /// IAddress instance. This accesses the implementation class of the AddressService through the IoC container.
+        /// IAddressService field. Used to access the Address Services.
         /// </summary>
         private readonly IAddressService _addressService;
 
+        /// <param name="addressService">IAddressService instance to be passed on to the
+        /// field, containing the correct implementation class through the IoC container.</param>
         public AddressController(IAddressService addressService)
         {
             _addressService = addressService;
@@ -27,7 +29,7 @@
         /// <summary>
         /// Endpoint to create or update the currently authenticated users address.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Represents the given Address to be added or updated.</param>
         /// <returns>The updated address data or an error in case of failure.</returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<Address>>> AddOrUpdateAddress(Address request) =>

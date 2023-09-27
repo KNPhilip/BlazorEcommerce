@@ -6,14 +6,18 @@
     public class ProductService : IProductService
     {
         /// <summary>
-        /// Instance of EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
         /// <summary>
-        /// Instance of the HTTP Context.
+        /// IHttpContextAccessor field. Used to access the current HTTP context.
         /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the correct
+        /// field, containing the correct implementation through the IoC container.</param>
+        /// <param name="httpContextAccessor">IHttpContextAccessor instance to be passed on to the
+        /// correct field, containing the correct implementation through the IoC container.</param>
         public ProductService(EcommerceContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
@@ -23,7 +27,7 @@
         /// <summary>
         /// Recieves a product from the database matching the given ID.
         /// </summary>
-        /// <param name="productId"></param>
+        /// <param name="productId">Represents the given ID of the product to recieve.</param>
         /// <returns>The product, or an appropriate error message in case of failure.</returns>
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
@@ -69,7 +73,8 @@
         /// <summary>
         /// Recieves a list of products within the specified category name.
         /// </summary>
-        /// <param name="categoryUrl"></param>
+        /// <param name="categoryUrl">Represents the given name of the
+        /// category URL to recieve products from.</param>
         /// <returns>A list of products or an appropriate error message on failure.</returns>
         public async Task<ServiceResponse<List<Product>>> GetProductsByCategoryAsync(string categoryUrl)
         {
@@ -87,7 +92,7 @@
         /// <summary>
         /// Recieves a list of suggested product titles based on search text.
         /// </summary>
-        /// <param name="searchTerm"></param>
+        /// <param name="searchTerm">Represents the search text to get suggestions based on.</param>
         /// <returns>A list of strings (product title suggestions)</returns>
         public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestionsAsync(string searchTerm)
         {
@@ -121,8 +126,8 @@
         /// <summary>
         /// Recieves paginated list of products matching the given search text, on the given page.
         /// </summary>
-        /// <param name="searchTerm"></param>
-        /// <param name="page"></param>
+        /// <param name="searchTerm">Represents the text to search for products.</param>
+        /// <param name="page">Represents the number of the page to be returned.</param>
         /// <returns>A list of paginated products</returns>
         public async Task<ServiceResponse<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
         {
@@ -186,7 +191,7 @@
         /// <summary>
         /// Creates a new Product in the database.
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="product">Represents the given Product to be created.</param>
         /// <returns>The given body on success, or an appropriate error message on failure.</returns>
         public async Task<ServiceResponse<Product>> CreateProductAsync(Product product)
         {
@@ -202,7 +207,7 @@
         /// <summary>
         /// Updates a Product with the matching ID, replacing the old body with the given.
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="product">Represents the given product to be updated (Including the ID)</param>
         /// <returns>The given body on success, or an appropriate error message on failure.</returns>
         public async Task<ServiceResponse<Product>> UpdateProductAsync(Product product)
         {
@@ -254,7 +259,7 @@
         /// <summary>
         /// Deletes the Product with the given ID from the database.
         /// </summary>
-        /// <param name="productId"></param>
+        /// <param name="productId">Represents the ID of the product to be deleted from the database.</param>
         /// <returns>True/False depending on the success.</returns>
         public async Task<ServiceResponse<bool>> DeleteProductsAsync(int productId)
         {
@@ -271,7 +276,7 @@
         /// <summary>
         /// Extracted method to recieve a list of all products matching the given search text.
         /// </summary>
-        /// <param name="searchTerm"></param>
+        /// <param name="searchTerm">Represents the search text to find products.</param>
         /// <returns>A list of products on success, or an appropriate error message on failure</returns>
         private async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm) =>
             await _context.Products

@@ -6,14 +6,18 @@
     public class AddressService : IAddressService
     {
         /// <summary>
-        /// Instance of EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
         /// <summary>
-        /// IAuthService instance. This accesses the implementation class of the AuthService through the IoC container.
+        /// IAuthService field. Used to access the Auth Services.
         /// </summary>
         private readonly IAuthService _authService;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the correct
+        /// field, containing the correct implementation through the IoC container.</param>
+        /// <param name="authService">IAuthService instance to be passed on to the correct
+        /// field, containing the correct implementation class through the IoC container.</param>
         public AddressService(EcommerceContext context, IAuthService authService)
         {
             _context = context;
@@ -38,7 +42,7 @@
         /// <summary>
         /// Adds or updates the address of the currently authenticated user.
         /// </summary>
-        /// <param name="address"></param>
+        /// <param name="address">Represents the given address to add or update.</param>
         /// <returns>The added or updated address.</returns>
         public async Task<ServiceResponse<Address>> AddOrUpdateAddress(Address address)
         {

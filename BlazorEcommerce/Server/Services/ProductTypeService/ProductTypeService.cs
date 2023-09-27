@@ -6,10 +6,12 @@
     public class ProductTypeService : IProductTypeService
     {
         /// <summary>
-        /// Instance of the EcommerceContext (EF Data Context)
+        /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
 
+        /// <param name="context">EcommerceContext instance to be passed on to the correct
+        /// field, containing the correct implementation through the IoC container.</param>
         public ProductTypeService(EcommerceContext context)
         {
             _context = context;
@@ -31,7 +33,7 @@
         /// <summary>
         /// Adds a new Product Type to the database.
         /// </summary>
-        /// <param name="productType"></param>
+        /// <param name="productType">Represents the given product type to be added to the database.</param>
         /// <returns>A new list of all Product Types, making it possible to inspect the outcome of the method.</returns>
         public async Task<ServiceResponse<List<ProductType>>> AddProductType(ProductType productType)
         {
@@ -44,7 +46,8 @@
         /// <summary>
         /// Updates the properties of a Product Type.
         /// </summary>
-        /// <param name="productType"></param>
+        /// <param name="productType">Represents the given product type to update
+        /// in the database (ID included)</param>
         /// <returns>A new list of all Product Types, making it possible to inspect the outcome of the method, or an error if the Product Type was not found.</returns>
         public async Task<ServiceResponse<List<ProductType>>> UpdateProductType(ProductType productType)
         {
@@ -61,7 +64,7 @@
         /// <summary>
         /// Deletes the Product Type with the given ID from the database.
         /// </summary>
-        /// <param name="productTypeId"></param>
+        /// <param name="productTypeId">Represents the ID of the product to be deleted from the database.</param>
         /// <returns>A new list of all Product Types, making it possible to inspect the outcome of the method, or an error if the Product Type was not found.</returns>
         public async Task<ServiceResponse<List<ProductType>>> DeleteProductType(int productTypeId)
         {
@@ -78,7 +81,7 @@
         /// <summary>
         /// Extracted method to recieve a Product Type from the database with the given ID.
         /// </summary>
-        /// <param name="productTypeId"></param>
+        /// <param name="productTypeId">Represents the given ID of the Product Type to receive.</param>
         /// <returns>The ProductType with the given ID, if any.</returns>
         private async Task<ProductType?> GetProductTypeByIdAsync(int productTypeId) => 
             await _context.ProductTypes.FindAsync(productTypeId);

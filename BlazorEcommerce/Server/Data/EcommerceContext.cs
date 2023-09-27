@@ -6,6 +6,11 @@
     /// </summary>
     public class EcommerceContext : DbContext
     {
+        /// <summary>
+        /// EcommerceContext Constructor - Simply passes the DbContextOptions on to the base class.
+        /// </summary>
+        /// <param name="options">DbContextOptions of the EcommerceContext to be passed
+        /// on to the base class.</param>
         public EcommerceContext(DbContextOptions<EcommerceContext> options) : base(options)
         {
         }
@@ -392,15 +397,45 @@
                 .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
         }
 
+        /// <summary>
+        /// The name of the table in the database containing the Product Entity.
+        /// </summary>
         public DbSet<Product> Products { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Category Entity.
+        /// </summary>
         public DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the ProductType Entity.
+        /// </summary>
         public DbSet<ProductType> ProductTypes { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the ProductVariant Entity.
+        /// </summary>
         public DbSet<ProductVariant> ProductVariants { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the User Entity.
+        /// </summary>
         public DbSet<User> Users { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the CartItem Entity.
+        /// </summary>
         public DbSet<CartItem> CartItems { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Order Entity.
+        /// </summary>
         public DbSet<Order> Orders { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the OrderItem Entity.
+        /// </summary>
         public DbSet<OrderItem> OrderItems { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Address Entity.
+        /// </summary>
         public DbSet<Address> Addresses { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Image Entity.
+        /// </summary>
         public DbSet<Image> Images { get; set; }
     }
 }
