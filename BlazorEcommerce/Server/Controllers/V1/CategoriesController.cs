@@ -1,9 +1,9 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Category Controller - Contains all endpoints regarding categories.
     /// </summary>
-    public class CategoryController : ControllerTemplate
+    public class CategoriesController : ControllerTemplate
     {
         /// <summary>
         /// ICategoryService field. Used to access the Category Services.
@@ -12,7 +12,7 @@
 
         /// <param name="categoryService">ICategoryService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public CategoryController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="category">Represents the given category to be added.</param>
         /// <returns>A list of all categories.</returns>
-        [HttpPost("admin"), Authorize(Roles = "Admin")]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategory(Category category) =>
             HandleResult(await _categoryService.AddCategoryAsync(category));
 
@@ -49,7 +49,7 @@
         /// The existing one is found by taking the given id within the given category and finding
         /// the matching category from the database.</param>
         /// <returns>A list of all categories.</returns>
-        [HttpPut("admin"), Authorize(Roles = "Admin")]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(Category category) =>
             HandleResult(await _categoryService.UpdateCategoryAsync(category));
 
@@ -58,7 +58,7 @@
         /// </summary>
         /// <param name="categoryId">Represents the given ID of the category to be deleted from the database.</param>
         /// <returns>A list of all categories.</returns>
-        [HttpDelete("admin/{categoryId}"), Authorize(Roles = "Admin")]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int categoryId) =>
             HandleResult(await _categoryService.DeleteCategoryAsync(categoryId));
     }

@@ -1,9 +1,9 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Payment Controller - Contains all endpoints regarding payments & Stripe.
     /// </summary>
-    public class PaymentController : ControllerTemplate
+    public class PaymentsController : ControllerTemplate
     {
         /// <summary>
         /// IPaymentService field. Used to access the Payment Services.
@@ -12,7 +12,7 @@
 
         /// <param name="paymentService">IPaymentService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public PaymentController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }

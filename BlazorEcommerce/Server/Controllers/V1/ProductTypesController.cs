@@ -1,10 +1,10 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Product Type Controller - Contains all endpoints regarding Product Types. This is meant for administrators only.
     /// </summary>
     [Authorize(Roles = "Admin")]
-    public class ProductTypeController : ControllerTemplate
+    public class ProductTypesController : ControllerTemplate
     {
         /// <summary>
         /// IProductTypeService field. Used to access the Product Type Services.
@@ -13,7 +13,7 @@
 
         /// <param name="productTypeService">IProductTypeService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public ProductTypeController(IProductTypeService productTypeService)
+        public ProductTypesController(IProductTypeService productTypeService)
         {
             _productTypeService = productTypeService;
         }

@@ -1,9 +1,9 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Cart Controller - Contains all endpoints regarding the cart.
     /// </summary>
-    public class CartController : ControllerTemplate
+    public class CartsController : ControllerTemplate
     {
         /// <summary>
         /// ICartService field. Used to access the Cart Services.
@@ -12,7 +12,7 @@
 
         /// <param name="cartService">ICartService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public CartController(ICartService cartService)
+        public CartsController(ICartService cartService)
         {
             _cartService = cartService;
         }

@@ -16,7 +16,7 @@
 
         public async Task DeleteCategory(int categoryId)
         {
-            var response = await _http.DeleteAsync($"api/category/admin/{categoryId}");
+            var response = await _http.DeleteAsync($"api/v1/categories/{categoryId}");
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
             await GetCategories();
@@ -25,7 +25,7 @@
 
         public async Task UpdateCategory(Category category)
         {
-            var response = await _http.PutAsJsonAsync("api/category/admin", category);
+            var response = await _http.PutAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
             await GetCategories();
@@ -34,7 +34,7 @@
 
         public async Task AddCategory(Category category)
         {
-            var response = await _http.PostAsJsonAsync("api/category/admin", category);
+            var response = await _http.PostAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<Category>>>()).Data;
             await GetCategories();
@@ -55,14 +55,14 @@
 
         public async Task GetAdminCategories()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category/admin");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories/admin");
             if (response is not null && response.Data != null)
                 AdminCategories = response.Data;
         }
 
         public async Task GetCategories()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories");
             if (response is not null && response.Data != null)
                 Categories = response.Data;
         }

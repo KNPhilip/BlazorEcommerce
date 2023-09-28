@@ -1,10 +1,10 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Controller Template - Contains the common definition for all controllers
     /// as well as methods for handling common Controller logic. Derives from the ControllerBase class.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ControllerTemplate : ControllerBase
     {

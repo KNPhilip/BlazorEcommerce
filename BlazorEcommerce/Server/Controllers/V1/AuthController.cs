@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Auth Controller - Contains all endpoints regarding token-based authentication and authorization.
@@ -25,8 +25,8 @@
         /// <returns>The ID of the new registered user or an error in case of failure.</returns>
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegisterDto request) =>
-            HandleResult(await _authService.Register(new User 
-                { Email = request.Email }, request.Password));
+            HandleResult(await _authService.Register(new User
+            { Email = request.Email }, request.Password));
 
         /// <summary>
         /// Endpoint for login.

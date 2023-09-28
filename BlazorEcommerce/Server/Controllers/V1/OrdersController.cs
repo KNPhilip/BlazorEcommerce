@@ -1,9 +1,9 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Order Controller - Contains all endpoints regarding orders.
     /// </summary>
-    public class OrderController : ControllerTemplate
+    public class OrdersController : ControllerTemplate
     {
         /// <summary>
         /// IOrderService field. Used to access the Order Services.
@@ -12,7 +12,7 @@
 
         /// <param name="orderService">IOrderService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public OrderController(IOrderService orderService)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
         }

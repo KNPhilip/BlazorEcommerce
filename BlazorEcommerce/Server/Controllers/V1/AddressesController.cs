@@ -1,10 +1,10 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Address Controller - Contains all endpoints regarding addresses.
     /// </summary>
     [Authorize]
-    public class AddressController : ControllerTemplate
+    public class AddressesController : ControllerTemplate
     {
         /// <summary>
         /// IAddressService field. Used to access the Address Services.
@@ -13,7 +13,7 @@
 
         /// <param name="addressService">IAddressService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public AddressController(IAddressService addressService)
+        public AddressesController(IAddressService addressService)
         {
             _addressService = addressService;
         }

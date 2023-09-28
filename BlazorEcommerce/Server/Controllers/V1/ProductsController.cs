@@ -1,9 +1,9 @@
-﻿namespace BlazorEcommerce.Server.Controllers
+﻿namespace BlazorEcommerce.Server.Controllers.V1
 {
     /// <summary>
     /// Product Controller - Contains all endpoints regarding products.
     /// </summary>
-    public class ProductController : ControllerTemplate
+    public class ProductsController : ControllerTemplate
     {
         /// <summary>
         /// IProductService field. Used to access the Product Services.
@@ -12,7 +12,7 @@
 
         /// <param name="productService">IProductService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
-        public ProductController(IProductService productService)
+        public ProductsController(IProductService productService)
         {
             _productService = productService;
         }
@@ -30,7 +30,7 @@
         /// </summary>
         /// <param name="product">Represents the given product to be created in the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
-        [HttpPost("admin"), Authorize(Roles = "Admin")]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product) =>
             HandleResult(await _productService.CreateProductAsync(product));
 
@@ -39,7 +39,7 @@
         /// </summary>
         /// <param name="product">Represents the given product to be updated (ID must be included)</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
-        [HttpPut("admin"), Authorize(Roles = "Admin")]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> UpdateProduct(Product product) =>
             HandleResult(await _productService.UpdateProductAsync(product));
 
@@ -48,7 +48,7 @@
         /// </summary>
         /// <param name="productId">Represents the ID of the product to be deleted from the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
-        [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
+        [HttpDelete("{productId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId) =>
             HandleResult(await _productService.DeleteProductsAsync(productId));
 
@@ -93,7 +93,7 @@
         /// </summary>
         /// <param name="searchTerm">Represents the search text to recieve product suggestions.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
-        [HttpGet("search/suggestions/{searchTerm}")]
+        [HttpGet("search-suggestions/{searchTerm}")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm) =>
             HandleResult(await _productService.GetProductSearchSuggestionsAsync(searchTerm));
 

@@ -13,42 +13,40 @@
 
         public async Task<ServiceResponse<bool>> ChangePassword(UserChangePasswordDto request)
         {
-            var result = await _http.PostAsJsonAsync("api/auth/change-password", request.Password);
+            var result = await _http.PostAsJsonAsync("api/v1/auth/change-password", request.Password);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
         }
 
-        public async Task<bool> IsUserAuthenticated()
-        {
-            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
-        }
+        public async Task<bool> IsUserAuthenticated() =>
+            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
 
         public async Task<ServiceResponse<string>> Login(UserLoginDto request)
         {
-            var result = await _http.PostAsJsonAsync("api/auth/login", request);
+            var result = await _http.PostAsJsonAsync("api/v1/auth/login", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
 
         public async Task<ServiceResponse<int>> Register(UserRegisterDto request)
         {
-            var result = await _http.PostAsJsonAsync("api/auth/register", request);
+            var result = await _http.PostAsJsonAsync("api/v1/auth/register", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
 
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(TokenValidateDto request)
         {
-            var result = await _http.PostAsJsonAsync("api/auth/reset-password/validate", request);
+            var result = await _http.PostAsJsonAsync("api/v1/auth/reset-password/validate", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
         }
 
         public async Task<ServiceResponse<bool>> ResetPassword(PasswordResetDto request)
         {
-            var result = await _http.PostAsJsonAsync("api/auth/reset-password", request);
+            var result = await _http.PostAsJsonAsync("api/v1/auth/reset-password", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
         }
 
         public async Task<ServiceResponse<string>> CreateResetToken(User request)
         {
-            var result = await _http.PostAsJsonAsync("api/Auth/create-password-token", request);
+            var result = await _http.PostAsJsonAsync("api/v1/Auth/create-password-token", request);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
     }
