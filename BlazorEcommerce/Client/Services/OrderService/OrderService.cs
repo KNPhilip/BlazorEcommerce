@@ -18,13 +18,13 @@
 
         public async Task<OrderDetailsDto> GetOrderDetails(int orderId)
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsDto>>($"api/order/{orderId}");
+            var result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsDto>>($"api/v1/orders/{orderId}");
             return result.Data;
         }
 
         public async Task<List<OrderOverviewDto>> GetOrders()
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewDto>>>("api/order");
+            var result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewDto>>>("api/v1/orders");
             return result.Data;
         }
 
@@ -32,7 +32,7 @@
         {
             if (await IsUserAuthenticated())
             {
-                var result = await _http.PostAsync("api/payment/checkout", null);
+                var result = await _http.PostAsync("api/v1/payments/checkout", null);
                 var url = await result.Content.ReadAsStringAsync();
                 return url;
             }
@@ -42,9 +42,7 @@
             }
         }
 
-        private async Task<bool> IsUserAuthenticated()
-        {
-            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
-        }
+        private async Task<bool> IsUserAuthenticated() =>
+            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
     }
 }

@@ -1,3 +1,4 @@
+#region Usings
 global using Microsoft.AspNetCore.Mvc;
 global using BlazorEcommerce.Shared;
 global using Microsoft.EntityFrameworkCore;
@@ -21,12 +22,12 @@ global using Stripe.Checkout;
 global using Microsoft.AspNetCore.Authorization;
 global using System.Net.Mail;
 global using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Entity Framework Configuration
 builder.Services.AddDbContext<EcommerceContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -37,6 +38,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Add Services
+// Add Services to IoC container
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
@@ -47,6 +50,9 @@ builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettingsDto>());
+builder.Services.AddHttpContextAccessor(); 
+#endregion
+// Add Authentication Middleware
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -59,19 +65,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
-builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Referrer Policy Header - Controls included information on navigation.
+#region Security Headers
+// Referrer Policy Header - Controls included information on navigation
 app.UseReferrerPolicy(options => options.SameOrigin());
-// X Content Type Options Header - Prevents MIME-sniffing of the content type.
+// X Content Type Options Header - Prevents MIME-sniffing of the content type
 app.UseXContentTypeOptions();
-// X Frame Options Header - Defends against attacks like clickjacking by banning framing on the site.
+// X Frame Options Header - Defends against attacks like clickjacking by banning framing on the site
 app.UseXfo(options => options.Deny());
-// X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff.
+// X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff
 app.UseXXssProtection(options => options.EnabledWithBlockMode());
-// Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection).
+// Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection)
 app.UseCspReportOnly(options => options
     .BlockAllMixedContent()
     .StyleSources(s => s.Self())
@@ -81,13 +87,13 @@ app.UseCspReportOnly(options => options
     .FrameAncestors(s => s.Self())
     .ImageSources(s => s.Self())
     .ScriptSources(s => s.Self())
-);
+); 
+#endregion
 
-app.UseSwaggerUI();
-
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwaggerUI();
     app.UseWebAssemblyDebugging();
 }
 else

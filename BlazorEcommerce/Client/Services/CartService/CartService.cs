@@ -22,7 +22,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                await _http.PostAsJsonAsync("api/cart/add", cartItem);
+                await _http.PostAsJsonAsync("api/v1/carts/add", cartItem);
             }
             else
             {
@@ -52,7 +52,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                var result = await _http.GetFromJsonAsync<ServiceResponse<int>>("api/cart/count");
+                var result = await _http.GetFromJsonAsync<ServiceResponse<int>>("api/v1/carts/count");
                 var count = result.Data;
 
                 await _localStorage.SetItemAsync<int>("cartItemsCount", count);
@@ -70,7 +70,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                var response = await _http.GetFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>("api/cart");
+                var response = await _http.GetFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>("api/v1/carts");
                 return response.Data;
             }
             else
@@ -78,7 +78,7 @@
                 var cartItems = await _localStorage.GetItemAsync<List<CartItem>>("cart");
                 if (cartItems is null)
                     return new List<CartProductResponseDto>();
-                var response = await _http.PostAsJsonAsync("api/cart/products", cartItems);
+                var response = await _http.PostAsJsonAsync("api/v1/carts/products", cartItems);
                 var cartProducts =
                     await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>();
 
@@ -90,7 +90,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                await _http.DeleteAsync($"api/cart/{productId}/{productTypeId}");
+                await _http.DeleteAsync($"api/v1/carts/{productId}/{productTypeId}");
             }
             else
             {
@@ -116,7 +116,7 @@
             if (localCart is null)
                 return;
 
-            await _http.PostAsJsonAsync("api/cart", localCart);
+            await _http.PostAsJsonAsync("api/v1/carts", localCart);
 
             if (emptyLocalCart)
                 await _localStorage.RemoveItemAsync("cart");
@@ -133,7 +133,7 @@
                     ProductTypeId = product.ProductTypeId
                 };
 
-                await _http.PutAsJsonAsync("api/cart/update-quantity", request);
+                await _http.PutAsJsonAsync("api/v1/carts/update-quantity", request);
             }
             else
             {

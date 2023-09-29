@@ -11,14 +11,14 @@
 
         public async Task<Address> AddOrUpdateAddress(Address address)
         {
-            var response = await _http.PostAsJsonAsync("api/address", address);
+            var response = await _http.PostAsJsonAsync("api/v1/addresses", address);
             return response.Content
                 .ReadFromJsonAsync<ServiceResponse<Address>>().Result.Data;
         }
 
         public async Task<Address> GetAddress()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<Address>>("api/address");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<Address>>("api/v1/addresses");
             return response.Data;
         }
     }

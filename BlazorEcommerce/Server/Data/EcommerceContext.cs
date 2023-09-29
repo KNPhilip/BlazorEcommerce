@@ -1,11 +1,23 @@
 ﻿namespace BlazorEcommerce.Server.Data
 {
+    /// <summary>
+    /// A database context instance, representing a session with the database and can be used to query and save instances of the entities.
+    /// EcommerceContext derives from DbContext, which is a combination of the UoW and Repository patterns.
+    /// </summary>
     public class EcommerceContext : DbContext
     {
+        #region Constructor
+        /// <summary>
+        /// EcommerceContext Constructor - Simply passes the DbContextOptions on to the base class.
+        /// </summary>
+        /// <param name="options">DbContextOptions of the EcommerceContext to be passed
+        /// on to the base class.</param>
         public EcommerceContext(DbContextOptions<EcommerceContext> options) : base(options)
         {
         }
+        #endregion
 
+        #region Data Seeding
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasData(
@@ -316,63 +328,63 @@
             );
 
             modelBuilder.Entity<ProductType>().HasData(
-                new 
+                new
                 {
                     Id = 1,
                     Name = "Default",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 2, 
+                    Id = 2,
                     Name = "Paperback",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 3, 
+                    Id = 3,
                     Name = "E-Book",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 4, 
+                    Id = 4,
                     Name = "Audiobook",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 5, 
+                    Id = 5,
                     Name = "Stream",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 6, 
+                    Id = 6,
                     Name = "Blu-ray",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 7, 
+                    Id = 7,
                     Name = "VHS",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 8, 
+                    Id = 8,
                     Name = "PC",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 9, 
+                    Id = 9,
                     Name = "PlayStation",
                     IsDeleted = false
                 },
-                new 
+                new
                 {
-                    Id = 10, 
+                    Id = 10,
                     Name = "Xbox",
                     IsDeleted = false
                 }
@@ -387,16 +399,49 @@
             modelBuilder.Entity<OrderItem>()
                 .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
         }
+        #endregion
 
+        #region Properties
+        /// <summary>
+        /// The name of the table in the database containing the Product Entity.
+        /// </summary>
         public DbSet<Product> Products { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Category Entity.
+        /// </summary>
         public DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the ProductType Entity.
+        /// </summary>
         public DbSet<ProductType> ProductTypes { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the ProductVariant Entity.
+        /// </summary>
         public DbSet<ProductVariant> ProductVariants { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the User Entity.
+        /// </summary>
         public DbSet<User> Users { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the CartItem Entity.
+        /// </summary>
         public DbSet<CartItem> CartItems { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Order Entity.
+        /// </summary>
         public DbSet<Order> Orders { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the OrderItem Entity.
+        /// </summary>
         public DbSet<OrderItem> OrderItems { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Address Entity.
+        /// </summary>
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<Image> Images { get; set; }
+        /// <summary>
+        /// The name of the table in the database containing the Image Entity.
+        /// </summary>
+        public DbSet<Image> Images { get; set; } 
+        #endregion
     }
 }

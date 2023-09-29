@@ -1,6 +1,4 @@
-﻿using BlazorEcommerce.Shared.Models;
-
-namespace BlazorEcommerce.Client.Services.ProductTypeService
+﻿namespace BlazorEcommerce.Client.Services.ProductTypeService
 {
     public class ProductTypeService : IProductTypeService
     {
@@ -18,7 +16,7 @@ namespace BlazorEcommerce.Client.Services.ProductTypeService
         public async Task AddProductType(ProductType productType)
         {
             productType.Editing = productType.IsNew = false;
-            var response = await _http.PostAsJsonAsync("api/producttype", productType);
+            var response = await _http.PostAsJsonAsync("api/v1/producttypes", productType);
             ProductTypes = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
@@ -40,13 +38,13 @@ namespace BlazorEcommerce.Client.Services.ProductTypeService
         public async Task GetProductTypes()
         {
             var result = await _http
-                .GetFromJsonAsync<ServiceResponse<List<ProductType>>>("api/producttype");
+                .GetFromJsonAsync<ServiceResponse<List<ProductType>>>("api/v1/producttypes");
             ProductTypes = result.Data;
         }
 
         public async Task UpdateProductType(ProductType productType)
         {
-            var response = await _http.PutAsJsonAsync("api/producttype", productType);
+            var response = await _http.PutAsJsonAsync("api/v1/producttypes", productType);
             ProductTypes = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
@@ -54,7 +52,7 @@ namespace BlazorEcommerce.Client.Services.ProductTypeService
 
         public async Task DeleteProductType(int productTypeId)
         {
-            var response = await _http.DeleteAsync($"api/producttype/{productTypeId}");
+            var response = await _http.DeleteAsync($"api/v1/producttypes/{productTypeId}");
             ProductTypes = (await response.Content
                 .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>()).Data;
             OnChange.Invoke();
