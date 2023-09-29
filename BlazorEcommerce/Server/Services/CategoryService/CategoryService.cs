@@ -5,18 +5,23 @@
     /// </summary>
     public class CategoryService : ICategoryService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
-        private readonly EcommerceContext _context;
+        private readonly EcommerceContext _context; 
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the
         /// field, containing the correct implementation through the IoC container.</param>
         public CategoryService(EcommerceContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Recieves a list of all available categories from the database.
         /// </summary>
@@ -98,7 +103,8 @@
         /// </summary>
         /// <param name="id">Represents the ID of the category to recieve.</param>
         /// <returns>A Category.</returns>
-        private async Task<Category?> GetCategoryById(int id) => 
-            await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        private async Task<Category?> GetCategoryById(int id) =>
+            await _context.Categories.FirstOrDefaultAsync(c => c.Id == id); 
+        #endregion
     }
 }

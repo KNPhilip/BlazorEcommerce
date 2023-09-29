@@ -5,18 +5,23 @@
     /// </summary>
     public class ProductTypeService : IProductTypeService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
         private readonly EcommerceContext _context;
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the correct
         /// field, containing the correct implementation through the IoC container.</param>
         public ProductTypeService(EcommerceContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Gets all of the Product Types from the database.
         /// </summary>
@@ -83,7 +88,8 @@
         /// </summary>
         /// <param name="productTypeId">Represents the given ID of the Product Type to receive.</param>
         /// <returns>The ProductType with the given ID, if any.</returns>
-        private async Task<ProductType?> GetProductTypeByIdAsync(int productTypeId) => 
-            await _context.ProductTypes.FindAsync(productTypeId);
+        private async Task<ProductType?> GetProductTypeByIdAsync(int productTypeId) =>
+            await _context.ProductTypes.FindAsync(productTypeId); 
+        #endregion
     }
 }

@@ -5,18 +5,23 @@
     /// </summary>
     public class CartsController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// ICartService field. Used to access the Cart Services.
         /// </summary>
         private readonly ICartService _cartService;
+        #endregion
 
+        #region Constructor
         /// <param name="cartService">ICartService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public CartsController(ICartService cartService)
         {
             _cartService = cartService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Endpoint to recieve the actual products from the cart.
         /// </summary>
@@ -77,6 +82,7 @@
         /// <returns>A list of the products in the cart.</returns>
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> GetDbCartItems() =>
-            HandleResult(await _cartService.GetDbCartItems());
+            HandleResult(await _cartService.GetDbCartItems()); 
+        #endregion
     }
 }

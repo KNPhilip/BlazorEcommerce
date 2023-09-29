@@ -5,18 +5,23 @@
     /// </summary>
     public class ProductsController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// IProductService field. Used to access the Product Services.
         /// </summary>
         private readonly IProductService _productService;
+        #endregion
 
+        #region Constructor
         /// <param name="productService">IProductService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public ProductsController(IProductService productService)
         {
             _productService = productService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Endpoint for administrators to get all products, even those marked as invisible.
         /// </summary>
@@ -103,6 +108,7 @@
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("featured")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts() =>
-            HandleResult(await _productService.GetFeaturedProductsAsync());
+            HandleResult(await _productService.GetFeaturedProductsAsync()); 
+        #endregion
     }
 }

@@ -5,18 +5,23 @@
     /// </summary>
     public class OrdersController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// IOrderService field. Used to access the Order Services.
         /// </summary>
         private readonly IOrderService _orderService;
+        #endregion
 
+        #region Constructor
         /// <param name="orderService">IOrderService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Endpoint to recieve all orders from the database.
         /// </summary>
@@ -32,6 +37,7 @@
         /// <returns>"OrderOverviewDto" with all needed details, or error message in case something went wrong.</returns>
         [HttpGet("{orderId}")]
         public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId) =>
-            HandleResult(await _orderService.GetOrderDetailsAsync(orderId));
+            HandleResult(await _orderService.GetOrderDetailsAsync(orderId)); 
+        #endregion
     }
 }

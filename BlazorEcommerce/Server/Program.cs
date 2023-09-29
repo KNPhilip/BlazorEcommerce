@@ -1,3 +1,4 @@
+#region Usings
 global using Microsoft.AspNetCore.Mvc;
 global using BlazorEcommerce.Shared;
 global using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ global using Stripe.Checkout;
 global using Microsoft.AspNetCore.Authorization;
 global using System.Net.Mail;
 global using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Add Services
 // Add Services to IoC container
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -47,6 +50,8 @@ builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettingsDto>());
+builder.Services.AddHttpContextAccessor(); 
+#endregion
 // Add Authentication Middleware
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -60,10 +65,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
-builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+#region Security Headers
 // Referrer Policy Header - Controls included information on navigation
 app.UseReferrerPolicy(options => options.SameOrigin());
 // X Content Type Options Header - Prevents MIME-sniffing of the content type
@@ -82,8 +87,8 @@ app.UseCspReportOnly(options => options
     .FrameAncestors(s => s.Self())
     .ImageSources(s => s.Self())
     .ScriptSources(s => s.Self())
-);
-
+); 
+#endregion
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

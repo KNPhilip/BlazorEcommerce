@@ -5,18 +5,23 @@
     /// </summary>
     public class PaymentsController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// IPaymentService field. Used to access the Payment Services.
         /// </summary>
         private readonly IPaymentService _paymentService;
+        #endregion
 
+        #region Constructor
         /// <param name="paymentService">IPaymentService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public PaymentsController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Creates a new Stripe checkout session.
         /// </summary>
@@ -42,6 +47,7 @@
         /// <returns>True or False depending on the success of the purchase.</returns>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder() =>
-            HandleResult(await _paymentService.FulfillOrder(Request));
+            HandleResult(await _paymentService.FulfillOrder(Request)); 
+        #endregion
     }
 }

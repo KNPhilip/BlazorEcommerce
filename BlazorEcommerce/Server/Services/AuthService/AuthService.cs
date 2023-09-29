@@ -7,6 +7,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
     /// </summary>
     public class AuthService : IAuthService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
@@ -23,7 +24,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// IMailService field. Used to access the Mail Services.
         /// </summary>
         private readonly IMailService _mailService;
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the correct
         /// field, containing the correct implementation through the IoC container.</param>
         /// <param name="configuration">IConfiguration instance to be passed on to the correct
@@ -33,7 +36,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         /// <param name="mailService">IMailService instance to be passed on to the correct
         /// field, containing the correct implementation class through the IoC container.</param>
         public AuthService(
-            EcommerceContext context, 
+            EcommerceContext context,
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor,
             IMailService mailService)
@@ -43,7 +46,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
             _httpContextAccessor = httpContextAccessor;
             _mailService = mailService;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Request to login to the application with a given email address and password.
         /// </summary>
@@ -73,7 +78,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         {
             if (await UserExists(user.Email))
                 return new ServiceResponse<int> { Error = "User already exists." };
-            
+
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -91,11 +96,16 @@ namespace BlazorEcommerce.Server.Services.AuthService
         {
             User? user = await GetUserByEmail(request.Email);
             if (user is null)
-                return new ServiceResponse<string> { Error =
-                    $"There are no registered users with the email address {request.Email}" };
+                return new ServiceResponse<string>
+                {
+                    Error =
+                    $"There are no registered users with the email address {request.Email}"
+                };
 
             if (!String.IsNullOrEmpty(user.PasswordResetToken) && DateTime.Now < user.ResetTokenExpires)
-                return new ServiceResponse<string> { Error =
+                return new ServiceResponse<string>
+                {
+                    Error =
                     "There is an open reset request already! Please check your inbox or try again later"
                 };
 
@@ -130,7 +140,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         public async Task<ServiceResponse<bool>> ResetPassword(string email, string newPassword, string resetToken)
         {
             ServiceResponse<bool> response = await ValidateResetPasswordToken(email, resetToken);
-            if(!response.Success) return response;
+            if (!response.Success) return response;
 
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user is null)
@@ -256,6 +266,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             string jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-        }
+        } 
+        #endregion
     }
 }

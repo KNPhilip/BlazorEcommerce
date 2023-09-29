@@ -5,18 +5,23 @@
     /// </summary>
     public class AuthController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// IAuthService field. Used to access the Auth Services.
         /// </summary>
         private readonly IAuthService _authService;
+        #endregion
 
+        #region Constructor
         /// <param name="authService">IAuthService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Endpoint to register a new user.
         /// </summary>
@@ -74,6 +79,7 @@
         /// <returns>True/False depending on the success.</returns>
         [HttpPost("reset-password/validate")]
         public async Task<ActionResult<ServiceResponse<bool>>> ResetPasswordTokenValidation(TokenValidateDto request) =>
-            HandleResult(await _authService.ValidateResetPasswordToken(request.UserEmail!, request.ResetToken!));
+            HandleResult(await _authService.ValidateResetPasswordToken(request.UserEmail!, request.ResetToken!)); 
+        #endregion
     }
 }

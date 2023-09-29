@@ -5,6 +5,7 @@
     /// </summary>
     public class ProductService : IProductService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
@@ -13,7 +14,9 @@
         /// IHttpContextAccessor field. Used to access the current HTTP context.
         /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the correct
         /// field, containing the correct implementation through the IoC container.</param>
         /// <param name="httpContextAccessor">IHttpContextAccessor instance to be passed on to the
@@ -23,7 +26,9 @@
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Recieves a product from the database matching the given ID.
         /// </summary>
@@ -39,7 +44,7 @@
                     .ThenInclude(v => v.ProductType)
                     .Include(p => p.Images)
                     .FirstOrDefaultAsync(p => p.Id == productId);
-            else 
+            else
                 product = await _context.Products
                     .Include(p => p.Variants.Where(v => v.Visible && !v.IsDeleted))
                     .ThenInclude(v => v.ProductType)
@@ -114,7 +119,7 @@
                         .Select(s => s.Trim(punctuation));
 
                     foreach (string word in words)
-                        if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) 
+                        if (word.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
                             && !result.Contains(word))
                             result.Add(word);
                 }
@@ -183,7 +188,7 @@
                 .Include(p => p.Images)
                 .ToListAsync();
 
-            return response.Count > 0 
+            return response.Count > 0
                 ? ServiceResponse<List<Product>>.SuccessResponse(response)
                 : new ServiceResponse<List<Product>> { Error = "No products found" };
         }
@@ -284,6 +289,7 @@
                 .Contains(searchTerm.ToLower()) || p.Visible && !p.IsDeleted && p.Description.ToLower()
                 .Contains(searchTerm.ToLower()))
                 .Include(p => p.Variants)
-                .ToListAsync();
+                .ToListAsync(); 
+        #endregion
     }
 }

@@ -5,6 +5,7 @@
     /// </summary>
     public class OrderService : IOrderService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
@@ -17,7 +18,9 @@
         /// IAuthService field. Used to access the Auth Services.
         /// </summary>
         private readonly IAuthService _authService;
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the correct
         /// field, containing the correct implementation through the IoC container.</param>
         /// <param name="cartService">ICartService instance to be passed on to the correct
@@ -27,13 +30,15 @@
         public OrderService(
             EcommerceContext context,
             ICartService cartService,
-            IAuthService authService )
+            IAuthService authService)
         {
             _context = context;
             _cartService = cartService;
             _authService = authService;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Places an order for the user with the given ID. The order contains
         /// all the cart items the current user has. This method also deletes those
@@ -144,6 +149,7 @@
             }));
 
             return ServiceResponse<List<OrderOverviewDto>>.SuccessResponse(orderResponse);
-        }
+        } 
+        #endregion
     }
 }

@@ -7,6 +7,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
     /// </summary>
     public class PaymentService : IPaymentService
     {
+        #region Fields
         /// <summary>
         /// ICartService field. Used to access the Cart Services.
         /// </summary>
@@ -27,7 +28,9 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         /// IHttpContextAccessor field. Used to access the current HTTP context.
         /// </summary>
         protected readonly IHttpContextAccessor _httpContextAccessor;
+        #endregion
 
+        #region Constructor
         /// <param name="cartService">ICartService instance to be passed on to the
         /// correct field, containing the correct implementation class through the IoC container.</param>
         /// <param name="authService">IAuthService instance to be passed on to the
@@ -41,9 +44,9 @@ namespace BlazorEcommerce.Server.Services.PaymentService
         public PaymentService(
             ICartService cartService,
             IAuthService authService,
-            IOrderService orderService, 
+            IOrderService orderService,
             IHttpContextAccessor httpContextAccessor,
-            IConfiguration configuration ) 
+            IConfiguration configuration)
         {
             _configuration = configuration;
             _cartService = cartService;
@@ -54,7 +57,9 @@ namespace BlazorEcommerce.Server.Services.PaymentService
 
             StripeConfiguration.ApiKey = _configuration["StripeAPIKey"];
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Fake completes the order to simulate a complete purchase.
         /// </summary>
@@ -133,7 +138,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
                         _configuration["StripeWebhookSecret"]
                     );
 
-                if(stripeEvent.Type == Events.CheckoutSessionCompleted)
+                if (stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {
                     Session? session = stripeEvent.Data.Object as Session;
                     User? user = await _authService.GetUserByEmail(session?.CustomerEmail!);
@@ -142,10 +147,11 @@ namespace BlazorEcommerce.Server.Services.PaymentService
 
                 return ServiceResponse<bool>.SuccessResponse(true);
             }
-            catch(StripeException e)
+            catch (StripeException e)
             {
                 return new ServiceResponse<bool> { Error = e.Message };
             }
-        }
+        } 
+        #endregion
     }
 }

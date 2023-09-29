@@ -5,6 +5,7 @@
     /// </summary>
     public class AddressService : IAddressService
     {
+        #region Fields
         /// <summary>
         /// EcommerceContext field. Used to access the database context.
         /// </summary>
@@ -12,8 +13,10 @@
         /// <summary>
         /// IAuthService field. Used to access the Auth Services.
         /// </summary>
-        private readonly IAuthService _authService;
+        private readonly IAuthService _authService; 
+        #endregion
 
+        #region Constructor
         /// <param name="context">EcommerceContext instance to be passed on to the correct
         /// field, containing the correct implementation through the IoC container.</param>
         /// <param name="authService">IAuthService instance to be passed on to the correct
@@ -23,7 +26,9 @@
             _context = context;
             _authService = authService;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Recieves the address of the currently authenticated user.
         /// </summary>
@@ -70,6 +75,7 @@
             await _context.SaveChangesAsync();
 
             return ServiceResponse<Address>.SuccessResponse(response);
-        }
+        } 
+        #endregion
     }
 }

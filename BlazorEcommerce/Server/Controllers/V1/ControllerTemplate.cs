@@ -8,6 +8,7 @@
     [ApiController]
     public class ControllerTemplate : ControllerBase
     {
+        #region Methods
         /// <summary>
         /// Handles a response in the ServiceResponse format and
         /// gives back the appropriate status code, data, error messages, etc.
@@ -23,6 +24,7 @@
                     ? NotFound()
                     : Ok(response.Data)
                 : BadRequest(response.Error);
-        }
+        } 
+        #endregion
     }
 }

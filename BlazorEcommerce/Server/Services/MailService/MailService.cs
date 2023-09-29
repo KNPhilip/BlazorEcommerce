@@ -5,13 +5,18 @@
     /// </summary>
     public class MailService : IMailService
     {
-        private readonly MailSettingsDto _mailConfig;
+        #region Fields
+        private readonly MailSettingsDto _mailConfig; 
+        #endregion
 
+        #region Constructor
         public MailService(MailSettingsDto mailConfig)
         {
             _mailConfig = mailConfig;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Sends an email to the given email, with the title of the given subject.
         /// The email itself simply contains the given HTML body.
@@ -47,6 +52,7 @@
             {
                 return new ServiceResponse<bool> { Error = e.Message.ToString() };
             }
-        }
+        } 
+        #endregion
     }
 }

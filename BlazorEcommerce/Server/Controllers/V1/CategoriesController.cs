@@ -5,18 +5,23 @@
     /// </summary>
     public class CategoriesController : ControllerTemplate
     {
+        #region Fields
         /// <summary>
         /// ICategoryService field. Used to access the Category Services.
         /// </summary>
         private readonly ICategoryService _categoryService;
+        #endregion
 
+        #region Constructor
         /// <param name="categoryService">ICategoryService instance to be passed on to the
         /// field, containing the correct implementation class through the IoC container.</param>
         public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
+        #endregion
 
+        #region Endpoints
         /// <summary>
         /// Endpoint to get all categories from the database.
         /// </summary>
@@ -60,6 +65,7 @@
         /// <returns>A list of all categories.</returns>
         [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int categoryId) =>
-            HandleResult(await _categoryService.DeleteCategoryAsync(categoryId));
+            HandleResult(await _categoryService.DeleteCategoryAsync(categoryId)); 
+        #endregion
     }
 }
