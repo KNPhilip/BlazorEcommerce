@@ -9,9 +9,12 @@ namespace BlazorEcommerce.Shared
     {
         public T? Data { get; set; }
         public bool Success { get; set; }
-        public string Error { get; set; } = "Something went wrong..";
+        public string Error { get; set; } = string.Empty;
 
         public static ServiceResponse<T> SuccessResponse(T Data) =>
             new() { Data = Data, Success = true, Error = string.Empty };
+
+        public static ServiceResponse<T> ErrorResponse(string message) =>
+            new() { Success = false, Error = message };
     }
 }

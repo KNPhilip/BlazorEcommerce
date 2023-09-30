@@ -51,9 +51,9 @@
                     .Include(p => p.Images)
                     .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
             if (product is null)
-                return new() { Error = "This product does not exist." };
+                return ServiceResponse<Product>.ErrorResponse("This product does not exist.");
             else if (product.IsDeleted)
-                return new() { Error = $"We're sorry, but \"{product.Title}\" is not available anymore.." };
+                return ServiceResponse<Product>.ErrorResponse($"We're sorry, but \"{product.Title}\" is not available anymore..");
 
             return ServiceResponse<Product>.SuccessResponse(product);
         }
@@ -72,7 +72,7 @@
 
             return products.Count > 0
                 ? ServiceResponse<List<Product>>.SuccessResponse(products)
-                : new ServiceResponse<List<Product>> { Error = "No products found" };
+                : ServiceResponse<List<Product>>.ErrorResponse("No products found");
         }
 
         /// <summary>
@@ -91,7 +91,7 @@
 
             return products.Count > 0
                 ? ServiceResponse<List<Product>>.SuccessResponse(products)
-                : new ServiceResponse<List<Product>> { Error = "No products found" };
+                : ServiceResponse<List<Product>>.ErrorResponse("No products found");
         }
 
         /// <summary>
@@ -172,7 +172,7 @@
 
             return response.Count > 0
                 ? ServiceResponse<List<Product>>.SuccessResponse(response)
-                : new ServiceResponse<List<Product>> { Error = "No products found" };
+                : ServiceResponse<List<Product>>.ErrorResponse("No products found");
         }
 
         /// <summary>
@@ -190,7 +190,7 @@
 
             return response.Count > 0
                 ? ServiceResponse<List<Product>>.SuccessResponse(response)
-                : new ServiceResponse<List<Product>> { Error = "No products found" };
+                : ServiceResponse<List<Product>>.ErrorResponse("No products found");
         }
 
         /// <summary>
@@ -221,7 +221,7 @@
                 .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (dbProduct is null)
-                return new ServiceResponse<Product> { Error = "Product not found." };
+                return ServiceResponse<Product>.ErrorResponse("Product not found.");
 
             List<Image> productImages = dbProduct.Images;
             _context.Images.RemoveRange(productImages);
@@ -270,8 +270,7 @@
         {
             Product? dbProduct = await _context.Products.FindAsync(productId);
             if (dbProduct is null)
-                return new ServiceResponse<bool> { Error = "Product not found" };
-
+                return ServiceResponse<bool>.ErrorResponse("Product not found");
             dbProduct.IsDeleted = true;
             await _context.SaveChangesAsync();
 

@@ -58,7 +58,7 @@
         {
             ProductType? dbProductType = await GetProductTypeByIdAsync(productType.Id);
             if (dbProductType is null)
-                return new() { Error = "Product Type not found" };
+                return ServiceResponse<List<ProductType>>.ErrorResponse("Product Type not found");
 
             dbProductType.Name = productType.Name;
             await _context.SaveChangesAsync();
@@ -75,7 +75,7 @@
         {
             ProductType? dbProductType = await GetProductTypeByIdAsync(productTypeId);
             if (dbProductType is null)
-                return new() { Error = "Product Type not found" };
+                return ServiceResponse<List<ProductType>>.ErrorResponse("Product Type not found");
 
             dbProductType.IsDeleted = true;
             await _context.SaveChangesAsync();

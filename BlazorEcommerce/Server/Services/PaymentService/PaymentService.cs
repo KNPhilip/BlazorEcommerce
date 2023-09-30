@@ -149,7 +149,7 @@ namespace BlazorEcommerce.Server.Services.PaymentService
             }
             catch (StripeException e)
             {
-                return new ServiceResponse<bool> { Error = e.Message };
+                return ServiceResponse<bool>.ErrorResponse(e.Message);
             }
         } 
         #endregion

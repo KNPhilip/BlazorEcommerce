@@ -96,7 +96,7 @@
                 .FirstOrDefaultAsync();
 
             if (order is null)
-                return new ServiceResponse<OrderDetailsDto> { Error = "Order not found." };
+                return ServiceResponse<OrderDetailsDto>.ErrorResponse("Order not found.");
 
             OrderDetailsDto orderDetailsResponse = new()
             {

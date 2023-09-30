@@ -61,9 +61,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
             User? user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
             if (user is null)
-                return new ServiceResponse<string> { Error = "User not found." };
+                return ServiceResponse<string>.ErrorResponse("User not found.");
             else if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                return new ServiceResponse<string> { Error = "Incorrect password" };
+                return ServiceResponse<string>.ErrorResponse("Incorrect password");
 
             return ServiceResponse<string>.SuccessResponse(CreateJWT(user));
         }
@@ -77,7 +77,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             if (await UserExists(user.Email))
-                return new ServiceResponse<int> { Error = "User already exists." };
+                return ServiceResponse<int>.ErrorResponse("User already exists.");
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
             _context.Users.Add(user);
@@ -96,18 +96,12 @@ namespace BlazorEcommerce.Server.Services.AuthService
         {
             User? user = await GetUserByEmail(request.Email);
             if (user is null)
-                return new ServiceResponse<string>
-                {
-                    Error =
-                    $"There are no registered users with the email address {request.Email}"
-                };
+                return ServiceResponse<string>.ErrorResponse(
+                    $"There are no registered users with the email address {request.Email}");
 
             if (!String.IsNullOrEmpty(user.PasswordResetToken) && DateTime.Now < user.ResetTokenExpires)
-                return new ServiceResponse<string>
-                {
-                    Error =
-                    "There is an open reset request already! Please check your inbox or try again later"
-                };
+                return ServiceResponse<string>.ErrorResponse(
+                    "There is an open reset request already! Please check your inbox or try again later");
 
             user.PasswordResetToken = CreateRandomToken();
             user.ResetTokenExpires = DateTime.Now.AddHours(2);
@@ -144,9 +138,9 @@ namespace BlazorEcommerce.Server.Services.AuthService
 
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user is null)
-                return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
+                return ServiceResponse<bool>.ErrorResponse($"User with email {email} not found.");
             else if (user.ResetTokenExpires < DateTime.Now)
-                return new ServiceResponse<bool> { Error = "This reset token has expired.." };
+                return ServiceResponse<bool>.ErrorResponse("This reset token has expired..");
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.PasswordResetToken = "";
@@ -167,14 +161,14 @@ namespace BlazorEcommerce.Server.Services.AuthService
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(string email, string resetToken)
         {
             if (!await _context.Users.AnyAsync(user => user.PasswordResetToken.ToLower().Equals(resetToken.ToLower())))
-                return new ServiceResponse<bool> { Error = "Invalid reset token" };
+                return ServiceResponse<bool>.ErrorResponse("Invalid reset token");
 
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user is null)
-                return new ServiceResponse<bool> { Error = $"User with email {email} not found." };
+                return ServiceResponse<bool>.ErrorResponse($"User with email {email} not found.");
             else if (user.ResetTokenExpires < DateTime.Now)
-                return new ServiceResponse<bool> { Error = "This reset token has expired.." };
+                return ServiceResponse<bool>.ErrorResponse("This reset token has expired..");
 
             return ServiceResponse<bool>.SuccessResponse(true);
         }
@@ -197,7 +191,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
         {
             User? user = await _context.Users.FindAsync(userId);
             if (user is null)
-                return new ServiceResponse<bool> { Error = "User not found." };
+                return ServiceResponse<bool>.ErrorResponse("User not found.");
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
 

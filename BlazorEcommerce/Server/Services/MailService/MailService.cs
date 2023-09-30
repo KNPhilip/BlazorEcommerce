@@ -50,7 +50,7 @@
             }
             catch (Exception e)
             {
-                return new ServiceResponse<bool> { Error = e.Message.ToString() };
+                return ServiceResponse<bool>.ErrorResponse(e.Message.ToString());
             }
         } 
         #endregion

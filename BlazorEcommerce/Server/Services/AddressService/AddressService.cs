@@ -41,7 +41,7 @@
 
             return address is not null
                 ? ServiceResponse<Address>.SuccessResponse(address)
-                : new ServiceResponse<Address> { Error = "No address found." };
+                : ServiceResponse<Address>.ErrorResponse("No address found.");
         }
 
         /// <summary>

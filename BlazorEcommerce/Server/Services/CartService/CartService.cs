@@ -73,7 +73,7 @@
 
             return response.Count > 0
                 ? ServiceResponse<List<CartProductResponseDto>>.SuccessResponse(response)
-                : new ServiceResponse<List<CartProductResponseDto>> { Error = "No products found." };
+                : ServiceResponse<List<CartProductResponseDto>>.ErrorResponse("No products found.");
         }
 
         /// <summary>
@@ -174,13 +174,13 @@
                 ci.ProductTypeId == productTypeId &&
                 ci.UserId == _authService.GetNameIdFromClaims());
             if (dbCartItem is null)
-                return new ServiceResponse<bool> { Error = "Cart item does not exist." };
+                return ServiceResponse<bool>.ErrorResponse("Cart item does not exist.");
 
             _context.CartItems.Remove(dbCartItem);
             await _context.SaveChangesAsync();
 
             return ServiceResponse<bool>.SuccessResponse(true);
-        } 
+        }
         #endregion
     }
 }
