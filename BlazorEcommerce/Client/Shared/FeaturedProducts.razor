@@ -16,7 +16,7 @@
 else
 {
     <div class="container">
-        @foreach (var product in ProductService.Products)
+        @foreach (Product product in ProductService.Products)
         {
             @if (product.Featured)
             {
@@ -49,13 +49,9 @@ else
 }
 
 @code {
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() =>
         ProductService.OnProductsChanged += StateHasChanged;
-    }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         ProductService.OnProductsChanged -= StateHasChanged;
-    }
 }

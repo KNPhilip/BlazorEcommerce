@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Product Types</MudText>
 
-    @foreach(var productType in ProductTypeService.ProductTypes)
+    @foreach(ProductType productType in ProductTypeService.ProductTypes)
     {
         @if (productType.Editing)
         {
@@ -25,17 +25,17 @@
             <div class="d-flex justify-content-between mt-3">
                 <MudText>@productType.Name</MudText>
                 <div>
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingProductType == null)" Color="Color.Info" aria-label="edit" OnClick="@(() => EditProductType(productType))"></MudIconButton>
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingProductType == null)" Color="Color.Error" aria-label="delete" OnClick="@(() => DeleteProductType(productType.Id))"></MudIconButton>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingProductType is null)" Color="Color.Info" aria-label="edit" OnClick="@(() => EditProductType(productType))"></MudIconButton>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingProductType is null)" Color="Color.Error" aria-label="delete" OnClick="@(() => DeleteProductType(productType.Id))"></MudIconButton>
                 </div>
             </div>
         }
     }
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingProductType == null)" Color="Color.Info" aria-label="create" OnClick="CreateNewProductType">Add new Product Type</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingProductType is null)" Color="Color.Info" aria-label="create" OnClick="CreateNewProductType">Add new Product Type</MudButton>
 </div>
 
 @code {
-    ProductType editingProductType = null;
+    ProductType? editingProductType = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,10 +43,8 @@
         ProductTypeService.OnChange += StateHasChanged;
     }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         ProductTypeService.OnChange -= StateHasChanged;
-    }
 
     private void EditProductType(ProductType productType)
     {
@@ -54,10 +52,8 @@
         editingProductType = productType;
     }
 
-    private void CreateNewProductType()
-    {
+    private void CreateNewProductType() =>
         editingProductType = ProductTypeService.CreateNewProductType();
-    }
 
     private async Task CancelEditing()
     {
@@ -74,8 +70,6 @@
         editingProductType = null;
     }
 
-    private async Task DeleteProductType(int productTypeId)
-    {
+    private async Task DeleteProductType(int productTypeId) =>
         await ProductTypeService.DeleteProductType(productTypeId);
-    }
 }

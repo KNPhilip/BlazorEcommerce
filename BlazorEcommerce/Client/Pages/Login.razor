@@ -38,14 +38,14 @@
 
     protected override void OnInitialized()
     {
-        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        Uri uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))
             returnUrl = url;
     }
 
     private async Task HandleLogin()
     {
-        var result = await AuthService.Login(user);
+        ServiceResponse<string> result = await AuthService.Login(user);
         if (result.Success)
         {
             errorMessage = string.Empty;

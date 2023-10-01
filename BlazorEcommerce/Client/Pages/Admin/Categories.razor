@@ -48,17 +48,17 @@
                     <MudIcon Icon="@(category.Visible ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="Color.Info"></MudIcon>
                 </div>
                 <div class="col">
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingCategory == null)" Color="Color.Info" aria-label="edit" OnClick="(() => EditCategory(category))" />
-                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingCategory == null)" Color="Color.Error" aria-label="delete" OnClick="(() => DeleteCategory(category.Id))" />
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingCategory is null)" Color="Color.Info" aria-label="edit" OnClick="(() => EditCategory(category))" />
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingCategory is null)" Color="Color.Error" aria-label="delete" OnClick="(() => DeleteCategory(category.Id))" />
                 </div>
             </div>
         }
     }
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingCategory == null)" Color="Color.Info" aria-label="create" OnClick="CreateNewCategory">Add new Category</MudButton>
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingCategory is null)" Color="Color.Info" aria-label="create" OnClick="CreateNewCategory">Add new Category</MudButton>
 </div>
 
 @code {
-    Category editingCategory = null;
+    Category? editingCategory = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,15 +66,11 @@
         CategoryService.OnChange += StateHasChanged;
     }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         CategoryService.OnChange += StateHasChanged;
-    }
 
-    private void CreateNewCategory()
-    {
+    private void CreateNewCategory() =>
         editingCategory = CategoryService.CreateNewCategory();
-    }
 
     private void EditCategory(Category category)
     {
@@ -98,8 +94,6 @@
         editingCategory = null;
     }
 
-    private async Task DeleteCategory(int id)
-    {
+    private async Task DeleteCategory(int id) =>
         await CategoryService.DeleteCategory(id);
-    }
 }

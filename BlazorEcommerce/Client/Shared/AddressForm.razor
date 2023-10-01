@@ -74,13 +74,11 @@ else
 }
 
 @code {
-    Address address = null;
+    Address? address = null;
     bool editAddress = false;
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() =>
         address = await AddressService.GetAddress();
-    }
 
     private async Task SubmitAddresss()
     {
@@ -94,8 +92,6 @@ else
         editAddress = true;
     }
 
-    private void EditAddress()
-    {
+    private void EditAddress() =>
         editAddress = true;
-    }
 }

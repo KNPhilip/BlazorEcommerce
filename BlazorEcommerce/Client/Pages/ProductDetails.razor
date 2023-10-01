@@ -44,7 +44,7 @@
                 {
                     <div class="mb-3">
                         <select class="form-select" @bind="currentTypeId">
-                            @foreach (var variant in product.Variants)
+                            @foreach (ProductVariant variant in product.Variants)
                             {
                                 <option value="@variant.ProductTypeId">@variant.ProductType.Name</option>
                             }
@@ -81,7 +81,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var result = await ProductService.GetProduct(Id);
+        ServiceResponse<Product> result = await ProductService.GetProduct(Id);
         if (!result.Success)
             message = result.Error;
         else
@@ -92,15 +92,15 @@
         }
     }
 
-    private ProductVariant GetSelectedVariant() =>
-        product.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
+    private ProductVariant? GetSelectedVariant() =>
+        product!.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
 
     private async Task AddToCart()
     {
-        var productVariant = GetSelectedVariant();
-        var cartItem = new CartItem
+        ProductVariant? productVariant = GetSelectedVariant();
+        CartItem cartItem = new()
         {
-            ProductId = productVariant.ProductId,
+            ProductId = productVariant!.ProductId,
             ProductTypeId = productVariant.ProductTypeId
         };
 

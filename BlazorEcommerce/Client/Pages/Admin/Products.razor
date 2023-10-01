@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Products</MudText>
 
-    @if(ProductService.AdminProducts == null)
+    @if(ProductService.AdminProducts is null)
     {
         <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
     }
@@ -39,13 +39,13 @@
                         </td>
                         <td>@product.Title</td>
                         <td>
-                            @foreach(var variant in product.Variants)
+                            @foreach(ProductVariant variant in product.Variants)
                             {
                                 <span>@variant.ProductType.Name</span><br />
                             }
                         </td>
                         <td>
-                            @foreach (var variant in product.Variants)
+                            @foreach (ProductVariant variant in product.Variants)
                             {
                                 <span>@variant.Price</span>
 
@@ -66,18 +66,12 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() =>
         await ProductService.GetAdminProducts();
-    }
 
-    void EditProduct(int productId)
-    {
+    void EditProduct(int productId) =>
         NavigationManager.NavigateTo($"admin/product/{productId}");
-    }
 
-    void CreateProduct()
-    {
+    void CreateProduct() =>
         NavigationManager.NavigateTo($"admin/product");
-    }
 }

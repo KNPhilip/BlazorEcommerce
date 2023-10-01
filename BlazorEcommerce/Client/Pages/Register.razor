@@ -38,7 +38,7 @@
 
     async Task HandleRegistration()
     {
-        var result = await AuthService.Register(user);
+        ServiceResponse<int> result = await AuthService.Register(user);
         resultMessage = result.Success ? "Successfully registered" : result.Error;
         resultMessageCssClass = result.Success ? "text-success" : "text-danger";
     }

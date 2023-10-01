@@ -18,6 +18,7 @@
     {
         string role = (await AuthStateProvider.GetAuthenticationStateAsync())
             .User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+
         if (role.Contains("Admin"))
             authorized = true;
     }

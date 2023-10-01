@@ -8,7 +8,7 @@
 else
 {
     <ul class="list-unstyled">
-        @foreach (var product in ProductService.Products)
+        @foreach (Product product in ProductService.Products)
         {
             <li class="media my-3">
                 <div class="media-img-wrapper mr-2">
@@ -35,7 +35,7 @@ else
             </li>
         }
     </ul>
-    for (var i = 1; i <= ProductService.PageCount; i++)
+    for (int i = 1; i <= ProductService.PageCount; i++)
     {
         <a class="btn 
             @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline")
@@ -45,27 +45,21 @@ else
 }
 
 @code {
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() =>
         ProductService.OnProductsChanged += StateHasChanged;
-    }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         ProductService.OnProductsChanged -= StateHasChanged;
-    }
 
     public string GetPriceText(Product product)
     {
-        var variants = product.Variants;
+        List<ProductVariant> variants = product.Variants;
+
         if (variants.Count == 0)
-        {
             return string.Empty;
-        }
         else if (variants.Count == 1)
-        {
             return $"${variants[0].Price}";
-        }
+
         decimal minPrice = variants.Min(v => v.Price);
         return $"Starting at ${minPrice}";
     }

@@ -43,7 +43,7 @@
 
         public Category CreateNewCategory()
         {
-            var newCategory = new Category()
+            Category newCategory = new()
             {
                 IsNew = true,
                 Editing = true
@@ -55,14 +55,14 @@
 
         public async Task GetAdminCategories()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories/admin");
+            ServiceResponse<List<Category>> response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories/admin");
             if (response is not null && response.Data != null)
                 AdminCategories = response.Data;
         }
 
         public async Task GetCategories()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories");
+            ServiceResponse<List<Category>> response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories");
             if (response is not null && response.Data != null)
                 Categories = response.Data;
         }

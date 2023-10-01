@@ -20,19 +20,12 @@
 </div>
 
 @code {
-    private int GetCartItemsCount()
-    {
-        var count = LocalStorage.GetItem<int>("cartItemsCount");
-        return count;
-    }
+    private int GetCartItemsCount() =>
+        LocalStorage.GetItem<int>("cartItemsCount");
 
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() =>
         CartService.OnChange += StateHasChanged;
-    }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         CartService.OnChange -= StateHasChanged;
-    }
 }
