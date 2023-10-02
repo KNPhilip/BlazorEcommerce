@@ -23,17 +23,17 @@
         /// <summary>
         /// Represents the name(s) of the product(s) that the order is containing.
         /// </summary>
-        public string Product { get; set; }
+        public required string Product { get; set; }
 
         /// <summary>
         /// Represents the image url to represent the order.
         /// </summary>
-        public string ProductImageUrl { get; set; }
+        public string? ProductImageUrl { get; set; }
 
         /// <summary>
         /// Represents the list of images of the order. However,
         /// only the first image in this list will be used to represent the order.
         /// </summary>
-        public List<Image> Images { get; set; }
+        public List<Image> Images { get; set; } = new();
     }
 }

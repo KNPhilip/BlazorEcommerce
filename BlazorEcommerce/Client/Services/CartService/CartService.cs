@@ -16,7 +16,7 @@
             _authService = authService;
         }
 
-        public event Action OnChange;
+        public event Action? OnChange;
 
         public async Task AddToCart(CartItem cartItem)
         {
@@ -27,7 +27,7 @@
                 List<CartItem> cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
                 cart ??= new List<CartItem>();
 
-                CartItem sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
+                CartItem? sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
                 && x.ProductTypeId == cartItem.ProductTypeId);
                 if (sameItem is null)
                     cart.Add(cartItem);
@@ -43,8 +43,8 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                ServiceResponse<int> result = await _http.GetFromJsonAsync<ServiceResponse<int>>("api/v1/carts/count");
-                int count = result.Data;
+                ServiceResponse<int>? result = await _http.GetFromJsonAsync<ServiceResponse<int>?>("api/v1/carts/count");
+                int count = result!.Data;
 
                 await _localStorage.SetItemAsync<int>("cartItemsCount", count);
             }
@@ -54,15 +54,15 @@
                 await _localStorage.SetItemAsync<int>("cartItemsCount", cart != null ? cart.Count : 0);
             }
 
-            OnChange.Invoke();
+            OnChange!.Invoke();
         }
 
         public async Task<List<CartProductResponseDto>> GetCartProducts()
         {
             if (await _authService.IsUserAuthenticated())
             {
-                ServiceResponse<List<CartProductResponseDto>> response = await _http.GetFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>("api/v1/carts");
-                return response.Data;
+                ServiceResponse<List<CartProductResponseDto>>? response = await _http.GetFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>("api/v1/carts");
+                return response!.Data!;
             }
             else
             {
@@ -70,10 +70,10 @@
                 if (cartItems is null)
                     return new List<CartProductResponseDto>();
                 var response = await _http.PostAsJsonAsync("api/v1/carts/products", cartItems);
-                ServiceResponse<List<CartProductResponseDto>> cartProducts =
-                    await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>();
+                ServiceResponse<List<CartProductResponseDto>>? cartProducts =
+                    await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>?>();
 
-                return cartProducts.Data;
+                return cartProducts!.Data!;
             }
         }
 
@@ -87,7 +87,7 @@
                 if (cart is null)
                     return;
 
-                CartItem cartItem = cart.Find(x => x.ProductId == productId
+                CartItem? cartItem = cart.Find(x => x.ProductId == productId
                 && x.ProductTypeId == productTypeId);
 
                 if (cartItem is not null)
@@ -130,7 +130,7 @@
                 if (cart is null)
                     return;
 
-                CartItem cartItem = cart.Find(x => x.ProductId == product.ProductId
+                CartItem? cartItem = cart.Find(x => x.ProductId == product.ProductId
                 && x.ProductTypeId == product.ProductTypeId);
 
                 if (cartItem is not null)

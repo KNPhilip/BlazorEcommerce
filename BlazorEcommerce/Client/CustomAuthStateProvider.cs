@@ -24,7 +24,7 @@
                 {
                     IEnumerable<Claim> claims = ParseClaimsFromJwt(authToken);
                     identity = new ClaimsIdentity(claims, "jwt");
-                    if (!await ExpiredToken(identity))
+                    if (ExpiredToken(identity))
                         _http.DefaultRequestHeaders.Authorization =
                             new AuthenticationHeaderValue("Bearer", authToken.Replace("\"", ""));
                     else throw new Exception();
@@ -44,7 +44,7 @@
             return state;
         }
 
-        private async Task<bool> ExpiredToken(ClaimsIdentity? identity)
+        private static bool ExpiredToken(ClaimsIdentity? identity)
         {
             if (identity is null)
                 return true;

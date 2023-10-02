@@ -83,7 +83,7 @@ else
     private async Task SubmitAddresss()
     {
         editAddress = false;
-        address = await AddressService.AddOrUpdateAddress(address);
+        address = await AddressService.AddOrUpdateAddress(address!);
     }
 
     private void InitAddress()

@@ -41,7 +41,7 @@
                         <td>
                             @foreach(ProductVariant variant in product.Variants)
                             {
-                                <span>@variant.ProductType.Name</span><br />
+                                <span>@variant.ProductType!.Name</span><br />
                             }
                         </td>
                         <td>

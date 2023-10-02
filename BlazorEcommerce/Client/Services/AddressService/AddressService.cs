@@ -13,13 +13,13 @@
         {
             var response = await _http.PostAsJsonAsync("api/v1/addresses", address);
             return response.Content
-                .ReadFromJsonAsync<ServiceResponse<Address>>().Result.Data;
+                .ReadFromJsonAsync<ServiceResponse<Address>>().Result?.Data!;
         }
 
         public async Task<Address> GetAddress()
         {
-            ServiceResponse<Address> response = await _http.GetFromJsonAsync<ServiceResponse<Address>>("api/v1/addresses");
-            return response.Data;
+            ServiceResponse<Address>? response = await _http.GetFromJsonAsync<ServiceResponse<Address>>("api/v1/addresses");
+            return response?.Data!;
         }
     }
 }

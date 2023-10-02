@@ -13,17 +13,17 @@
         /// <summary>
         /// Represents the title of the product.
         /// </summary>
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         /// <summary>
         /// Represents the name of the product type of the product.
         /// </summary>
-        public string ProductType { get; set; }
+        public required string ProductType { get; set; }
 
         /// <summary>
         /// Represents the image url (if any) of the product.
         /// </summary>
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
         /// <summary>
         /// Represents the images (if any) of the product.

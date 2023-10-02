@@ -18,6 +18,6 @@
         /// <summary>
         /// Represents the list of products ordered.
         /// </summary>
-        public List<OrderDetailsProductDto> Products { get; set; }
+        public List<OrderDetailsProductDto> Products { get; set; } = new();
     }
 }

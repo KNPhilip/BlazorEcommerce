@@ -13,14 +13,14 @@
         <div class="col"></div>
     </div>
 
-    @foreach(var category in CategoryService.AdminCategories)
+    @foreach(Category category in CategoryService.AdminCategories)
     {
         @if(category.Editing)
         {
             <EditForm Model="editingCategory" OnSubmit="UpdateCategory">
                 <div class="row">
                     <div class="col">
-                        <InputText @bind-Value="editingCategory.Name" class="form-control"></InputText>
+                        <InputText @bind-Value="editingCategory!.Name" class="form-control"></InputText>
                     </div>
                     <div class="col">
                         <InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
@@ -80,7 +80,7 @@
 
     private async Task UpdateCategory()
     {
-        if (editingCategory.IsNew)
+        if (editingCategory!.IsNew)
             await CategoryService.AddCategory(editingCategory);
         else
             await CategoryService.UpdateCategory(editingCategory);

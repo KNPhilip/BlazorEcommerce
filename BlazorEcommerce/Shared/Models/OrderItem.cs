@@ -8,7 +8,7 @@
         /// <summary>
         /// Represents the order that the order item belongs to.
         /// </summary>
-        public Order Order { get; set; }
+        public required Order Order { get; set; }
 
         /// <summary>
         /// Represents the unique identifier of the order that the order item belongs to.
@@ -18,7 +18,7 @@
         /// <summary>
         /// Represents the product that the order item contains of.
         /// </summary>
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
 
         /// <summary>
         /// Represents the unique identifier of the product that the order item contains of.
@@ -28,7 +28,7 @@
         /// <summary>
         /// Represents the product type of the product within the order item.
         /// </summary>
-        public ProductType ProductType { get; set; }
+        public ProductType? ProductType { get; set; }
 
         /// <summary>
         /// Represents the unique identifier for the product type of the

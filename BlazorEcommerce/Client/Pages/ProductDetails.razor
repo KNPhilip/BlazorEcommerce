@@ -46,21 +46,21 @@
                         <select class="form-select" @bind="currentTypeId">
                             @foreach (ProductVariant variant in product.Variants)
                             {
-                                <option value="@variant.ProductTypeId">@variant.ProductType.Name</option>
+                                <option value="@variant.ProductTypeId">@variant.ProductType!.Name</option>
                             }
                         </select>
                     </div>
                 }
                 @if (GetSelectedVariant() is not null)
                 {
-                    @if (GetSelectedVariant().OriginalPrice > GetSelectedVariant().Price)
+                    @if (GetSelectedVariant()!.OriginalPrice > GetSelectedVariant()!.Price)
                     {
                         <h6 class="text-muted original-price">
-                            $@GetSelectedVariant().OriginalPrice
+                            $@GetSelectedVariant()!.OriginalPrice
                         </h6>
                     }
                     <h4 class="price">
-                        $@GetSelectedVariant().Price
+                        $@GetSelectedVariant()!.Price
                     </h4>
                 }
                 <button class="btn btn-primary" @onclick="AddToCart">
@@ -81,13 +81,13 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        ServiceResponse<Product> result = await ProductService.GetProduct(Id);
-        if (!result.Success)
+        ServiceResponse<Product>? result = await ProductService.GetProduct(Id);
+        if (result!.Success)
             message = result.Error;
         else
         {
             product = result.Data;
-            if (product.Variants.Count > 0)
+            if (product!.Variants.Count > 0)
                 currentTypeId = product.Variants[0].ProductTypeId;
         }
     }

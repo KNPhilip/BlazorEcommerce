@@ -29,6 +29,6 @@
         /// <summary>
         /// Represents the list of items in an order.
         /// </summary>
-        public List<OrderItem> OrderItems { get; set; }
+        public List<OrderItem> OrderItems { get; set; } = new();
     }
 }

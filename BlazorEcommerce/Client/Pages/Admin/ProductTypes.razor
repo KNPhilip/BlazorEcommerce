@@ -12,7 +12,7 @@
         {
             <EditForm Model="editingProductType" OnSubmit="UpdateProductType">
                 <div class="d-flex justify-content-between mt-3">
-                    <InputText @bind-Value="editingProductType.Name" class="form-control" style="max-width: 400px;"></InputText>
+                    <InputText @bind-Value="editingProductType!.Name" class="form-control" style="max-width: 400px;"></InputText>
                     <div>
                         <MudIconButton ButtonType="ButtonType.Submit" Disabled="@(editingProductType.Name.Length <= 0)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Save" Color="Color.Info" aria-label="save"></MudIconButton>
                         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Close" Color="Color.Error" aria-label="cancel" OnClick="CancelEditing"></MudIconButton>
@@ -63,7 +63,7 @@
 
     private async Task UpdateProductType()
     {
-        if (editingProductType.IsNew)
+        if (editingProductType!.IsNew)
             await ProductTypeService.AddProductType(editingProductType);
         else
             await ProductTypeService.UpdateProductType(editingProductType);
