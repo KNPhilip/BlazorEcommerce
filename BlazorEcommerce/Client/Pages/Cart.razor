@@ -16,7 +16,7 @@
     else
     {
         <div>
-            @foreach (var product in cartProducts)
+            @foreach (CartProductResponseDto product in cartProducts)
             {
                 <div class="wrapper">
                     <div class="image-wrapper">
@@ -51,7 +51,7 @@
 </div>
 
 @code {
-    List<CartProductResponseDto> cartProducts = null;
+    List<CartProductResponseDto>? cartProducts = null;
     string message = "Loading cart...";
     bool isAuthenticated = false;
 
@@ -77,7 +77,7 @@
 
     private async Task UpdateQuantity(ChangeEventArgs e, CartProductResponseDto product)
     {
-        product.Quantity = int.Parse(e.Value.ToString());
+        product.Quantity = int.Parse(e.Value!.ToString()!);
         if (product.Quantity < 1)
             product.Quantity = 1;
         await CartService.UpdateQuantity(product);

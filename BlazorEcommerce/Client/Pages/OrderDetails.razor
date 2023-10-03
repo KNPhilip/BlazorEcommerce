@@ -12,7 +12,7 @@
     {
         <h3>Order from @order.OrderDate</h3>
         <div>
-            @foreach (var product in order.Products)
+            @foreach (OrderDetailsProductDto product in order.Products)
             {
                 <div class="wrapper">
                     <div class="image-wrapper">
@@ -44,10 +44,8 @@
     [Parameter]
     public int OrderId { get; set; }
 
-    OrderDetailsDto order = null;
+    OrderDetailsDto? order = null;
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() =>
         order = await OrderService.GetOrderDetails(OrderId);
-    }
 }

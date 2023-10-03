@@ -52,22 +52,21 @@
             decimal totalPrice = 0;
             products?.ForEach(product => totalPrice += product.Price * product.Quantity);
 
-            List<OrderItem> orderItems = new();
-            products?.ForEach(product => orderItems.Add(new OrderItem
+            Order order = new()
             {
+                UserId = userId,
+                OrderDate = DateTime.Now,
+                TotalPrice = totalPrice
+            };
+
+            products?.ForEach(product => order.OrderItems.Add(new OrderItem
+            {
+                Order = order,
                 ProductId = product.ProductId,
                 ProductTypeId = product.ProductTypeId,
                 Quantity = product.Quantity,
                 TotalPrice = product.Price * product.Quantity
             }));
-
-            Order order = new()
-            {
-                UserId = userId,
-                OrderDate = DateTime.Now,
-                TotalPrice = totalPrice,
-                OrderItems = orderItems
-            };
 
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(_context.CartItems
@@ -88,7 +87,7 @@
             Order? order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .ThenInclude(p => p.Images)
+                .ThenInclude(p => p!.Images)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.ProductType)
                 .Where(o => o.UserId == _authService.GetNameIdFromClaims() && o.Id == orderId)
@@ -96,7 +95,7 @@
                 .FirstOrDefaultAsync();
 
             if (order is null)
-                return new ServiceResponse<OrderDetailsDto> { Error = "Order not found." };
+                return ServiceResponse<OrderDetailsDto>.ErrorResponse("Order not found.");
 
             OrderDetailsDto orderDetailsResponse = new()
             {
@@ -110,9 +109,9 @@
             {
                 // TODO Might be wise to add Automapper / Mapster here
                 ProductId = item.ProductId,
-                ImageUrl = item.Product.ImageUrl,
+                ImageUrl = item.Product!.ImageUrl,
                 Images = item.Product.Images,
-                ProductType = item.ProductType.Name,
+                ProductType = item.ProductType!.Name,
                 Quantity = item.Quantity,
                 Title = item.Product.Title,
                 TotalPrice = item.TotalPrice
@@ -130,7 +129,7 @@
             List<Order> orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-                .ThenInclude(p => p.Images)
+                .ThenInclude(p => p!.Images)
                 .Where(o => o.UserId == _authService.GetNameIdFromClaims())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -141,11 +140,11 @@
                 OrderDate = o.OrderDate,
                 TotalPrice = o.TotalPrice,
                 Product = o.OrderItems.Count > 1 ?
-                    $"{o.OrderItems.First().Product.Title} and " +
+                    $"{o.OrderItems.First().Product!.Title} and " +
                     $"{o.OrderItems.Count - 1} more..." :
-                    o.OrderItems.First().Product.Title,
-                ProductImageUrl = o.OrderItems.First().Product.ImageUrl,
-                Images = o.OrderItems.First().Product.Images
+                    o.OrderItems.First().Product!.Title,
+                ProductImageUrl = o.OrderItems.First().Product!.ImageUrl,
+                Images = o.OrderItems.First().Product!.Images
             }));
 
             return ServiceResponse<List<OrderOverviewDto>>.SuccessResponse(orderResponse);

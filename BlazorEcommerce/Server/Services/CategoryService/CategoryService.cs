@@ -69,7 +69,7 @@
         {
             Category? dbCategory = await GetCategoryById(category.Id);
             if (dbCategory is null)
-                return new ServiceResponse<List<Category>> { Error = "Category not found." };
+                return ServiceResponse<List<Category>>.ErrorResponse("Category not found.");
 
             // TODO Might be wise to add Automapper / Mapster here
             dbCategory.Name = category.Name;
@@ -90,7 +90,7 @@
         {
             Category? dbCategory = await GetCategoryById(categoryId);
             if (dbCategory is null)
-                return new ServiceResponse<List<Category>> { Error = "Category not found." };
+                return ServiceResponse<List<Category>>.ErrorResponse("Category not found.");
 
             dbCategory.IsDeleted = true;
             await _context.SaveChangesAsync();

@@ -18,18 +18,18 @@
         }
 
         public async Task<bool> IsUserAuthenticated() =>
-            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity!.IsAuthenticated;
 
-        public async Task<ServiceResponse<string>> Login(UserLoginDto request)
+        public async Task<ServiceResponse<string>?> Login(UserLoginDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/login", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>?>();
         }
 
-        public async Task<ServiceResponse<int>> Register(UserRegisterDto request)
+        public async Task<ServiceResponse<int>?> Register(UserRegisterDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/register", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>?>();
         }
 
         public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(TokenValidateDto request)
@@ -44,10 +44,10 @@
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
         }
 
-        public async Task<ServiceResponse<string>> CreateResetToken(User request)
+        public async Task<ServiceResponse<string>?> CreateResetToken(User request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/Auth/create-password-token", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>?>();
         }
     }
 }

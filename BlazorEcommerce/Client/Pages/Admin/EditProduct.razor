@@ -79,7 +79,7 @@
                 {
                     <MudText Typo="Typo.body1">From Upload:</MudText>
                     <div style="display: flex; flex-wrap: wrap; flex-direction: row;">
-                        @foreach (var image in product.Images)
+                        @foreach (Image image in product.Images)
                         {
                             <MudCard Class="ma-2">
                                 <MudCardContent>
@@ -96,7 +96,7 @@
                     <ButtonTemplate Context="wut">
                         <MudPaper Height="200px" Outlined="true" Class="@DragClass">
                             <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
-                            @foreach (var file in fileNames)
+                            @foreach (string file in fileNames)
                             {
                                 <MudChip Color="Color.Dark" Text="@file" />
                             }
@@ -116,12 +116,12 @@
                 <div class="col">Visible</div>
                 <div class="col"></div>
             </div>
-            @foreach(var variant in product.Variants)
+            @foreach(ProductVariant variant in product.Variants)
             {
                 <div class="row">
                     <div class="col">
                         <InputSelect disabled="@variant.IsDeleted" @bind-Value="variant.ProductTypeId" class="form-control">
-                            @foreach(var productType in ProductTypeService.ProductTypes)
+                            @foreach(ProductType productType in ProductTypeService.ProductTypes)
                             {
                                 <option value="@productType.Id.ToString()">@productType.Name</option>
                             }
@@ -146,7 +146,7 @@
             <div class="mb-3">
                 <MudText Class="mb-2 mt-4" Typo="Typo.h5">Category</MudText>
                 <InputSelect id="category" @bind-Value="product.CategoryId" class="form-control">
-                    @foreach(var category in CategoryService.AdminCategories)
+                    @foreach(Category category in CategoryService.AdminCategories)
                     {
                         <option value="@category.Id">@category.Name</option>
                     }
@@ -175,7 +175,7 @@
 
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
     private string DragClass = DefaultDragClass;
-    private List<string> fileNames = new List<string>();
+    private List<string> fileNames = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -195,7 +195,7 @@
         }
         else
         {
-            Product dbProduct = (await ProductService.GetProduct(Id)).Data;
+            Product dbProduct = (await ProductService.GetProduct(Id))!.Data!;
             if (dbProduct is null)
             {
                 message = $"Product with Id '{Id}' does not exist.";
@@ -211,35 +211,27 @@
 
     void RemoveVariant(int productTypeId)
     {
-        var variant = product.Variants.Find(v => v.ProductTypeId == productTypeId);
+        ProductVariant? variant = product.Variants.Find(v => v.ProductTypeId == productTypeId);
+
         if (variant is null)
-        {
             return;
-        }
         if (variant.IsNew)
-        {
             product.Variants.Remove(variant);
-        }
-        else
-        {
-            variant.IsDeleted = true;
-        }
+        else variant.IsDeleted = true;
     }
 
-    void AddVariant()
-    {
+    void AddVariant() =>
         product.Variants.Add(new ProductVariant
         {
             IsNew = true,
             ProductId = product.Id
         });
-    }
 
     async void AddOrUpdateProduct()
     {
         if (product.IsNew)
         {
-            var result = await ProductService.CreateProduct(product);
+            Product result = await ProductService.CreateProduct(product);
             NavigationManager.NavigateTo($"admin/product/{result.Id}");
         }
         else
@@ -266,19 +258,17 @@
     async Task OnFileChange(InputFileChangeEventArgs e)
     {
         ClearDragClass();
-        var files = e.GetMultipleFiles();
-        foreach (var file in files)
-        {
+        IReadOnlyList<IBrowserFile> files = e.GetMultipleFiles();
+        foreach (IBrowserFile file in files)
             fileNames.Add(file.Name);
-        }
 
-        var format = "image/png";
-        foreach (var image in e.GetMultipleFiles(int.MaxValue))
+        string format = "image/png";
+        foreach (IBrowserFile image in e.GetMultipleFiles(int.MaxValue))
         {
-            var resizedImage = await image.RequestImageFileAsync(format, 200, 200);
-            var buffer = new byte[resizedImage.Size];
+            IBrowserFile resizedImage = await image.RequestImageFileAsync(format, 200, 200);
+            byte[] buffer = new byte[resizedImage.Size];
             await resizedImage.OpenReadStream().ReadAsync(buffer);
-            var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            string imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
 
             product.Images.Add(
                 new Image
@@ -298,13 +288,9 @@
         product.ImageUrl = "";
     }
 
-    private void SetDragClass()
-    {
+    private void SetDragClass() =>
         DragClass = $"{DefaultDragClass} mud-border-primary";
-    }
 
-    private void ClearDragClass()
-    {
+    private void ClearDragClass() =>
         DragClass = DefaultDragClass;
-    }
 }

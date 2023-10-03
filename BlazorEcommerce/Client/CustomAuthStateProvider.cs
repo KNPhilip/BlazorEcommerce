@@ -15,22 +15,19 @@
         {
             string authToken = await _localStorage.GetItemAsStringAsync("authToken");
 
-            var identity = new ClaimsIdentity();
+            ClaimsIdentity identity = new();
             _http.DefaultRequestHeaders.Authorization = null;
 
             if (!string.IsNullOrEmpty(authToken))
             {
                 try
                 {
-                    var claims = ParseClaimsFromJwt(authToken);
+                    IEnumerable<Claim> claims = ParseClaimsFromJwt(authToken);
                     identity = new ClaimsIdentity(claims, "jwt");
-                    if (!await ExpiredToken(identity))
-                    {
+                    if (ExpiredToken(identity))
                         _http.DefaultRequestHeaders.Authorization =
                             new AuthenticationHeaderValue("Bearer", authToken.Replace("\"", ""));
-                    }
-                    else
-                        throw new Exception();
+                    else throw new Exception();
                 }
                 catch (Exception)
                 {
@@ -39,29 +36,33 @@
                 }
             }
 
-            var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
+            ClaimsPrincipal user = new(identity);
+            AuthenticationState state = new(user);
 
             NotifyAuthenticationStateChanged(Task.FromResult(state));
 
             return state;
         }
 
-        private async Task<bool> ExpiredToken(ClaimsIdentity? identity)
+        private static bool ExpiredToken(ClaimsIdentity? identity)
         {
             if (identity is null)
                 return true;
-            var user = new ClaimsPrincipal(identity);
-            var exp = user.FindFirst("exp");
+
+            ClaimsPrincipal user = new(identity);
+            Claim exp = user.FindFirst("exp")!;
+
             if (exp is null)
                 return true;
-            var expDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp.Value));
+
+            DateTimeOffset expDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp.Value));
             if (DateTime.Now > expDateTime)
                 return true;
+
             return false;
         }
 
-        private byte[] ParseBase64WithoutPadding(string base64)
+        private static byte[] ParseBase64WithoutPadding(string base64)
         {
             switch(base64.Length % 4)
             {
@@ -73,14 +74,16 @@
             return Convert.FromBase64String(base64);
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer
-                .Deserialize<Dictionary<string, object>>(jsonBytes);
+            string payload = jwt.Split('.')[1];
+            byte[] jsonBytes = ParseBase64WithoutPadding(payload);
 
-            var claims = keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+            Dictionary<string, object> keyValuePairs = JsonSerializer
+                .Deserialize<Dictionary<string, object>>(jsonBytes)!;
+
+            IEnumerable<Claim> claims = keyValuePairs
+                .Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
 
             return claims;
         }

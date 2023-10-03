@@ -37,7 +37,7 @@
            @onkeyup="HandleSearch"
            @ref="searchInput" />
     <datalist id="products">
-        @foreach (var suggestion in suggestions)
+        @foreach (string suggestion in suggestions)
         {
             <option>@suggestion</option>
         }
@@ -51,31 +51,23 @@
 
 @code {
     private string searchTerm = string.Empty;
-    private List<string> suggestions = new List<string>();
+    private List<string> suggestions = new();
     protected ElementReference searchInput;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {
             await searchInput.FocusAsync();
-        }
     }
 
-    public void SearchProducts()
-    {
+    public void SearchProducts() =>
         NavigationManager.NavigateTo($"search/{searchTerm}/1");
-    }
 
     public async Task HandleSearch(KeyboardEventArgs args)
     {
         if (args.Key is null || args.Key.Equals("Enter"))
-        {
             SearchProducts();
-        }
         else if (searchTerm.Length > 1)
-        {
             suggestions = await ProductService.GetProductSearchSuggestions(searchTerm);
-        }
     }
 }

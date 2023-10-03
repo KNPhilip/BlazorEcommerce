@@ -18,14 +18,14 @@
 
         public async Task<OrderDetailsDto> GetOrderDetails(int orderId)
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsDto>>($"api/v1/orders/{orderId}");
-            return result.Data;
+            ServiceResponse<OrderDetailsDto>? result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsDto>>($"api/v1/orders/{orderId}");
+            return result!.Data!;
         }
 
         public async Task<List<OrderOverviewDto>> GetOrders()
         {
-            var result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewDto>>>("api/v1/orders");
-            return result.Data;
+            ServiceResponse<List<OrderOverviewDto>>? result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewDto>>>("api/v1/orders");
+            return result!.Data!;
         }
 
         public async Task<string> PlaceOrder()
@@ -33,16 +33,12 @@
             if (await IsUserAuthenticated())
             {
                 var result = await _http.PostAsync("api/v1/payments/checkout", null);
-                var url = await result.Content.ReadAsStringAsync();
-                return url;
+                return await result.Content.ReadAsStringAsync();
             }
-            else
-            {
-                return "login";
-            }
+            else return "login";
         }
 
         private async Task<bool> IsUserAuthenticated() =>
-            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+            (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity!.IsAuthenticated;
     }
 }
