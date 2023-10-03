@@ -5,6 +5,7 @@
     /// </summary>
     public class Order
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the order.
         /// </summary>
@@ -29,6 +30,7 @@
         /// <summary>
         /// Represents the list of items in an order.
         /// </summary>
-        public List<OrderItem> OrderItems { get; set; } = new();
+        public List<OrderItem> OrderItems { get; set; } = new(); 
+        #endregion
     }
 }

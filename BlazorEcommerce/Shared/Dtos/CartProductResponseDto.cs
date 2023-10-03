@@ -5,6 +5,7 @@
     /// </summary>
     public class CartProductResponseDto
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the product in the cart.
         /// </summary>
@@ -38,6 +39,7 @@
         /// <summary>
         /// Represents the quantity of the product in the cart.
         /// </summary>
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } 
+        #endregion
     }
 }

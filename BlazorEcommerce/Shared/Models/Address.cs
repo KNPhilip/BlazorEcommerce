@@ -5,6 +5,7 @@
     /// </summary>
     public class Address
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the address.
         /// </summary>
@@ -59,6 +60,7 @@
         /// Represents the name of the country the address is in.
         /// </summary>
         [Required, StringLength(30)]
-        public string Country { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty; 
+        #endregion
     }
 }

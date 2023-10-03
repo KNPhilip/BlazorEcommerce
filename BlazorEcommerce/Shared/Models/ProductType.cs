@@ -5,6 +5,7 @@
     /// </summary>
     public class ProductType
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the product type.
         /// </summary>
@@ -35,6 +36,7 @@
         /// property is not mapped/saved to the database, its only there for frontend purposes.
         /// </summary>
         [NotMapped]
-        public bool IsNew { get; set; } = false;
+        public bool IsNew { get; set; } = false; 
+        #endregion
     }
 }

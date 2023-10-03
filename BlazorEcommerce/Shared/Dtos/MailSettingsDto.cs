@@ -6,6 +6,7 @@
     /// </summary>
     public class MailSettingsDto
     {
+        #region Properties
         /// <summary>
         /// Represents the Username of the Mail Config.
         /// </summary>
@@ -29,6 +30,7 @@
         /// <summary>
         /// Represents the Host of the Mail Config.
         /// </summary>
-        public required string Host { get; set; }
+        public required string Host { get; set; } 
+        #endregion
     }
 }

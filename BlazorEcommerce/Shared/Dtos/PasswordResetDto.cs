@@ -5,6 +5,7 @@
     /// </summary>
     public class PasswordResetDto
     {
+        #region Properties
         /// <summary>
         /// Represents the email address of the user to have changed their password.
         /// </summary>
@@ -26,6 +27,7 @@
         /// this should always match the password property.
         /// </summary>
         [Compare("NewPassword", ErrorMessage = "The passwords do not match.")]
-        public string ConfirmNewPassword { get; set; } = string.Empty;
+        public string ConfirmNewPassword { get; set; } = string.Empty; 
+        #endregion
     }
 }

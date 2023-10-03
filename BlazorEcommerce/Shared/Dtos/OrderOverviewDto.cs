@@ -5,6 +5,7 @@
     /// </summary>
     public class OrderOverviewDto
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the order.
         /// </summary>
@@ -34,6 +35,7 @@
         /// Represents the list of images of the order. However,
         /// only the first image in this list will be used to represent the order.
         /// </summary>
-        public List<Image> Images { get; set; } = new();
+        public List<Image> Images { get; set; } = new(); 
+        #endregion
     }
 }

@@ -5,6 +5,7 @@
     /// </summary>
     public class Image
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the image.
         /// </summary>
@@ -13,6 +14,7 @@
         /// <summary>
         /// Represents the base64 string of the image.
         /// </summary>
-        public string Data { get; set; } = string.Empty;
+        public string Data { get; set; } = string.Empty; 
+        #endregion
     }
 }

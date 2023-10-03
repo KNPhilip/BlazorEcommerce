@@ -5,6 +5,7 @@
     /// </summary>
     public class ProductSearchResultDto
     {
+        #region Properties
         /// <summary>
         /// Represents the list of products resulting from the search.
         /// </summary>
@@ -18,6 +19,7 @@
         /// <summary>
         /// Represents the current page number.
         /// </summary>
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; set; } 
+        #endregion
     }
 }

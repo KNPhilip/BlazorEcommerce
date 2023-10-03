@@ -5,6 +5,7 @@
     /// </summary>
     public class UserRegisterDto
     {
+        #region Properties
         /// <summary>
         /// Represents the given to-be registered email.
         /// </summary>
@@ -22,6 +23,7 @@
         /// this should match the password property.
         /// </summary>
         [Compare("Password", ErrorMessage = "The passwords do not match.")]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty; 
+        #endregion
     }
 }

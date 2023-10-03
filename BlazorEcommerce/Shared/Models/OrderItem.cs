@@ -5,6 +5,7 @@
     /// </summary>
     public class OrderItem
     {
+        #region Properties
         /// <summary>
         /// Represents the order that the order item belongs to.
         /// </summary>
@@ -45,6 +46,7 @@
         /// Represents the total price of the order item (price * quantity)
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; } 
+        #endregion
     }
 }

@@ -5,6 +5,7 @@
     /// </summary>
     public class OrderDetailsProductDto
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier of the product.
         /// </summary>
@@ -38,6 +39,7 @@
         /// <summary>
         /// Represents the total price of the product.
         /// </summary>
-        public decimal TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; } 
+        #endregion
     }
 }

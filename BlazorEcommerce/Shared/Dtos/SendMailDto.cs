@@ -5,6 +5,7 @@
     /// </summary>
     public class SendMailDto
     {
+        #region Properties
         /// <summary>
         /// Represents the property of the reciever of the mail.
         /// </summary>
@@ -18,6 +19,7 @@
         /// <summary>
         /// Represents the body (plain HTML in a string) to be used for the mail.
         /// </summary>
-        public required string HTMLBody { get; set; }
+        public required string HTMLBody { get; set; } 
+        #endregion
     }
 }

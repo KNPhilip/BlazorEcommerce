@@ -5,6 +5,7 @@
     /// </summary>
     public class ProductVariant
     {
+        #region Properties
         /// <summary>
         /// Represents the product that the variant belongs to.
         /// </summary>
@@ -66,6 +67,7 @@
         /// property is not mapped/saved to the database, its only there for frontend purposes.
         /// </summary>
         [NotMapped]
-        public bool IsNew { get; set; } = false;
+        public bool IsNew { get; set; } = false; 
+        #endregion
     }
 }

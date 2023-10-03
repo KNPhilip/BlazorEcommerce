@@ -5,6 +5,7 @@
     /// </summary>
     public class TokenValidateDto
     {
+        #region Properties
         /// <summary>
         /// Represents the email address of the user owning the Password Reset Token.
         /// </summary>
@@ -13,6 +14,7 @@
         /// <summary>
         /// Represents the Password Reset Token.
         /// </summary>
-        public string ResetToken { get; set; } = string.Empty;
+        public string ResetToken { get; set; } = string.Empty; 
+        #endregion
     }
 }

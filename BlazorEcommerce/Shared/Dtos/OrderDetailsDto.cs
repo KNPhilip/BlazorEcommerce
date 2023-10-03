@@ -5,6 +5,7 @@
     /// </summary>
     public class OrderDetailsDto
     {
+        #region Properties
         /// <summary>
         /// Represents the date that the order was made.
         /// </summary>
@@ -18,6 +19,7 @@
         /// <summary>
         /// Represents the list of products ordered.
         /// </summary>
-        public List<OrderDetailsProductDto> Products { get; set; } = new();
+        public List<OrderDetailsProductDto> Products { get; set; } = new(); 
+        #endregion
     }
 }

@@ -5,6 +5,7 @@
     /// </summary>
     public class UserChangePasswordDto
     {
+        #region Properties
         /// <summary>
         /// Represents the given password to change to.
         /// </summary>
@@ -16,6 +17,7 @@
         /// This property should match the other password property.
         /// </summary>
         [Compare("Password", ErrorMessage = "The passwords do not match.")]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty; 
+        #endregion
     }
 }

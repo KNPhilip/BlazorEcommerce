@@ -12,6 +12,7 @@ namespace BlazorEcommerce.Shared
     /// <typeparam name="T">Represents the type of data the Service Response contains.</typeparam>
     public class ServiceResponse<T>
     {
+        #region Properties
         /// <summary>
         /// Represents the data.
         /// </summary>
@@ -23,8 +24,10 @@ namespace BlazorEcommerce.Shared
         /// <summary>
         /// Represents the potential error message if anything went wrong.
         /// </summary>
-        public string Error { get; set; } = string.Empty;
+        public string Error { get; set; } = string.Empty; 
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Method for creating a successful ServiceResponse object
         /// </summary>
@@ -39,6 +42,7 @@ namespace BlazorEcommerce.Shared
         /// <param name="message">Represents the error message to be set in the object.</param>
         /// <returns>A failed ServiceResponse object with the appropriate error message.</returns>
         public static ServiceResponse<T> ErrorResponse(string message) =>
-            new() { Success = false, Error = message };
+            new() { Success = false, Error = message }; 
+        #endregion
     }
 }

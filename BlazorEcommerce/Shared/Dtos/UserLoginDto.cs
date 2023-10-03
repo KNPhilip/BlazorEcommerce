@@ -5,6 +5,7 @@
     /// </summary>
     public class UserLoginDto
     {
+        #region Properties
         /// <summary>
         /// Represents the given email to login to.
         /// </summary>
@@ -15,6 +16,7 @@
         /// Represents the given password for the login.
         /// </summary>
         [Required]
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty; 
+        #endregion
     }
 }

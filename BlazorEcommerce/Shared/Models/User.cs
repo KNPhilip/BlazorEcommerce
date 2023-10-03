@@ -5,6 +5,7 @@
     /// </summary>
     public class User
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the user.
         /// </summary>
@@ -53,6 +54,7 @@
         /// <summary>
         /// Represents the role of the user (Customer for instance)
         /// </summary>
-        public string Role { get; set; } = "Customer";
+        public string Role { get; set; } = "Customer"; 
+        #endregion
     }
 }

@@ -5,6 +5,7 @@
     /// </summary>
     public class CartItem
     {
+        #region Properties
         /// <summary>
         /// Represents the unique identifier for the user that have the
         /// product(s)/cart item in their cart.
@@ -25,6 +26,7 @@
         /// <summary>
         /// Represents the quantity of the product that the cart item contains.
         /// </summary>
-        public int Quantity { get; set; } = 1;
+        public int Quantity { get; set; } = 1; 
+        #endregion
     }
 }
