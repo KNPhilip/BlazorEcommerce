@@ -78,15 +78,15 @@ app.UseXfo(options => options.Deny());
 // X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff
 app.UseXXssProtection(options => options.EnabledWithBlockMode());
 // Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection)
-app.UseCspReportOnly(options => options
+app.UseCsp(options => options
     .BlockAllMixedContent()
-    .StyleSources(s => s.Self())
-    .FontSources(s => s.Self())
+    .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://fonts.googleapis.com"))
+    .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com"))
     .FormActions(s => s.Self())
     // Frame Ancestors makes X-Frame-Options obsolete
     .FrameAncestors(s => s.Self())
     .ImageSources(s => s.Self())
-    .ScriptSources(s => s.Self())
+    .ScriptSources(s => s.Self().UnsafeEval())
 ); 
 #endregion
 
