@@ -28,7 +28,7 @@
         /// <param name="cartItems">Represents the given list of cart items.</param>
         /// <returns>List of products in the cart.</returns>
         [HttpPost("products")]
-        public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> GetCartProducts(List<CartItem> cartItems) =>
+        public async Task<ActionResult<List<CartProductResponseDto>>> GetCartProducts(List<CartItem> cartItems) =>
             HandleResult(await _cartService.GetCartProductsAsync(cartItems));
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <param name="cartItems">Represents the given list of cart items.</param>
         /// <returns>A list of the products in the users cart.</returns>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> StoreCartItems(List<CartItem> cartItems) =>
+        public async Task<ActionResult<List<CartProductResponseDto>>> StoreCartItems(List<CartItem> cartItems) =>
             HandleResult(await _cartService.StoreCartItemsAsync(cartItems));
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <param name="cartItem">Represents the given cart item to add to the cart.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpPost("add")]
-        public async Task<ActionResult<ServiceResponse<bool>>> AddToCart(CartItem cartItem) =>
+        public async Task<ActionResult<bool>> AddToCart(CartItem cartItem) =>
             HandleResult(await _cartService.AddToCart(cartItem));
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// <param name="cartItem">Represents the given cart item, used to update the quantity.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpPut("update-quantity")]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateQuantity(CartItem cartItem) =>
+        public async Task<ActionResult<bool>> UpdateQuantity(CartItem cartItem) =>
             HandleResult(await _cartService.UpdateQuantity(cartItem));
 
         /// <summary>
@@ -65,7 +65,7 @@
         /// <param name="productTypeId">Represents the given product type ID.</param>
         /// <returns>True/False depending on the success.</returns>
         [HttpDelete("{productId}/{productTypeId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> RemoveItemFromCart(int productId, int productTypeId) =>
+        public async Task<ActionResult<bool>> RemoveItemFromCart(int productId, int productTypeId) =>
             HandleResult(await _cartService.RemoveItemFromCart(productId, productTypeId));
 
         /// <summary>
@@ -73,7 +73,7 @@
         /// </summary>
         /// <returns>The number of items currently in the cart.</returns>
         [HttpGet("count")]
-        public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount() =>
+        public async Task<ActionResult<int>> GetCartItemsCount() =>
             HandleResult(await _cartService.GetCartItemsCountAsync());
 
         /// <summary>
@@ -81,7 +81,7 @@
         /// </summary>
         /// <returns>A list of the products in the cart.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CartProductResponseDto>>>> GetDbCartItems() =>
+        public async Task<ActionResult<List<CartProductResponseDto>>> GetDbCartItems() =>
             HandleResult(await _cartService.GetDbCartItems()); 
         #endregion
     }

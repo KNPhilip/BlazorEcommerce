@@ -11,43 +11,43 @@
             _authStateProvider = authStateProvider;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(UserChangePasswordDto request)
+        public async Task<bool> ChangePassword(UserChangePasswordDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/change-password", request.Password);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            return await result.Content.ReadFromJsonAsync<bool>();
         }
 
         public async Task<bool> IsUserAuthenticated() =>
             (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity!.IsAuthenticated;
 
-        public async Task<ServiceResponse<string>?> Login(UserLoginDto request)
+        public async Task<string?> Login(UserLoginDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/login", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>?>();
+            return await result.Content.ReadFromJsonAsync<string>();
         }
 
-        public async Task<ServiceResponse<int>?> Register(UserRegisterDto request)
+        public async Task<bool> Register(UserRegisterDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/register", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>?>();
+            return result.IsSuccessStatusCode;
         }
 
-        public async Task<ServiceResponse<bool>> ValidateResetPasswordToken(TokenValidateDto request)
+        public async Task<bool> ValidateResetPasswordToken(TokenValidateDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/reset-password/validate", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            return await result.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<ServiceResponse<bool>> ResetPassword(PasswordResetDto request)
+        public async Task<bool> ResetPassword(PasswordResetDto request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/auth/reset-password", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            return await result.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<ServiceResponse<string>?> CreateResetToken(User request)
+        public async Task<string?> CreateResetToken(User request)
         {
             var result = await _http.PostAsJsonAsync("api/v1/Auth/create-password-token", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>?>();
+            return await result.Content.ReadFromJsonAsync<string?>();
         }
     }
 }

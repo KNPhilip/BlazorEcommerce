@@ -43,8 +43,8 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                ServiceResponse<int>? result = await _http.GetFromJsonAsync<ServiceResponse<int>?>("api/v1/carts/count");
-                int count = result!.Data;
+                int result = await _http.GetFromJsonAsync<int>("api/v1/carts/count");
+                int count = result;
 
                 await _localStorage.SetItemAsync<int>("cartItemsCount", count);
             }
@@ -61,8 +61,8 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                ServiceResponse<List<CartProductResponseDto>>? response = await _http.GetFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>>("api/v1/carts");
-                return response!.Data!;
+                List<CartProductResponseDto>? response = await _http.GetFromJsonAsync<List<CartProductResponseDto>>("api/v1/carts");
+                return response!;
             }
             else
             {
@@ -70,10 +70,10 @@
                 if (cartItems is null)
                     return new List<CartProductResponseDto>();
                 var response = await _http.PostAsJsonAsync("api/v1/carts/products", cartItems);
-                ServiceResponse<List<CartProductResponseDto>>? cartProducts =
-                    await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponseDto>>?>();
+                List<CartProductResponseDto>? cartProducts =
+                    await response.Content.ReadFromJsonAsync<List<CartProductResponseDto>?>();
 
-                return cartProducts!.Data!;
+                return cartProducts!;
             }
         }
 

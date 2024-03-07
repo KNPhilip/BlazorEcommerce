@@ -27,7 +27,7 @@
         /// </summary>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAdminProducts() =>
+        public async Task<ActionResult<List<Product>>> GetAdminProducts() =>
             HandleResult(await _productService.GetAdminProductsAsync());
 
         /// <summary>
@@ -36,7 +36,7 @@
         /// <param name="product">Represents the given product to be created in the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPost, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<Product>>> CreateProduct(Product product) =>
+        public async Task<ActionResult<Product>> CreateProduct(Product product) =>
             HandleResult(await _productService.CreateProductAsync(product));
 
         /// <summary>
@@ -45,7 +45,7 @@
         /// <param name="product">Represents the given product to be updated (ID must be included)</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPut, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> UpdateProduct(Product product) =>
+        public async Task<ActionResult<List<Product>>> UpdateProduct(Product product) =>
             HandleResult(await _productService.UpdateProductAsync(product));
 
         /// <summary>
@@ -54,7 +54,7 @@
         /// <param name="productId">Represents the ID of the product to be deleted from the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpDelete("{productId}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProduct(int productId) =>
+        public async Task<ActionResult<bool>> DeleteProduct(int productId) =>
             HandleResult(await _productService.DeleteProductsAsync(productId));
 
         /// <summary>
@@ -62,7 +62,7 @@
         /// </summary>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetAllProducts() =>
+        public async Task<ActionResult<List<Product>>> GetAllProducts() =>
             HandleResult(await _productService.GetProductsAsync());
 
         /// <summary>
@@ -71,7 +71,7 @@
         /// <param name="productId">Represents the ID of the product to be recieved.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("{productId}")]
-        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId) =>
+        public async Task<ActionResult<Product>> GetProduct(int productId) =>
             HandleResult(await _productService.GetProductAsync(productId));
 
         /// <summary>
@@ -80,7 +80,7 @@
         /// <param name="categoryUrl">Represents the name of the category URL to get products within.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("category/{categoryUrl}")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductsByCategory(string categoryUrl) =>
+        public async Task<ActionResult<List<Product>>> GetProductsByCategory(string categoryUrl) =>
             HandleResult(await _productService.GetProductsByCategoryAsync(categoryUrl));
 
         /// <summary>
@@ -90,7 +90,7 @@
         /// <param name="page">Represents the page number to recieve products from.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("search/{searchTerm}/{page}")]
-        public async Task<ActionResult<ServiceResponse<ProductSearchResultDto>>> SearchProducts(string searchTerm, int page = 1) =>
+        public async Task<ActionResult<ProductSearchResultDto>> SearchProducts(string searchTerm, int page = 1) =>
             HandleResult(await _productService.SearchProductsAsync(searchTerm, page));
 
         /// <summary>
@@ -99,7 +99,7 @@
         /// <param name="searchTerm">Represents the search text to recieve product suggestions.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("search-suggestions/{searchTerm}")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductSearchSuggestions(string searchTerm) =>
+        public async Task<ActionResult<List<Product>>> GetProductSearchSuggestions(string searchTerm) =>
             HandleResult(await _productService.GetProductSearchSuggestionsAsync(searchTerm));
 
         /// <summary>
@@ -107,7 +107,7 @@
         /// </summary>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet("featured")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts() =>
+        public async Task<ActionResult<List<Product>>> GetFeaturedProducts() =>
             HandleResult(await _productService.GetFeaturedProductsAsync()); 
         #endregion
     }

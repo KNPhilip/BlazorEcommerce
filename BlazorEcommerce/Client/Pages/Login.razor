@@ -45,17 +45,20 @@
 
     private async Task HandleLogin()
     {
-        ServiceResponse<string>? result = await AuthService.Login(user);
-        if (result!.Success)
+        string? result = await AuthService.Login(user);
+        if (result is not null)
         {
             errorMessage = string.Empty;
 
-            await LocalStorage.SetItemAsync("authToken", result.Data);
+            await LocalStorage.SetItemAsync("authToken", result);
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
             await CartService.StoreCartItems(true);
             await CartService.GetCartItemsCount();
             NavigationManager.NavigateTo(returnUrl);
         }
-        else errorMessage = result.Error;
+        else
+        {
+            errorMessage = "Could not log in, please try again.";
+        }
     }
 }

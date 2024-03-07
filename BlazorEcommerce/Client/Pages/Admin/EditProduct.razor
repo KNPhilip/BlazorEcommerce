@@ -195,7 +195,7 @@
         }
         else
         {
-            Product dbProduct = (await ProductService.GetProduct(Id))!.Data!;
+            Product? dbProduct = await ProductService.GetProduct(Id);
             if (dbProduct is null)
             {
                 message = $"Product with Id '{Id}' does not exist.";
@@ -238,7 +238,7 @@
         {
             product.IsNew = false;
             product = await ProductService.UpdateProduct(product);
-            NavigationManager.NavigateTo($"admin/product/{product.Id}", true);
+            NavigationManager.NavigateTo($"admin/product/{product!.Id}", true);
         }
     }
 

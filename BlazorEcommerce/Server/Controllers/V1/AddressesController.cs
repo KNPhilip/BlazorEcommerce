@@ -28,7 +28,7 @@
         /// </summary>
         /// <returns>The appropriate address data or an error in case of the user not having added an address.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<Address>>> GetAddress() =>
+        public async Task<ActionResult<Address>> GetAddress() =>
             HandleResult(await _addressService.GetAddress());
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <param name="request">Represents the given Address to be added or updated.</param>
         /// <returns>The updated address data or an error in case of failure.</returns>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Address>>> AddOrUpdateAddress(Address request) =>
+        public async Task<ActionResult<Address>> AddOrUpdateAddress(Address request) =>
             HandleResult(await _addressService.AddOrUpdateAddress(request)); 
         #endregion
     }

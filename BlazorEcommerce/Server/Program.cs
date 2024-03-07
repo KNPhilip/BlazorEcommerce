@@ -85,7 +85,7 @@ app.UseCsp(options => options
     .FormActions(s => s.Self())
     // Frame Ancestors makes X-Frame-Options obsolete
     .FrameAncestors(s => s.Self())
-    .ImageSources(s => s.Self())
+    .ImageSources(s => s.Self().CustomSources("https://upload.wikimedia.org"))
     .ScriptSources(s => s.Self().UnsafeEval())
 ); 
 #endregion
