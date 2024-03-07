@@ -21,10 +21,10 @@
         public async Task<Product> CreateProduct(Product product)
         {
             var result = await _http.PostAsJsonAsync("api/v1/products", product);
-            Product newProduct = (await result.Content
-                .ReadFromJsonAsync<ServiceResponse<Product>>())!.Data!;
+            Product? newProduct = await result.Content
+                .ReadFromJsonAsync<Product>();
 
-            return newProduct;
+            return newProduct!;
         }
 
         public async Task DeleteProduct(Product product) =>
@@ -32,26 +32,27 @@
 
         public async Task GetAdminProducts()
         {
-            ServiceResponse<List<Product>>? result = await _http
-                .GetFromJsonAsync<ServiceResponse<List<Product>>>("api/v1/products/admin");
-            AdminProducts = result!.Data!;
+            List<Product> result = await _http.GetFromJsonAsync<List<Product>>("api/v1/products/admin") ?? [];
+            AdminProducts = result!;
             CurrentPage = 1;
             PageCount = 0;
             if (AdminProducts!.Count == 0)
                 Message = "No products found.";
         }
 
-        public async Task<ServiceResponse<Product>?> GetProduct(int productId) =>
-            await _http.GetFromJsonAsync<ServiceResponse<Product>?>($"api/v1/products/{productId}");
+        public async Task<Product?> GetProduct(int productId) =>
+            await _http.GetFromJsonAsync<Product?>($"api/v1/products/{productId}");
 
         public async Task GetProducts(string? categoryUrl = null)
         {
-            ServiceResponse<List<Product>>? result = categoryUrl is null ? 
-                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/v1/products/featured") :
-                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/v1/products/category/{categoryUrl}");
+            List<Product>? result = categoryUrl is null ? 
+                await _http.GetFromJsonAsync<List<Product>>("api/v1/products/featured") :
+                await _http.GetFromJsonAsync<List<Product>>($"api/v1/products/category/{categoryUrl}");
 
-            if (result is not null && result.Data is not null)
-                Products = result.Data;
+            if (result is not null)
+            {
+                Products = result;
+            }
 
             CurrentPage = 1;
             PageCount = 0;
@@ -64,32 +65,32 @@
 
         public async Task<List<string>> GetProductSearchSuggestions(string searchTerm)
         {
-            ServiceResponse<List<string>>? result = await _http
-                .GetFromJsonAsync<ServiceResponse<List<string>>>($"api/v1/products/search-suggestions/{searchTerm}");
+            List<string> result = await _http.GetFromJsonAsync<List<string>>
+                ($"api/v1/products/search-suggestions/{searchTerm}") ?? [];
 
-            return result!.Data!;
+            return result;
         }
 
         public async Task SearchProducts(string searchTerm, int page)
         {
             LastSearchTerm = searchTerm;
 
-            ServiceResponse<ProductSearchResultDto>? result = await _http
-                .GetFromJsonAsync<ServiceResponse<ProductSearchResultDto>>($"api/v1/products/search/{searchTerm}/{page}");
-            if (result is not null && result.Data is not null)
+            ProductSearchResultDto? result = await _http
+                .GetFromJsonAsync<ProductSearchResultDto>($"api/v1/products/search/{searchTerm}/{page}");
+            if (result is not null)
             {
-                Products = result.Data.Products;
-                CurrentPage = result.Data.CurrentPage;
-                PageCount = result.Data.Pages;
+                Products = result.Products;
+                CurrentPage = result.CurrentPage;
+                PageCount = result.Pages;
             }
             if (Products.Count == 0) Message = "No products found.";
             OnProductsChanged?.Invoke();
         }
 
-        public async Task<Product> UpdateProduct(Product product)
+        public async Task<Product?> UpdateProduct(Product product)
         {
             var result = await _http.PutAsJsonAsync($"api/v1/products", product);
-            return (await result.Content.ReadFromJsonAsync<ServiceResponse<Product>>())!.Data!;
+            return await result.Content.ReadFromJsonAsync<Product>();
         }
     }
 }

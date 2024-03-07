@@ -18,14 +18,14 @@
 
         public async Task<OrderDetailsDto> GetOrderDetails(int orderId)
         {
-            ServiceResponse<OrderDetailsDto>? result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsDto>>($"api/v1/orders/{orderId}");
-            return result!.Data!;
+            OrderDetailsDto? result = await _http.GetFromJsonAsync<OrderDetailsDto>($"api/v1/orders/{orderId}");
+            return result!;
         }
 
         public async Task<List<OrderOverviewDto>> GetOrders()
         {
-            ServiceResponse<List<OrderOverviewDto>>? result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewDto>>>("api/v1/orders");
-            return result!.Data!;
+            List<OrderOverviewDto>? result = await _http.GetFromJsonAsync<List<OrderOverviewDto>>("api/v1/orders");
+            return result!;
         }
 
         public async Task<string> PlaceOrder()

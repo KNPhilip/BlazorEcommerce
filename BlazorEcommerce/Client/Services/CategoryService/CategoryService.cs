@@ -18,7 +18,7 @@
         {
             var response = await _http.DeleteAsync($"api/v1/categories/{categoryId}");
             AdminCategories = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<Category>>>())!.Data!;
+                .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
             OnChange!.Invoke();
         }
@@ -27,7 +27,7 @@
         {
             var response = await _http.PutAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<Category>>>())!.Data!;
+                .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
             OnChange!.Invoke();
         }
@@ -36,7 +36,7 @@
         {
             var response = await _http.PostAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<Category>>>())!.Data!;
+                .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
             OnChange!.Invoke();
         }
@@ -55,16 +55,16 @@
 
         public async Task GetAdminCategories()
         {
-            ServiceResponse<List<Category>>? response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories/admin");
-            if (response is not null && response.Data != null)
-                AdminCategories = response.Data;
+            List<Category>? response = await _http.GetFromJsonAsync<List<Category>>("api/v1/categories/admin");
+            if (response is not null)
+            {
+                AdminCategories = response;
+            }
         }
 
         public async Task GetCategories()
         {
-            ServiceResponse<List<Category>>? response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/v1/categories");
-            if (response is not null && response.Data != null)
-                Categories = response.Data;
+            Categories = await _http.GetFromJsonAsync<List<Category>>("api/v1/categories") ?? [];
         }
     }
 }

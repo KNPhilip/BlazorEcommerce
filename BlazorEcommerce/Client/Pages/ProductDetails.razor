@@ -81,14 +81,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        ServiceResponse<Product>? result = await ProductService.GetProduct(Id);
-        if (result!.Success)
-            message = result.Error;
-        else
+        Product? result = await ProductService.GetProduct(Id);
+        product = result;
+        if (product!.Variants.Count > 0)
         {
-            product = result.Data;
-            if (product!.Variants.Count > 0)
-                currentTypeId = product.Variants[0].ProductTypeId;
+            currentTypeId = product.Variants[0].ProductTypeId;
         }
     }
 

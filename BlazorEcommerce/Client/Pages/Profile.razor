@@ -38,7 +38,7 @@
 
     private async Task ChangePassword()
     {
-        ServiceResponse<bool> result = await AuthService.ChangePassword(request);
-        message = result.Success ? "Password successfully reset" : result.Error;
+        bool result = await AuthService.ChangePassword(request);
+        message = result ? "Password successfully reset" : "Could not reset password, please try again.";
     }
 }

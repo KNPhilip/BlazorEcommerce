@@ -27,7 +27,7 @@
         /// </summary>
         /// <returns>A list of all the orders, or an error message in case of failure.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrders() =>
+        public async Task<ActionResult<List<OrderOverviewDto>>> GetOrders() =>
             HandleResult(await _orderService.GetOrders());
 
         /// <summary>
@@ -36,7 +36,7 @@
         /// <param name="orderId">Represents the ID of the order you want to recieve details from.</param>
         /// <returns>"OrderOverviewDto" with all needed details, or error message in case something went wrong.</returns>
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<ServiceResponse<List<OrderOverviewDto>>>> GetOrderDetails(int orderId) =>
+        public async Task<ActionResult<List<OrderOverviewDto>>> GetOrderDetails(int orderId) =>
             HandleResult(await _orderService.GetOrderDetailsAsync(orderId)); 
         #endregion
     }

@@ -18,7 +18,7 @@
             productType.Editing = productType.IsNew = false;
             HttpResponseMessage response = await _http.PostAsJsonAsync("api/v1/producttypes", productType);
             ProductTypes = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>())!.Data!;
+                .ReadFromJsonAsync<List<ProductType>>())!;
             OnChange!.Invoke();
         }
 
@@ -37,24 +37,24 @@
 
         public async Task GetProductTypes()
         {
-            ServiceResponse<List<ProductType>>? result = await _http
-                .GetFromJsonAsync<ServiceResponse<List<ProductType>>>("api/v1/producttypes");
-            ProductTypes = result!.Data!;
+            List<ProductType> result = await _http
+                .GetFromJsonAsync<List<ProductType>>("api/v1/producttypes") ?? [];
+            ProductTypes = result;
         }
 
         public async Task UpdateProductType(ProductType productType)
         {
             var response = await _http.PutAsJsonAsync("api/v1/producttypes", productType);
-            ProductTypes = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>())!.Data!;
+            ProductTypes = await response.Content
+                .ReadFromJsonAsync<List<ProductType>>() ?? [];
             OnChange!.Invoke();
         }
 
         public async Task DeleteProductType(int productTypeId)
         {
             var response = await _http.DeleteAsync($"api/v1/producttypes/{productTypeId}");
-            ProductTypes = (await response.Content
-                .ReadFromJsonAsync<ServiceResponse<List<ProductType>>>())!.Data!;
+            ProductTypes = await response.Content
+                .ReadFromJsonAsync<List<ProductType>>() ?? [];
             OnChange!.Invoke();
         }
     }

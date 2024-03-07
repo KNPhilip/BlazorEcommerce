@@ -28,7 +28,7 @@
         /// </summary>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes() =>
+        public async Task<ActionResult<List<ProductType>>> GetProductTypes() =>
             HandleResult(await _productTypeService.GetProductTypesAsync());
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <param name="productType">Represents the given product type to be added to the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductType(ProductType productType) =>
+        public async Task<ActionResult<List<ProductType>>> AddProductType(ProductType productType) =>
             HandleResult(await _productTypeService.AddProductType(productType));
 
         /// <summary>
@@ -47,7 +47,7 @@
         /// to be updated in the database (ID must be included)</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> UpdateProductType(ProductType productType) =>
+        public async Task<ActionResult<List<ProductType>>> UpdateProductType(ProductType productType) =>
             HandleResult(await _productTypeService.UpdateProductType(productType));
 
         /// <summary>
@@ -56,7 +56,7 @@
         /// <param name="productTypeId">Represents the ID of the product type to delete from the database.</param>
         /// <returns>Appropriate status code and either the data or an error depending on the response.</returns>
         [HttpDelete("{productTypeId}")]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> DeleteProductType(int productTypeId) =>
+        public async Task<ActionResult<List<ProductType>>> DeleteProductType(int productTypeId) =>
             HandleResult(await _productTypeService.DeleteProductType(productTypeId)); 
         #endregion
     }

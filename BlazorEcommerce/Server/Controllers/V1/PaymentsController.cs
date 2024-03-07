@@ -46,7 +46,7 @@
         /// </summary>
         /// <returns>True or False depending on the success of the purchase.</returns>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder() =>
+        public async Task<ActionResult<bool>> FulfillOrder() =>
             HandleResult(await _paymentService.FulfillOrder(Request)); 
         #endregion
     }

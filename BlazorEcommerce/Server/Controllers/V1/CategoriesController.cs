@@ -27,7 +27,7 @@
         /// </summary>
         /// <returns>A list of all the categories, or an error message in case of failure.</returns>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCategories() =>
+        public async Task<ActionResult<List<Category>>> GetCategories() =>
             HandleResult(await _categoryService.GetCategoriesAsync());
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// </summary>
         /// <returns>A list of the appropriate categories, or an error message in case of failure.</returns>
         [HttpGet("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategories() =>
+        public async Task<ActionResult<List<Category>>> GetAdminCategories() =>
             HandleResult(await _categoryService.GetAdminCategoriesAsync());
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// <param name="category">Represents the given category to be added.</param>
         /// <returns>A list of all categories.</returns>
         [HttpPost, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategory(Category category) =>
+        public async Task<ActionResult<List<Category>>> AddCategory(Category category) =>
             HandleResult(await _categoryService.AddCategoryAsync(category));
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// the matching category from the database.</param>
         /// <returns>A list of all categories.</returns>
         [HttpPut, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(Category category) =>
+        public async Task<ActionResult<List<Category>>> UpdateCategory(Category category) =>
             HandleResult(await _categoryService.UpdateCategoryAsync(category));
 
         /// <summary>
@@ -64,7 +64,7 @@
         /// <param name="categoryId">Represents the given ID of the category to be deleted from the database.</param>
         /// <returns>A list of all categories.</returns>
         [HttpDelete, Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int categoryId) =>
+        public async Task<ActionResult<List<Category>>> DeleteCategory(int categoryId) =>
             HandleResult(await _categoryService.DeleteCategoryAsync(categoryId)); 
         #endregion
     }
