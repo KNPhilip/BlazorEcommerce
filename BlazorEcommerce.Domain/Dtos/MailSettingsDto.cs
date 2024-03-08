@@ -1,0 +1,33 @@
+﻿namespace BlazorEcommerce.Domain.Dtos;
+
+/// <summary>
+/// Data Transfer Object representing the mail settings / config.
+/// This is needed for the mail feature to work.
+/// </summary>
+public sealed class MailSettingsDto
+{
+    /// <summary>
+    /// Represents the Username of the Mail Config.
+    /// </summary>
+    public required string Username { get; init; }
+
+    /// <summary>
+    /// Represents the Password of the Mail Config.
+    /// </summary>
+    public required string Password { get; init; }
+
+    /// <summary>
+    /// Represents the Port of the Mail Config.
+    /// </summary>
+    public required int Port { get; init; }
+
+    /// <summary>
+    /// Represents the "Sender Email" of the Mail Config.
+    /// </summary>
+    public required string FromEmail { get; init; }
+
+    /// <summary>
+    /// Represents the Host of the Mail Config.
+    /// </summary>
+    public required string Host { get; init; } 
+}
