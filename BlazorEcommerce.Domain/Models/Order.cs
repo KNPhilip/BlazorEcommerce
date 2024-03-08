@@ -29,5 +29,5 @@ public sealed class Order
     /// <summary>
     /// Represents the list of items in an order.
     /// </summary>
-    public List<OrderItem> OrderItems { get; set; } = new(); 
+    public List<OrderItem> OrderItems { get; set; } = []; 
 }

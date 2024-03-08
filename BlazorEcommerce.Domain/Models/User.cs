@@ -3,13 +3,8 @@
 /// <summary>
 /// Represents the User entity in the business domain.
 /// </summary>
-public sealed class User
+public sealed class User : DbEntity
 {
-    /// <summary>
-    /// Represents the unique identifier for the user.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Represents the email address of the user.
     /// </summary>
@@ -39,11 +34,6 @@ public sealed class User
     /// Represents the expiry date of the users Password Reset Token.
     /// </summary>
     public DateTime? ResetTokenExpires { get; set; }
-
-    /// <summary>
-    /// Represents the date that the user got registered.
-    /// </summary>
-    public DateTime DateCreated { get; set; } = DateTime.Now;
 
     /// <summary>
     /// Represents the users address.

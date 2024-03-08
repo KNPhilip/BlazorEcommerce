@@ -3,13 +3,8 @@
 /// <summary>
 /// Represents the Address entity in the business domain.
 /// </summary>
-public sealed class Address
+public sealed class Address : DbEntity
 {
-    /// <summary>
-    /// Represents the unique identifier for the address.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Represents the unique identifier for the user that lives on the address.
     /// </summary>

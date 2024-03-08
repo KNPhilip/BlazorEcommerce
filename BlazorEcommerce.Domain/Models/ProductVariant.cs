@@ -47,12 +47,11 @@ public sealed class ProductVariant
     public bool Visible { get; set; } = true;
 
     /// <summary>
-    /// Represents the status of whether the product variant is deleted or not. On deletion the
-    /// data of old product variants is still saved for a period of time in the database
-    /// (This is a common approach in most companies because of legal reasons)
-    /// - The data is then deleted after x amount of years.
+    /// Represents the status of whether the product variant is "soft" deleted or not. On deletion the
+    /// data of old product variants is still saved for a period of time in the database. This is a common 
+    /// approach in companies for legal reasons. The data is then deleted after x amount of time.
     /// </summary>
-    public bool IsDeleted { get; set; } = false;
+    public bool IsSoftDeleted { get; set; }
 
     /// <summary>
     /// Represents the status of whether or not the product variant is currently being edited. This

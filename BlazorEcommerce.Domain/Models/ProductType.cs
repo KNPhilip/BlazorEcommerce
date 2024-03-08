@@ -3,25 +3,12 @@
 /// <summary>
 /// Represents the Product Type entity in the business domain.
 /// </summary>
-public sealed class ProductType
+public sealed class ProductType : DbEntity
 {
-    /// <summary>
-    /// Represents the unique identifier for the product type.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Represents the name of the product type.
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Represents the status of whether the product type is deleted or not. On deletion the
-    /// data of old product types is still saved for a period of time in the database
-    /// (This is a common approach in most companies because of legal reasons)
-    /// - The data is then deleted after x amount of years.
-    /// </summary>
-    public bool IsDeleted { get; set; }
 
     /// <summary>
     /// Represents the status of whether or not the product type is currently being edited. This
