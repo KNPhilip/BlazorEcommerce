@@ -1,7 +1,7 @@
 ﻿namespace BlazorEcommerce.Domain.Dtos;
 
 /// <summary>
-/// Data Transfer Object for validating a Password Reset Token for a specified user.
+/// DTO for validating a Password Reset Token for a specified user.
 /// </summary>
 public sealed class TokenValidateDto
 {

@@ -1,23 +1,12 @@
 ﻿namespace BlazorEcommerce.Domain.Dtos;
 
 /// <summary>
-/// Data Transfer Object representing the overview of an order.
+/// DTO representing the overview of an order.
 /// </summary>
 public sealed class OrderOverviewDto
 {
-    /// <summary>
-    /// Represents the unique identifier for the order.
-    /// </summary>
     public int Id { get; set; }
-
-    /// <summary>
-    /// Represents the date that the order was made.
-    /// </summary>
     public DateTime OrderDate { get; set; }
-
-    /// <summary>
-    /// Represents the total price of the order.
-    /// </summary>
     public decimal TotalPrice { get; set; }
 
     /// <summary>
@@ -34,5 +23,5 @@ public sealed class OrderOverviewDto
     /// Represents the list of images of the order. However,
     /// only the first image in this list will be used to represent the order.
     /// </summary>
-    public List<Image> Images { get; set; } = new(); 
+    public List<Image> Images { get; set; } = []; 
 }

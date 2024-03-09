@@ -8,7 +8,7 @@
 public sealed class ResponseDto<T>
 {
     public T? Data { get; set; }
-    public bool Success { get; set; }
+    public required bool Success { get; set; }
     public string? Error { get; set; } 
 
     /// <summary>
