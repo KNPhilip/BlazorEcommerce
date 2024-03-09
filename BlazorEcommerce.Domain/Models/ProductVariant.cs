@@ -5,6 +5,11 @@
 /// </summary>
 public sealed class ProductVariant
 {
+    private int productId;
+    private int productTypeId;
+    private decimal price;
+    private decimal originalPrice;
+
     /// <summary>
     /// Represents the product that the variant belongs to.
     /// </summary>
@@ -14,7 +19,15 @@ public sealed class ProductVariant
     /// <summary>
     /// Represents the unique identifier of the product that the variant belongs to.
     /// </summary>
-    public int ProductId { get; set; }
+    public int ProductId 
+    {
+        get => productId;
+        set
+        {
+            Encapsulation.ThrowIfZeroOrLess(value);
+            productId = value;
+        }
+    }
 
     /// <summary>
     /// Represents the product type of the product variant.
@@ -24,13 +37,35 @@ public sealed class ProductVariant
     /// <summary>
     /// Represents the unique identifier of the product type of the product variant.
     /// </summary>
-    public int ProductTypeId { get; set; }
+    public int ProductTypeId 
+    {
+        get => productTypeId;
+        set
+        {
+            Encapsulation.ThrowIfZeroOrLess(value);
+            productTypeId = value;
+        }
+    }
 
     /// <summary>
     /// Represents the price of the product variant.
     /// </summary>
     [Column(TypeName = "decimal(18,2)")]
-    public decimal Price { get; set; }
+    public decimal Price 
+    {
+        get => price;
+        set
+        {
+            Encapsulation.ThrowIfNull(value);
+
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Price cannot be less than 0.");
+            }
+
+            price = value;
+        }
+    }
 
     /// <summary>
     /// Represents the original price of the product variant. This is only set when you
@@ -38,7 +73,21 @@ public sealed class ProductVariant
     /// discount price, and this will be the old price.
     /// </summary>
     [Column(TypeName = "decimal(18,2)")]
-    public decimal OriginalPrice { get; set; }
+    public decimal OriginalPrice 
+    {
+        get => originalPrice;
+        set
+        {
+            Encapsulation.ThrowIfNull(value);
+
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Original price cannot be less than 0.");
+            }
+
+            originalPrice = value;
+        }
+    }
 
     /// <summary>
     /// Represents the status of whether the product variant
@@ -58,12 +107,12 @@ public sealed class ProductVariant
     /// property is not mapped/saved to the database, its only there for frontend purposes.
     /// </summary>
     [NotMapped]
-    public bool Editing { get; set; } = false;
+    public bool Editing { get; set; }
 
     /// <summary>
     /// Represents the status of whether this product variant is "being created" or not. This
     /// property is not mapped/saved to the database, its only there for frontend purposes.
     /// </summary>
     [NotMapped]
-    public bool IsNew { get; set; } = false; 
+    public bool IsNew { get; set; }
 }

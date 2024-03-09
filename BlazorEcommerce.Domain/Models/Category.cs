@@ -5,15 +5,34 @@
 /// </summary>
 public sealed class Category : DbEntity
 {
+    private string name = string.Empty;
+    private string url = string.Empty;
+
     /// <summary>
     /// Represents the name of the category.
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string Name 
+    {
+        get => name;
+        set
+        {
+            Encapsulation.ThrowIfNullOrWhiteSpace(value);
+            name = value;
+        }
+    }
 
     /// <summary>
     /// Represents the URL for the category.
     /// </summary>
-    public string Url { get; set; } = string.Empty;
+    public string Url 
+    {
+        get => url;
+        set
+        {
+            Encapsulation.ThrowIfNullOrWhiteSpace(value);
+            url = value;
+        }
+    }
 
     /// <summary>
     /// Represents the status of whether the category
