@@ -1,7 +1,9 @@
 ﻿@page "/admin/product-types"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin")]
+
 @inject IProductTypeUIService ProductTypeService
 @implements IDisposable
-@attribute [Authorize(Roles = "Admin")]
 
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Product Types</MudText>
@@ -37,7 +39,7 @@
 @code {
     ProductType? editingProductType = null;
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         await ProductTypeService.GetProductTypes();
         ProductTypeService.OnChange += StateHasChanged;

@@ -1,6 +1,8 @@
 ﻿@page "/profile"
-@inject IAuthUIService AuthService
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize]
+
+@inject IAuthUIService AuthService
 
 <PageTitle>Your profile</PageTitle>
 

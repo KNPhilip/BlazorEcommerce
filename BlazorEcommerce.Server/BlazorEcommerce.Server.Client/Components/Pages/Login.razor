@@ -1,5 +1,6 @@
 ﻿@page "/login"
-@using Microsoft.AspNetCore.WebUtilities;
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject IAuthUIService AuthService
 @inject ICartUIService CartService
 @inject ILocalStorageService LocalStorage
@@ -36,7 +37,7 @@
     private string errorMessage = string.Empty;
     private string returnUrl = string.Empty;
 
-    protected override void OnInitialized()
+    protected sealed override void OnInitialized()
     {
         Uri uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))

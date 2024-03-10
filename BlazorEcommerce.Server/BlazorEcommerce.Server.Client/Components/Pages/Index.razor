@@ -1,6 +1,8 @@
 ﻿@page "/"
 @page "/search/{SearchTerm}/{page:int}"
 @page "/{CategoryUrl}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject IProductUIService ProductService
 
 <PageTitle>Home</PageTitle>
@@ -26,7 +28,7 @@
     [Parameter]
     public int Page { get; set; } = 1;
 
-    protected override async Task OnParametersSetAsync()
+    protected sealed override async Task OnParametersSetAsync()
     {
         if (SearchTerm is not null)
         {

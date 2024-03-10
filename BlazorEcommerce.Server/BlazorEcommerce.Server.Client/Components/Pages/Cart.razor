@@ -1,4 +1,6 @@
 ﻿@page "/cart"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject ICartUIService CartService
 @inject IOrderUIService OrderService
 @inject IAuthUIService AuthService
@@ -55,7 +57,7 @@
     string message = "Loading cart...";
     bool isAuthenticated = false;
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         isAuthenticated = await AuthService.IsUserAuthenticated();
         await LoadCart();

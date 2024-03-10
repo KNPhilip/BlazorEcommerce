@@ -1,4 +1,6 @@
-﻿@inject ICartUIService CartService
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject ICartUIService CartService
 @inject ISyncLocalStorageService LocalStorage
 @implements IDisposable
 

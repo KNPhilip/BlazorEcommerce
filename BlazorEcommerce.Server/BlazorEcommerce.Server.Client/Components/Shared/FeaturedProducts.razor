@@ -1,4 +1,6 @@
-﻿@inject IProductUIService ProductService
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject IProductUIService ProductService
 @implements IDisposable
 
 <center><h2>Current Top Products:</h2></center>

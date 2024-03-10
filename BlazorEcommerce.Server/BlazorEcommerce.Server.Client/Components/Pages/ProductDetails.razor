@@ -1,4 +1,6 @@
 ﻿@page "/product/{id:int}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject IProductUIService ProductService
 @inject ICartUIService CartService
 
@@ -79,7 +81,7 @@
     [Parameter]
     public int Id { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected sealed override async Task OnParametersSetAsync()
     {
         Product? result = await ProductService.GetProduct(Id);
         product = result;

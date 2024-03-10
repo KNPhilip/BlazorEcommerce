@@ -3,23 +3,18 @@ using System.Net.Http.Json;
 
 namespace BlazorEcommerce.Server.Client.Services.CategoryService
 {
-    public class CategoryUIService : ICategoryUIService
+    public sealed class CategoryUIService(HttpClient http) 
+        : ICategoryUIService
     {
-        private readonly HttpClient _http;
-
-        public CategoryUIService(HttpClient http)
-        {
-            _http = http;
-        }
-
-        public List<Category> Categories { get; set; } = new();
-        public List<Category> AdminCategories { get; set; } = new();
+        public List<Category> Categories { get; set; } = [];
+        public List<Category> AdminCategories { get; set; } = [];
 
         public event Action? OnChange;
 
         public async Task DeleteCategory(int categoryId)
         {
-            var response = await _http.DeleteAsync($"api/v1/categories/{categoryId}");
+            HttpResponseMessage response = await http
+                .DeleteAsync($"api/v1/categories/{categoryId}");
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
@@ -28,7 +23,8 @@ namespace BlazorEcommerce.Server.Client.Services.CategoryService
 
         public async Task UpdateCategory(Category category)
         {
-            var response = await _http.PutAsJsonAsync("api/v1/categories", category);
+            HttpResponseMessage response = await http
+                .PutAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
@@ -37,7 +33,8 @@ namespace BlazorEcommerce.Server.Client.Services.CategoryService
 
         public async Task AddCategory(Category category)
         {
-            var response = await _http.PostAsJsonAsync("api/v1/categories", category);
+            HttpResponseMessage response = await http
+                .PostAsJsonAsync("api/v1/categories", category);
             AdminCategories = (await response.Content
                 .ReadFromJsonAsync<List<Category>>())!;
             await GetCategories();
@@ -58,7 +55,10 @@ namespace BlazorEcommerce.Server.Client.Services.CategoryService
 
         public async Task GetAdminCategories()
         {
-            List<Category>? response = await _http.GetFromJsonAsync<List<Category>>("api/v1/categories/admin");
+            List<Category>? response = await http
+                .GetFromJsonAsync<List<Category>>
+                    ("api/v1/categories/admin");
+
             if (response is not null)
             {
                 AdminCategories = response;
@@ -67,7 +67,9 @@ namespace BlazorEcommerce.Server.Client.Services.CategoryService
 
         public async Task GetCategories()
         {
-            Categories = await _http.GetFromJsonAsync<List<Category>>("api/v1/categories") ?? [];
+            Categories = await http
+                .GetFromJsonAsync<List<Category>>
+                    ("api/v1/categories") ?? [];
         }
     }
 }

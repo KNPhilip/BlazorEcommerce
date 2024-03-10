@@ -1,7 +1,9 @@
 ﻿@page "/admin/products"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin")]
+
 @inject IProductUIService ProductService
 @inject NavigationManager NavigationManager
-@attribute [Authorize(Roles = "Admin")]
 
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Products</MudText>
@@ -66,7 +68,7 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         await ProductService.GetAdminProducts();
     }

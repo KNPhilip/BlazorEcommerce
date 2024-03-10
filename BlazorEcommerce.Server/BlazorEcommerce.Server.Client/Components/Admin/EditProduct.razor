@@ -1,5 +1,8 @@
 ﻿@page "/admin/product"
 @page "/admin/product/{id:int}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin")]
+
 @inject NavigationManager NavigationManager
 @inject IProductUIService ProductService
 @inject IProductTypeUIService ProductTypeService
@@ -177,13 +180,13 @@
     private string DragClass = DefaultDragClass;
     private List<string> fileNames = new();
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         await ProductTypeService.GetProductTypes();
         await CategoryService.GetAdminCategories();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected sealed override async Task OnParametersSetAsync()
     {
         if(Id == 0)
         {
@@ -229,7 +232,7 @@
 
     private void AddVariant()
     {
-        product.Variants.Add(new ProductVariant
+        product.Variants.Add(new()
         {
             IsNew = true,
             ProductId = product.Id
@@ -253,8 +256,7 @@
 
     private async void DeleteProduct()
     {
-        bool confirmed = await JSRuntime
-            .InvokeAsync<bool>("confirm",
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
             $"Are you sure you want to delete '{product.Title}'?");
 
         if (confirmed)

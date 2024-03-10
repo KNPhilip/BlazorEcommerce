@@ -1,4 +1,6 @@
 ﻿@page "/orders/{orderId:int}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject IOrderUIService OrderService
 
 <PageTitle>Order details</PageTitle>
@@ -46,7 +48,7 @@
 
     OrderDetailsDto? order = null;
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         order = await OrderService.GetOrderDetails(OrderId);
     }

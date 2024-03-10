@@ -1,4 +1,6 @@
-﻿@inject NavigationManager NavigationManager
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject NavigationManager NavigationManager
 @inject IProductUIService ProductService
 
 <style>
@@ -54,20 +56,26 @@
     private List<string> suggestions = new();
     protected ElementReference searchInput;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
             await searchInput.FocusAsync();
     }
 
-    public void SearchProducts() =>
+    public void SearchProducts()
+    {
         NavigationManager.NavigateTo($"search/{searchTerm}/1");
+    }
 
     public async Task HandleSearch(KeyboardEventArgs args)
     {
         if (args.Key is null || args.Key.Equals("Enter"))
+        {
             SearchProducts();
+        }
         else if (searchTerm.Length > 1)
+        {
             suggestions = await ProductService.GetProductSearchSuggestions(searchTerm);
+        }
     }
 }

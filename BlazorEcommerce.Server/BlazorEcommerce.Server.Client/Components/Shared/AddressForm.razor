@@ -1,4 +1,6 @@
-﻿@inject IAddressUIService AddressService
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject IAddressUIService AddressService
 
 @if (address is null)
 {
@@ -77,7 +79,7 @@ else
     Address? address = null;
     bool editAddress = false;
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         address = await AddressService.GetAddress();
     }

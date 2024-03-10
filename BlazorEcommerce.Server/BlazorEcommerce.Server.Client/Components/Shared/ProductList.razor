@@ -1,4 +1,6 @@
-﻿@inject IProductUIService ProductService
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject IProductUIService ProductService
 @implements IDisposable
 
 @if (ProductService.Products is null || ProductService.Products.Count == 0)
@@ -40,12 +42,13 @@ else
         <a class="btn 
             @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline")
             page-selection"
-            href="/search/@ProductService.LastSearchTerm/@i">@i</a>
+            href="/search/@ProductService.LastSearchTerm/@i"
+        >@i</a>
     }
 }
 
 @code {
-    protected override void OnInitialized()
+    protected sealed override void OnInitialized()
     {
         ProductService.OnProductsChanged += StateHasChanged;
     }

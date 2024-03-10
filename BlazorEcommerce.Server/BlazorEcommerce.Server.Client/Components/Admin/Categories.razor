@@ -1,6 +1,8 @@
 ﻿@page "/admin/categories"
-@inject ICategoryUIService CategoryService
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
+
+@inject ICategoryUIService CategoryService
 @implements IDisposable
 
 <div class="container mt-5">
@@ -13,9 +15,9 @@
         <div class="col"></div>
     </div>
 
-    @foreach(Category category in CategoryService.AdminCategories)
+    @foreach (Category category in CategoryService.AdminCategories)
     {
-        @if(category.Editing)
+        @if (category.Editing)
         {
             <EditForm Model="editingCategory" OnSubmit="UpdateCategory">
                 <div class="row">
@@ -60,7 +62,7 @@
 @code {
     Category? editingCategory = null;
 
-    protected override async Task OnInitializedAsync()
+    protected sealed override async Task OnInitializedAsync()
     {
         await CategoryService.GetAdminCategories();
         CategoryService.OnChange += StateHasChanged;
