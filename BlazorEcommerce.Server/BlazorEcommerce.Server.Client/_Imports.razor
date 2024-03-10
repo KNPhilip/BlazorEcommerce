@@ -1,9 +1,26 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
-@using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Primitives
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Microsoft.JSInterop
+@using BlazorEcommerce.Domain.Models
+@using BlazorEcommerce.Domain.Dtos
 @using BlazorEcommerce.Server.Client
+@using BlazorEcommerce.Server.Client.Services.AddressService
+@using BlazorEcommerce.Server.Client.Services.AuthService
+@using BlazorEcommerce.Server.Client.Services.CartService
+@using BlazorEcommerce.Server.Client.Services.CategoryService
+@using BlazorEcommerce.Server.Client.Services.OrderService
+@using BlazorEcommerce.Server.Client.Services.ProductService
+@using BlazorEcommerce.Server.Client.Services.ProductTypeService
+@using BlazorEcommerce.Server.Client.Components.Shared
+@using Blazored.LocalStorage
+@using MudBlazor

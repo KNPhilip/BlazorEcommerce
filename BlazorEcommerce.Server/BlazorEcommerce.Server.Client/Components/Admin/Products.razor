@@ -1,0 +1,83 @@
+﻿@page "/admin/products"
+@inject IProductUIService ProductService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container mt-5">
+    <MudText Typo="Typo.h3">Products</MudText>
+
+    @if(ProductService.AdminProducts is null)
+    {
+        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        <MudButton Variant="Variant.Filled" Class="float-end mb-3" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" @onclick="CreateProduct">Create new Product</MudButton>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>Price</th>
+                    <th>Visible</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <Virtualize Items="ProductService.AdminProducts" Context="product">
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(product.ImageUrl))
+                            {
+                                <img src="@product.ImageUrl" />
+                            }
+                            else if (product.Images.Count > 0)
+                            {
+                                <img src="@product.Images[0].Data" />
+                            }
+                        </td>
+                        <td>@product.Title</td>
+                        <td>
+                            @foreach(ProductVariant variant in product.Variants)
+                            {
+                                <span>@variant.ProductType!.Name</span><br />
+                            }
+                        </td>
+                        <td>
+                            @foreach (ProductVariant variant in product.Variants)
+                            {
+                                <span>@variant.Price</span>
+
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            <MudIcon Icon="@(product.Visible ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="Color.Info"></MudIcon>
+                        </td>
+                        <td>
+                            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Color="Color.Info" aria-label="edit" OnClick="(() => EditProduct(product.Id))"></MudIconButton>
+                        </td>
+                    </tr>
+                </Virtualize>
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.GetAdminProducts();
+    }
+
+    private void EditProduct(int productId)
+    {
+        NavigationManager.NavigateTo($"admin/product/{productId}");
+    }
+
+    private void CreateProduct()
+    {
+        NavigationManager.NavigateTo($"admin/product");
+    }
+}

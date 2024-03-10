@@ -20,6 +20,7 @@ global using Microsoft.Extensions.Primitives;
 using BlazorEcommerce.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using BlazorEcommerce.OldClient;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

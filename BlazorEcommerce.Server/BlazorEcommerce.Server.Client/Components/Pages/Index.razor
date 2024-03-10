@@ -1,0 +1,40 @@
+﻿@page "/"
+@page "/search/{SearchTerm}/{page:int}"
+@page "/{CategoryUrl}"
+@inject IProductUIService ProductService
+
+<PageTitle>Home</PageTitle>
+
+<div class="container mt-5">
+    @if (SearchTerm is null && CategoryUrl is null)
+    {
+        <FeaturedProducts />
+    }
+    else
+    {
+        <ProductList />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? CategoryUrl { get; set; }
+
+    [Parameter]
+    public string? SearchTerm { get; set; } = null;
+
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (SearchTerm is not null)
+        {
+            await ProductService.SearchProducts(SearchTerm, Page);
+        }
+        else
+        {
+            await ProductService.GetProducts(CategoryUrl);
+        }
+    }
+}

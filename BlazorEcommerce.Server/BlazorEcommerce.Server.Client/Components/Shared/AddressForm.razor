@@ -1,0 +1,101 @@
+﻿@inject IAddressUIService AddressService
+
+@if (address is null)
+{
+    <span>You haven't specified a delivery address, yet.</span>
+        <br />
+    <button class="btn btn-primary" @onclick="InitAddress">Add an address?</button>
+    <br />
+}
+else if (!editAddress)
+{
+    <p>
+        <span>Name: @address.FullName</span>
+        <br />
+        <span>Country: @address.Country</span>
+        <br />
+        <span>Street: @address.Street</span>
+        <br />
+        @if (address.State.Length > 0)
+        {
+            <span>City: @address.State, @address.Zip @address.City</span>
+        }
+        else
+        {
+            <span>City: @address.Zip @address.City</span>
+        }
+        <br />
+    </p>
+    <button class="btn btn-primary" @onclick="EditAddress">Edit</button>
+    <br />
+}
+else
+{
+    <EditForm Model="address" OnValidSubmit="SubmitAddresss">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="firstname">First Name</label>
+            <InputText id="firstname" @bind-Value="address.FirstName" class="form-control" />
+            <ValidationMessage For="@(() => address.FirstName)" />
+        </div>
+        <div class="mb-3">
+            <label for="lastname">Last Name</label>
+            <InputText id="lastname" @bind-Value="address.LastName" class="form-control" />
+            <ValidationMessage For="@(() => address.LastName)" />
+        </div>
+        <div class="mb-3">
+            <label for="country">Country</label>
+            <InputText id="country" @bind-Value="address.Country" class="form-control" />
+            <ValidationMessage For="@(() => address.Country)" />
+        </div>
+        <div class="mb-3">
+            <label for="state">State (optional)</label>
+            <InputText id="state" @bind-Value="address.State" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="street">Street</label>
+            <InputText id="street" @bind-Value="address.Street" class="form-control" />
+            <ValidationMessage For="@(() => address.Street)" />
+        </div>
+        <div class="mb-3">
+            <label for="city">City</label>
+            <InputText id="city" @bind-Value="address.City" class="form-control" />
+            <ValidationMessage For="@(() => address.City)" />
+        </div>
+        <div class="mb-3">
+            <label for="zip">Postal Code</label>
+            <InputText id="zip" @bind-Value="address.Zip" class="form-control" />
+            <ValidationMessage For="@(() => address.Zip)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <br />
+    </EditForm>
+}
+
+@code {
+    Address? address = null;
+    bool editAddress = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        address = await AddressService.GetAddress();
+    }
+
+    private async Task SubmitAddresss()
+    {
+        editAddress = false;
+        address = await AddressService.AddOrUpdateAddress(address!);
+    }
+
+    private void InitAddress()
+    {
+        address = new();
+        editAddress = true;
+    }
+
+    private void EditAddress()
+    {
+        editAddress = true;
+    }
+}
