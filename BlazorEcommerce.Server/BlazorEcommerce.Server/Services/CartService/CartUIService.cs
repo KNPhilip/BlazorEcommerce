@@ -6,15 +6,14 @@ namespace BlazorEcommerce.Server.Services.CartService
 {
     public sealed class CartUIService(
         ILocalStorageService localStorage,
-        IAuthUIService authService,
-        ICartService cartService) : ICartUIService
+        IAuthUIService authService) : ICartUIService
     {
         public async Task GetCartItemsCount()
         {
             if (authService.IsUserAuthenticated())
             {
-                int result = cartService.GetCartItemsCountAsync();
-                int count = result.Data;
+                //int result = cartService.GetCartItemsCountAsync();
+                int count = 1;//result.Data;
 
                 await localStorage.SetItemAsync
                     ("cartItemsCount", count);

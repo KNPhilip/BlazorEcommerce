@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BlazorEcommerce.Server.Services.AuthService;
+using Microsoft.EntityFrameworkCore;
+using BlazorEcommerce.Server.Data;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +21,14 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddControllers();
-
 builder.Services.AddAuthorization();
+
+builder.Services.AddDbContext<EcommerceContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
