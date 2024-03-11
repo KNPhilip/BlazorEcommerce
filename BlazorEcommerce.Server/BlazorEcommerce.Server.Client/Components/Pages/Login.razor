@@ -1,8 +1,8 @@
 ﻿@page "/login"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IAuthUIService AuthService
-@inject ICartUIService CartService
+@inject IAuthUIService AuthUIService
+@inject ICartUIService CartUIService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -48,15 +48,15 @@
 
     private async Task HandleLogin()
     {
-        string? result = await AuthService.Login(user);
+        string? result = await AuthUIService.Login(user);
         if (result is not null)
         {
             errorMessage = string.Empty;
 
             await LocalStorage.SetItemAsync("authToken", result);
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            await CartService.StoreCartItems(true);
-            await CartService.GetCartItemsCount();
+            await CartUIService.StoreCartItems(true);
+            await CartUIService.GetCartItemsCount();
             NavigationManager.NavigateTo(returnUrl);
         }
         else

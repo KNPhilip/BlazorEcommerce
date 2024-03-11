@@ -2,7 +2,7 @@
 @page "/order-success/{status}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject ICartUIService CartService
+@inject ICartUIService CartUIService
 
 <PageTitle>Thank you!</PageTitle>
 
@@ -24,6 +24,6 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        await CartService.GetCartItemsCount();
+        await CartUIService.GetCartItemsCount();
     }
 }

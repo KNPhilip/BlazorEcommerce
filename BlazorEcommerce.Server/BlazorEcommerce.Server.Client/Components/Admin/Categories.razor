@@ -2,7 +2,7 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
 
-@inject ICategoryUIService CategoryService
+@inject ICategoryUIService CategoryUIService
 @implements IDisposable
 
 <div class="container mt-5">
@@ -15,7 +15,7 @@
         <div class="col"></div>
     </div>
 
-    @foreach (Category category in CategoryService.AdminCategories)
+    @foreach (Category category in CategoryUIService.AdminCategories)
     {
         @if (category.Editing)
         {
@@ -64,18 +64,18 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        await CategoryService.GetAdminCategories();
-        CategoryService.OnChange += StateHasChanged;
+        await CategoryUIService.GetAdminCategories();
+        CategoryUIService.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
-        CategoryService.OnChange += StateHasChanged;
+        CategoryUIService.OnChange += StateHasChanged;
     }
 
     private void CreateNewCategory()
     {
-        editingCategory = CategoryService.CreateNewCategory();
+        editingCategory = CategoryUIService.CreateNewCategory();
     }
 
     private void EditCategory(Category category)
@@ -88,11 +88,11 @@
     {
         if (editingCategory!.IsNew)
         {
-            await CategoryService.AddCategory(editingCategory);
+            await CategoryUIService.AddCategory(editingCategory);
         }
         else
         {
-            await CategoryService.UpdateCategory(editingCategory);
+            await CategoryUIService.UpdateCategory(editingCategory);
         }
 
         editingCategory = null;
@@ -100,12 +100,12 @@
 
     private async Task CancelEditing()
     {
-        await CategoryService.GetAdminCategories();
+        await CategoryUIService.GetAdminCategories();
         editingCategory = null;
     }
 
     private async Task DeleteCategory(int id)
     {
-        await CategoryService.DeleteCategory(id);
+        await CategoryUIService.DeleteCategory(id);
     }
 }

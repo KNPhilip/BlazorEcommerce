@@ -4,9 +4,9 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @inject NavigationManager NavigationManager
-@inject IProductUIService ProductService
-@inject IProductTypeUIService ProductTypeService
-@inject ICategoryUIService CategoryService
+@inject IProductUIService ProductUIService
+@inject IProductTypeUIService ProductTypeUIService
+@inject ICategoryUIService CategoryUIService
 @inject IJSRuntime JSRuntime
 @inject IDialogService DialogService
 
@@ -124,7 +124,7 @@
                 <div class="row">
                     <div class="col">
                         <InputSelect disabled="@variant.IsSoftDeleted" @bind-Value="variant.ProductTypeId" class="form-control">
-                            @foreach(ProductType productType in ProductTypeService.ProductTypes)
+                            @foreach(ProductType productType in ProductTypeUIService.ProductTypes)
                             {
                                 <option value="@productType.Id.ToString()">@productType.Name</option>
                             }
@@ -149,7 +149,7 @@
             <div class="mb-3">
                 <MudText Class="mb-2 mt-4" Typo="Typo.h5">Category</MudText>
                 <InputSelect id="category" @bind-Value="product.CategoryId" class="form-control">
-                    @foreach(Category category in CategoryService.AdminCategories)
+                    @foreach(Category category in CategoryUIService.AdminCategories)
                     {
                         <option value="@category.Id">@category.Name</option>
                     }
@@ -182,8 +182,8 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        await ProductTypeService.GetProductTypes();
-        await CategoryService.GetAdminCategories();
+        await ProductTypeUIService.GetProductTypes();
+        await CategoryUIService.GetAdminCategories();
     }
 
     protected sealed override async Task OnParametersSetAsync()
@@ -198,7 +198,7 @@
         }
         else
         {
-            Product? dbProduct = await ProductService.GetProduct(Id);
+            Product? dbProduct = await ProductUIService.GetProduct(Id);
             if (dbProduct is null)
             {
                 message = $"Product with Id '{Id}' does not exist.";
@@ -243,13 +243,13 @@
     {
         if (product.IsNew)
         {
-            Product result = await ProductService.CreateProduct(product);
+            Product result = await ProductUIService.CreateProduct(product);
             NavigationManager.NavigateTo($"admin/product/{result.Id}");
         }
         else
         {
             product.IsNew = false;
-            product = await ProductService.UpdateProduct(product) ?? new();
+            product = await ProductUIService.UpdateProduct(product) ?? new();
             NavigationManager.NavigateTo($"admin/product/{product!.Id}", true);
         }
     }
@@ -261,7 +261,7 @@
 
         if (confirmed)
         {
-            await ProductService.DeleteProduct(product);
+            await ProductUIService.DeleteProduct(product);
             NavigationManager.NavigateTo("admin/products");
         }
     }

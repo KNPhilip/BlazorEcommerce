@@ -2,7 +2,7 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize]
 
-@inject IAuthUIService AuthService
+@inject IAuthUIService AuthUIService
 
 <PageTitle>Your profile</PageTitle>
 
@@ -40,7 +40,7 @@
 
     private async Task ChangePassword()
     {
-        bool result = await AuthService.ChangePassword(request);
+        bool result = await AuthUIService.ChangePassword(request);
         message = result ? "Password successfully reset" : "Could not reset password, please try again.";
     }
 }

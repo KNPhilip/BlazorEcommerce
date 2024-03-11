@@ -1,7 +1,7 @@
 ﻿@page "/register"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IAuthUIService AuthService
+@inject IAuthUIService AuthUIService
 
 <PageTitle>Register</PageTitle>
 
@@ -40,7 +40,7 @@
 
     private async Task HandleRegistration()
     {
-        bool result = await AuthService.Register(user);
+        bool result = await AuthUIService.Register(user);
         resultMessage = result ? "Successfully registered" : "Could not register, please try again.";
         resultMessageCssClass = result ? "text-success" : "text-danger";
     }

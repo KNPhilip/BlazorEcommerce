@@ -1,8 +1,8 @@
 ﻿@inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
-@inject ICartService CartService
-@inject ICategoryService CategoryService
+@inject ICartUIService CartUIService
+@inject ICategoryUIService CategoryUIService
 
 <HomeButton />
 <div class="d-flex flex-column justify-content-center">
@@ -22,7 +22,7 @@
     <MudNavLink Href="https://github.com/KNPhilip/BlazorEcommerce" Target="_blank" Icon="@iconGitHub" IconColor="Color.Info">GitHub</MudNavLink>
     <MudNavLink Href="https://www.linkedin.com/in/philipkragnielsen" Target="_blank" Icon="@iconLinkedIn" IconColor="Color.Info">LinkedIn</MudNavLink>
     <MudNavGroup Title="Categories" Expanded="true" Icon="@Icons.Material.Filled.Category" IconColor="Color.Info">
-        @foreach (Category category in CategoryService.Categories)
+        @foreach (Category category in CategoryUIService.Categories)
         {
             <MudNavLink Href="@category.Url">@category.Name</MudNavLink>
         }
@@ -46,13 +46,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CategoryService.GetCategories();
-        CategoryService.OnChange += StateHasChanged;
+        await CategoryUIService.GetCategories();
+        CategoryUIService.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
-        CategoryService.OnChange -= StateHasChanged;
+        CategoryUIService.OnChange -= StateHasChanged;
     }
 
     private void ToggleUserMenu()
@@ -69,7 +69,7 @@
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");
-        await CartService.GetCartItemsCount();
+        await CartUIService.GetCartItemsCount();
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("");
     }

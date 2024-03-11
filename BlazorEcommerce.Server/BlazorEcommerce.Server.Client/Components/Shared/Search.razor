@@ -1,7 +1,7 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @inject NavigationManager NavigationManager
-@inject IProductUIService ProductService
+@inject IProductUIService ProductUIService
 
 <style>
     .input-group {
@@ -75,7 +75,7 @@
         }
         else if (searchTerm.Length > 1)
         {
-            suggestions = await ProductService.GetProductSearchSuggestions(searchTerm);
+            suggestions = await ProductUIService.GetProductSearchSuggestions(searchTerm);
         }
     }
 }

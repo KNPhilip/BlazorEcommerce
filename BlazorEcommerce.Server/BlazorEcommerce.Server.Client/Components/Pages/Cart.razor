@@ -1,9 +1,9 @@
 ﻿@page "/cart"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject ICartUIService CartService
-@inject IOrderUIService OrderService
-@inject IAuthUIService AuthService
+@inject ICartUIService CartUIService
+@inject IOrderUIService OrderUIService
+@inject IAuthUIService AuthUIService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Shopping cart</PageTitle>
@@ -59,20 +59,20 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        isAuthenticated = await AuthService.IsUserAuthenticated();
+        isAuthenticated = await AuthUIService.IsUserAuthenticated();
         await LoadCart();
     }
 
     private async Task RemoveProductFromCart(int productId, int productTypeId)
     {
-        await CartService.RemoveProductFromCart(productId, productTypeId);
+        await CartUIService.RemoveProductFromCart(productId, productTypeId);
         await LoadCart();
     }
 
     private async Task LoadCart()
     {
-        await CartService.GetCartItemsCount();
-        cartProducts = await CartService.GetCartProducts();
+        await CartUIService.GetCartItemsCount();
+        cartProducts = await CartUIService.GetCartProducts();
         if (cartProducts is null || cartProducts.Count == 0)
         {
             message = "Your cart is empty.";
@@ -86,12 +86,12 @@
         {
             product.Quantity = 1;
         }
-        await CartService.UpdateQuantity(product);
+        await CartUIService.UpdateQuantity(product);
     }
 
     private async Task PlaceOrder()
     {
-        string url = await OrderService.PlaceOrder();
+        string url = await OrderUIService.PlaceOrder();
         NavigationManager.NavigateTo(url);
     }
 }

@@ -1,6 +1,6 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject ICartUIService CartService
+@inject ICartUIService CartUIService
 @inject ISyncLocalStorageService LocalStorage
 @implements IDisposable
 
@@ -29,11 +29,11 @@
 
     protected override void OnInitialized()
     {
-        CartService.OnChange += StateHasChanged;
+        CartUIService.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
-        CartService.OnChange -= StateHasChanged;
+        CartUIService.OnChange -= StateHasChanged;
     }
 }

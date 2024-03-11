@@ -3,7 +3,7 @@
 @page "/{CategoryUrl}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IProductUIService ProductService
+@inject IProductUIService ProductUIService
 
 <PageTitle>Home</PageTitle>
 
@@ -32,11 +32,11 @@
     {
         if (SearchTerm is not null)
         {
-            await ProductService.SearchProducts(SearchTerm, Page);
+            await ProductUIService.SearchProducts(SearchTerm, Page);
         }
         else
         {
-            await ProductService.GetProducts(CategoryUrl);
+            await ProductUIService.GetProducts(CategoryUrl);
         }
     }
 }

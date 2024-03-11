@@ -1,7 +1,7 @@
 ﻿@page "/orders/{orderId:int}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IOrderUIService OrderService
+@inject IOrderUIService OrderUIService
 
 <PageTitle>Order details</PageTitle>
 
@@ -50,6 +50,6 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        order = await OrderService.GetOrderDetails(OrderId);
+        order = await OrderUIService.GetOrderDetails(OrderId);
     }
 }

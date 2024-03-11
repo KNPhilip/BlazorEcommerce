@@ -1,7 +1,7 @@
 ﻿@page "/orders"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IOrderUIService OrderService
+@inject IOrderUIService OrderUIService
 
 <PageTitle>Orders</PageTitle>
 
@@ -48,6 +48,6 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        orders = await OrderService.GetOrders();
+        orders = await OrderUIService.GetOrders();
     }
 }

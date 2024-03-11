@@ -2,13 +2,13 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
 
-@inject IProductTypeUIService ProductTypeService
+@inject IProductTypeUIService ProductTypeUIService
 @implements IDisposable
 
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Product Types</MudText>
 
-    @foreach(ProductType productType in ProductTypeService.ProductTypes)
+    @foreach(ProductType productType in ProductTypeUIService.ProductTypes)
     {
         @if (productType.Editing)
         {
@@ -41,13 +41,13 @@
 
     protected sealed override async Task OnInitializedAsync()
     {
-        await ProductTypeService.GetProductTypes();
-        ProductTypeService.OnChange += StateHasChanged;
+        await ProductTypeUIService.GetProductTypes();
+        ProductTypeUIService.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
-        ProductTypeService.OnChange -= StateHasChanged;
+        ProductTypeUIService.OnChange -= StateHasChanged;
     }
 
     private void EditProductType(ProductType productType)
@@ -58,12 +58,12 @@
 
     private void CreateNewProductType()
     {
-        editingProductType = ProductTypeService.CreateNewProductType();
+        editingProductType = ProductTypeUIService.CreateNewProductType();
     }
 
     private async Task CancelEditing()
     {
-        await ProductTypeService.GetProductTypes();
+        await ProductTypeUIService.GetProductTypes();
         editingProductType = null;
     }
 
@@ -71,17 +71,17 @@
     {
         if (editingProductType!.IsNew)
         {
-            await ProductTypeService.AddProductType(editingProductType);
+            await ProductTypeUIService.AddProductType(editingProductType);
         }
         else
         {
-            await ProductTypeService.UpdateProductType(editingProductType);
+            await ProductTypeUIService.UpdateProductType(editingProductType);
         }
         editingProductType = null;
     }
 
     private async Task DeleteProductType(int productTypeId)
     {
-        await ProductTypeService.DeleteProductType(productTypeId);
+        await ProductTypeUIService.DeleteProductType(productTypeId);
     }
 }

@@ -1,24 +1,24 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IProductUIService ProductService
+@inject IProductUIService ProductUIService
 @implements IDisposable
 
 <center><h2>Current Top Products:</h2></center>
-@if(ProductService.Products is null || ProductService.Products.Count == 0)
+@if(ProductUIService.Products is null || ProductUIService.Products.Count == 0)
 {
-    if(string.IsNullOrEmpty(ProductService.Message))
+    if(string.IsNullOrEmpty(ProductUIService.Message))
     {
         <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
     }
     else
     {
-        <span>@ProductService.Message</span>
+        <span>@ProductUIService.Message</span>
     }
 }
 else
 {
     <div class="container">
-        @foreach (Product product in ProductService.Products)
+        @foreach (Product product in ProductUIService.Products)
         {
             @if (product.Featured)
             {
@@ -53,11 +53,11 @@ else
 @code {
     protected override void OnInitialized()
     {
-        ProductService.OnProductsChanged += StateHasChanged;
+        ProductUIService.OnProductsChanged += StateHasChanged;
     }
 
     public void Dispose()
     {
-        ProductService.OnProductsChanged -= StateHasChanged;
+        ProductUIService.OnProductsChanged -= StateHasChanged;
     }
 }

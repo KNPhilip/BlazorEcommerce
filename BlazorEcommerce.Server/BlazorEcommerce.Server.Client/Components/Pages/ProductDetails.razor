@@ -1,8 +1,8 @@
 ﻿@page "/product/{id:int}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject IProductUIService ProductService
-@inject ICartUIService CartService
+@inject IProductUIService ProductUIService
+@inject ICartUIService CartUIService
 
 <PageTitle>Product details</PageTitle>
 
@@ -83,7 +83,7 @@
 
     protected sealed override async Task OnParametersSetAsync()
     {
-        Product? result = await ProductService.GetProduct(Id);
+        Product? result = await ProductUIService.GetProduct(Id);
         product = result;
         if (product!.Variants.Count > 0)
         {
@@ -105,6 +105,6 @@
             ProductTypeId = productVariant.ProductTypeId
         };
 
-        await CartService.AddToCart(cartItem);
+        await CartUIService.AddToCart(cartItem);
     }
 }

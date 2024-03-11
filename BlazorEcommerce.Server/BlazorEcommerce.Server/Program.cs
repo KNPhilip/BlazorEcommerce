@@ -1,7 +1,10 @@
+using BlazorEcommerce.Server.Services.CartService;
+using BlazorEcommerce.Server.Services.CategoryService;
 using BlazorEcommerce.Server.Components;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BlazorEcommerce.Server.Services.AuthService;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +53,9 @@ builder.Services.AddSwaggerGen();
 });*/
 
 // Add actual services
-// ----
+builder.Services.AddScoped<ICartUIService, CartUIService>();
+builder.Services.AddScoped<ICategoryUIService, CategoryUIService>();
+builder.Services.AddScoped<IAuthUIService, AuthUIService>();
 
 WebApplication app = builder.Build();
 

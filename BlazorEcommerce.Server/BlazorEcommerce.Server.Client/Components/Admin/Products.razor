@@ -2,13 +2,13 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
 
-@inject IProductUIService ProductService
+@inject IProductUIService ProductUIService
 @inject NavigationManager NavigationManager
 
 <div class="container mt-5">
     <MudText Typo="Typo.h3">Products</MudText>
 
-    @if(ProductService.AdminProducts is null)
+    @if(ProductUIService.AdminProducts is null)
     {
         <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
     }
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                <Virtualize Items="ProductService.AdminProducts" Context="product">
+                <Virtualize Items="ProductUIService.AdminProducts" Context="product">
                     <tr>
                         <td>
                             @if (!string.IsNullOrEmpty(product.ImageUrl))
@@ -70,7 +70,7 @@
 @code {
     protected sealed override async Task OnInitializedAsync()
     {
-        await ProductService.GetAdminProducts();
+        await ProductUIService.GetAdminProducts();
     }
 
     private void EditProduct(int productId)
