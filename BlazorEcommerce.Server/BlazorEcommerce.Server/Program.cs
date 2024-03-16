@@ -7,6 +7,7 @@ using System.Text;
 using BlazorEcommerce.Server.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 using BlazorEcommerce.Server.Data;
+using Blazored.LocalStorage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -59,10 +60,12 @@ builder.Services.AddSwaggerGen();
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });*/
 
+builder.Services.AddBlazoredLocalStorage();
+
 // Add actual services
-builder.Services.AddScoped<ICartUIService, CartUIService>();
-builder.Services.AddScoped<ICategoryUIService, CategoryUIService>();
-builder.Services.AddScoped<IAuthUIService, AuthUIService>();
+builder.Services.AddHttpClient<ICartUIService, CartUIService>();
+builder.Services.AddHttpClient<ICategoryUIService, CategoryUIService>();
+builder.Services.AddHttpClient<IAuthUIService, AuthUIService>();
 
 WebApplication app = builder.Build();
 

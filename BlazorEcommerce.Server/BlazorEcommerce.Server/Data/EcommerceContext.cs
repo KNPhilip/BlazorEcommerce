@@ -13,10 +13,23 @@ namespace BlazorEcommerce.Server.Data
     /// </remarks>
     /// <param name="options">DbContextOptions of the EcommerceContext to be passed
     /// on to the base class.</param>
-    public sealed class EcommerceContext(
-        DbContextOptions<EcommerceContext> options) 
-        : DbContext(options)
+    public sealed class EcommerceContext : DbContext
     {
+        public EcommerceContext(DbContextOptions<EcommerceContext> options) : base(options)
+        {
+            
+        }
+
+        public EcommerceContext()
+        {
+            
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BlazorEcommerce;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        }
+
         #region Data Seeding
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
