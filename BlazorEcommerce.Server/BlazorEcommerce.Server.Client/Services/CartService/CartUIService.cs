@@ -43,9 +43,8 @@ namespace BlazorEcommerce.Server.Client.Services.CartService
         {
             if (await authService.IsUserAuthenticated())
             {
-                int result = await http
+                int count = await http
                     .GetFromJsonAsync<int>("api/v1/carts/count");
-                int count = result;
 
                 await localStorage.SetItemAsync
                     ("cartItemsCount", count);

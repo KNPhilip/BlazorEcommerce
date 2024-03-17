@@ -3,34 +3,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 
-namespace BlazorEcommerce.Server.Controllers
+namespace BlazorEcommerce.Server.Controllers;
+
+public sealed class PaymentsController(
+    IPaymentService paymentService) : ControllerTemplate
 {
-    public sealed class PaymentsController : ControllerTemplate
+    private readonly IPaymentService _paymentService = paymentService;
+
+    [HttpPost("checkout"), Authorize]
+    public async Task<ActionResult<string>> CreateCheckoutSession()
     {
-        private readonly IPaymentService _paymentService;
-
-        public PaymentsController(IPaymentService paymentService)
+        try
         {
-            _paymentService = paymentService;
+            Session session = await _paymentService.CreateCheckoutSession();
+            return Ok(session.Url);
         }
-
-        [HttpPost("checkout"), Authorize]
-        public async Task<ActionResult<string>> CreateCheckoutSession()
+        catch
         {
-            try
-            {
-                Session session = await _paymentService.CreateCheckoutSession();
-                return Ok(session.Url);
-            }
-            catch
-            {
-                string url = await _paymentService.FakeOrderCompletion();
-                return Ok(url);
-            }
+            string url = await _paymentService.FakeOrderCompletion();
+            return Ok(url);
         }
-
-        [HttpPost]
-        public async Task<ActionResult<bool>> FulfillOrder() =>
-            HandleResult(await _paymentService.FulfillOrder(Request)); 
     }
+
+    [HttpPost]
+    public async Task<ActionResult<bool>> FulfillOrder() =>
+        HandleResult(await _paymentService.FulfillOrder(Request)); 
 }

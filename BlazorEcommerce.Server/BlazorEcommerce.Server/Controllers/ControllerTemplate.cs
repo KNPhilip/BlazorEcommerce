@@ -1,31 +1,30 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers
+namespace BlazorEcommerce.Server.Controllers;
+
+/// <summary>
+/// Controller Template - Contains the common definition for all controllers
+/// as well as methods for handling common Controller logic. Derives from the ControllerBase class.
+/// </summary>
+[Route("api/v1/[controller]")]
+[ApiController]
+public class ControllerTemplate : ControllerBase
 {
     /// <summary>
-    /// Controller Template - Contains the common definition for all controllers
-    /// as well as methods for handling common Controller logic. Derives from the ControllerBase class.
+    /// Handles a response in the ServiceResponse format and
+    /// gives back the appropriate status code, data, error messages, etc.
     /// </summary>
-    [Route("api/v1/[controller]")]
-    [ApiController]
-    public class ControllerTemplate : ControllerBase
+    /// <typeparam name="T"></typeparam>
+    /// <param name="response"></param>
+    /// <returns>Status code (depending on the result), and with that either the data,
+    /// or a proper error message.</returns>
+    protected ActionResult HandleResult<T>(ResponseDto<T> response)
     {
-        /// <summary>
-        /// Handles a response in the ServiceResponse format and
-        /// gives back the appropriate status code, data, error messages, etc.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <returns>Status code (depending on the result), and with that either the data,
-        /// or a proper error message.</returns>
-        protected ActionResult HandleResult<T>(ResponseDto<T> response)
-        {
-            return response.Success
-                ? response.Data is null
-                    ? NotFound()
-                    : Ok(response.Data)
-                : BadRequest(response.Error);
-        } 
-    }
+        return response.Success
+            ? response.Data is null
+                ? NotFound()
+                : Ok(response.Data)
+            : BadRequest(response.Error);
+    } 
 }

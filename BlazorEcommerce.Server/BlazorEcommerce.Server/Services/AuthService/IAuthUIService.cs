@@ -1,7 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.AuthService
+﻿namespace BlazorEcommerce.Server.Services.AuthService;
+
+public interface IAuthUIService
 {
-    public interface IAuthUIService
-    {
-        bool IsUserAuthenticated();
-    }
+    bool IsUserAuthenticated();
 }

@@ -1,9 +1,8 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
 
-namespace BlazorEcommerce.Server.Services.MailService
+namespace BlazorEcommerce.Server.Services.MailService;
+
+public interface IMailService
 {
-    public interface IMailService
-    {
-        Task<ResponseDto<bool>> SendEmailAsync(string ToEmail, string Subject, string HTMLBody);
-    }
+    Task<ResponseDto<bool>> SendEmailAsync(string ToEmail, string Subject, string HTMLBody);
 }

@@ -1,12 +1,11 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
 using Stripe.Checkout;
 
-namespace BlazorEcommerce.Server.Services.PaymentService
+namespace BlazorEcommerce.Server.Services.PaymentService;
+
+public interface IPaymentService
 {
-    public interface IPaymentService
-    {
-        Task<string> FakeOrderCompletion();
-        Task<Session> CreateCheckoutSession();
-        Task<ResponseDto<bool>> FulfillOrder(HttpRequest request);
-    }
+    Task<string> FakeOrderCompletion();
+    Task<Session> CreateCheckoutSession();
+    Task<ResponseDto<bool>> FulfillOrder(HttpRequest request);
 }

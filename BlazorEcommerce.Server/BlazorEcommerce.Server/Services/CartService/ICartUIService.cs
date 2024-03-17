@@ -1,7 +1,6 @@
-﻿namespace BlazorEcommerce.Server.Services.CartService
+﻿namespace BlazorEcommerce.Server.Services.CartService;
+
+public interface ICartUIService
 {
-    public interface ICartUIService
-    {
-        Task GetCartItemsCount();
-    }
+    Task GetCartItemsCount();
 }
