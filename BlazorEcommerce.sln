@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.OldClient",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Shared", "BlazorEcommerce\Shared\BlazorEcommerce.Shared.csproj", "{F280722D-357B-4207-B9EC-7208DD2C1C75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorEcommerce.Server", "BlazorEcommerce.Server\BlazorEcommerce.Server\BlazorEcommerce.Server.csproj", "{1D50069F-03E9-4D80-A048-5FF69B92173F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Server", "BlazorEcommerce.Server\BlazorEcommerce.Server\BlazorEcommerce.Server.csproj", "{1D50069F-03E9-4D80-A048-5FF69B92173F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorEcommerce.Server.Client", "BlazorEcommerce.Server\BlazorEcommerce.Server.Client\BlazorEcommerce.Server.Client.csproj", "{64558DB6-1C88-4D2D-816B-1DDF47FDC180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Server.Client", "BlazorEcommerce.Server\BlazorEcommerce.Server.Client\BlazorEcommerce.Server.Client.csproj", "{64558DB6-1C88-4D2D-816B-1DDF47FDC180}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorEcommerce.Domain", "BlazorEcommerce.Domain\BlazorEcommerce.Domain.csproj", "{F12DAF66-E879-421A-BF70-D42A58BD75E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcommerce.Domain", "BlazorEcommerce.Domain\BlazorEcommerce.Domain.csproj", "{F12DAF66-E879-421A-BF70-D42A58BD75E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

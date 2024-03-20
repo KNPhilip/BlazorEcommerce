@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
+<MudThemeProvider />
+<MudSnackbarProvider />
+
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Info" Class="d-flex justify-content-center">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
@@ -14,9 +17,6 @@
         @Body
     </MudMainContent>
 </MudLayout>
-
-<MudThemeProvider />
-<MudSnackbarProvider />
 
 @code {
     private bool _drawerOpen = true;

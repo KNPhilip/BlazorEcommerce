@@ -1,7 +1,4 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-
-namespace BlazorEcommerce.Server.Client.Services.AuthService
+﻿namespace BlazorEcommerce.Domain.Interfaces
 {
     public interface IAuthUIService
     {

@@ -8,28 +8,58 @@ using BlazorEcommerce.Server.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 using BlazorEcommerce.Server.Data;
 using Blazored.LocalStorage;
+using BlazorEcommerce.Server.Services.AddressService;
+using BlazorEcommerce.Server.Services.MailService;
+using BlazorEcommerce.Server.Services.OrderService;
+using BlazorEcommerce.Server.Services.PaymentService;
+using BlazorEcommerce.Server.Services.ProductService;
+using BlazorEcommerce.Server.Services.ProductTypeService;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using BlazorEcommerce.Domain.Dtos;
+using MudBlazor.Services;
+using BlazorEcommerce.Domain.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ASP.NET Configuration
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddControllers();
+
 builder.Services.AddRazorPages();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Name = "Authorization"
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+builder.Services.AddMudServices();
+
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddAuthorization();
-
+// Entity Framework Configuration
 builder.Services.AddDbContext<EcommerceContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddControllers();
+builder.Services.AddAuthorization();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -44,28 +74,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen();
-
-/*services.AddSwaggerGen(options =>
+builder.Services.AddScoped(sp => new HttpClient 
 {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.ApiKey,
-        In = ParameterLocation.Header,
-        Name = "Authorization"
-    });
+    BaseAddress = new Uri(builder.Configuration["BaseUri"]!) 
+});
 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});*/
+// Add services to the container
+builder.Services.AddScoped<ICartUIService, CartUIService>();
+builder.Services.AddScoped<ICategoryUIService, CategoryUIService>();
+builder.Services.AddScoped<IAuthUIService, AuthUIService>();
 
-builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 
-// Add actual services
-builder.Services.AddHttpClient<ICartUIService, CartUIService>();
-builder.Services.AddHttpClient<ICategoryUIService, CategoryUIService>();
-builder.Services.AddHttpClient<IAuthUIService, AuthUIService>();
+builder.Services.AddSingleton(builder.Configuration
+    .GetSection("MailSettings").Get<MailSettingsDto>());
 
 WebApplication app = builder.Build();
 
@@ -73,13 +103,13 @@ WebApplication app = builder.Build();
 // Referrer Policy Header - Controls included information on navigation
 app.UseReferrerPolicy(options => options.SameOrigin());
 // X Content Type Options Header - Prevents MIME-sniffing of the content type
-app.UseXContentTypeOptions();
+// app.UseXContentTypeOptions();
 // X Frame Options Header - Defends against attacks like clickjacking by banning framing on the site
 app.UseXfo(options => options.Deny());
 // X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff
 app.UseXXssProtection(options => options.EnabledWithBlockMode());
 // Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection)
-app.UseCsp(options => options
+app.UseCspReportOnly(options => options
     .BlockAllMixedContent()
     .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://fonts.googleapis.com"))
     .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com"))
@@ -112,6 +142,8 @@ else
 
 app.UseSwagger();
 
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.MapControllers();
@@ -122,9 +154,9 @@ app.UseStaticFiles();
 
 app.UseAntiforgery();
 
-// app.UseAuthentication();
+app.UseAuthentication();
 
-// app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

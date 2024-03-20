@@ -1,4 +1,4 @@
-﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+﻿
 
 @inject NavigationManager NavigationManager
 @inject IProductUIService ProductUIService
@@ -59,7 +59,9 @@
     protected sealed override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
             await searchInput.FocusAsync();
+        }
     }
 
     public void SearchProducts()

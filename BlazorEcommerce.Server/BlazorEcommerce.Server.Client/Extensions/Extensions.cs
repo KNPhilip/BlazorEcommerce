@@ -1,4 +1,5 @@
-﻿using BlazorEcommerce.Server.Client.Services.AddressService;
+﻿using BlazorEcommerce.Domain.Interfaces;
+using BlazorEcommerce.Server.Client.Services.AddressService;
 using BlazorEcommerce.Server.Client.Services.AuthService;
 using BlazorEcommerce.Server.Client.Services.CartService;
 using BlazorEcommerce.Server.Client.Services.CategoryService;
@@ -7,6 +8,7 @@ using BlazorEcommerce.Server.Client.Services.ProductService;
 using BlazorEcommerce.Server.Client.Services.ProductTypeService;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor.Services;
 
 namespace BlazorEcommerce.Server.Client.Extensions
 {
@@ -15,7 +17,8 @@ namespace BlazorEcommerce.Server.Client.Extensions
         public static void AddServicesFromExtensionsClass
             (this IServiceCollection services, Uri baseAddress)
         {
-            // services.AddAuthorizationCore();
+            services.AddMudServices();
+            services.AddBlazoredLocalStorage();
             services.AddCascadingAuthenticationState();
 
             services.AddScoped(sp => new HttpClient { BaseAddress = baseAddress });
@@ -28,7 +31,8 @@ namespace BlazorEcommerce.Server.Client.Extensions
             services.AddScoped<IProductUIService, ProductUIService>();
             services.AddScoped<IProductTypeUIService, ProductTypeUIService>();
 
-            services.AddBlazoredLocalStorage();
+            services.AddOptions();
+            services.AddAuthorizationCore();
         }
     }
 }

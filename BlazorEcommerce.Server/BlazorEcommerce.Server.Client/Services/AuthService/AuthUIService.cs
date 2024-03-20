@@ -1,4 +1,5 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
+using BlazorEcommerce.Domain.Interfaces;
 using BlazorEcommerce.Domain.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;

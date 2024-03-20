@@ -1,6 +1,6 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
+using BlazorEcommerce.Domain.Interfaces;
 using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Client.Services.AuthService;
 using Blazored.LocalStorage;
 using System.Net.Http.Json;
 

@@ -1,11 +1,9 @@
-﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-
-@inject ICartUIService CartUIService
-@inject ISyncLocalStorageService LocalStorage
+﻿@inject ICartUIService CartUIService
+@inject ILocalStorageService LocalStorage
 @implements IDisposable
 
 <div class="mx-6 my-3">
-    @if(GetCartItemsCount() == 0)
+    @if (cartItemsCount == 0)
     {
         <a href="cart">
             <MudIcon Href="cart" Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
@@ -13,7 +11,7 @@
     }
     else
     {
-        <MudBadge Content="GetCartItemsCount()" Color="Color.Error" Overlap="true">
+        <MudBadge Content="cartItemsCount" Color="Color.Error" Overlap="true">
             <a href="cart">
                 <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
             </a>
@@ -22,14 +20,21 @@
 </div>
 
 @code {
-    private int GetCartItemsCount()
+    private int cartItemsCount;
+
+    async Task<int> GetCartItemsCountAsync()
     {
-        return LocalStorage.GetItem<int>("cartItemsCount");
+        return await LocalStorage.GetItemAsync<int>("cartItemsCount");
     }
 
-    protected override void OnInitialized()
+    protected sealed override void OnInitialized()
     {
         CartUIService.OnChange += StateHasChanged;
+    }
+
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        cartItemsCount = await GetCartItemsCountAsync();
     }
 
     public void Dispose()
