@@ -1,6 +1,4 @@
-﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-
-@inject IProductUIService ProductUIService
+﻿@inject IProductUIService ProductUIService
 @implements IDisposable
 
 @if (ProductUIService.Products is null || ProductUIService.Products.Count == 0)

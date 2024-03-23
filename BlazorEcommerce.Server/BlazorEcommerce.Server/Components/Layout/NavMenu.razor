@@ -1,4 +1,6 @@
-﻿@inject ILocalStorageService LocalStorage
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject ICartUIService CartUIService

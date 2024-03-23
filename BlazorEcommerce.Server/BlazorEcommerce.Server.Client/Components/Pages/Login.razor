@@ -1,5 +1,4 @@
 ﻿@page "/login"
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @inject IAuthUIService AuthUIService
 @inject ICartUIService CartUIService
@@ -12,7 +11,7 @@
 <div class="container mt-5">
     <h3>Login</h3>
 
-    <EditForm Model="user" OnValidSubmit="HandleLogin">
+    <EditForm Model="user" OnValidSubmit="HandleLogin" FormName="Login">
         <DataAnnotationsValidator />
         <div class="mb-3">
             <label for="email">Email</label>
