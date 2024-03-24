@@ -1,7 +1,8 @@
-﻿using BlazorEcommerce.Domain.Models;
+﻿using BlazorEcommerce.Domain.Interfaces;
+using BlazorEcommerce.Domain.Models;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.AddressService
+namespace BlazorEcommerce.Server.Client.Services
 {
     public sealed class AddressUIService(
         HttpClient http) : IAddressUIService

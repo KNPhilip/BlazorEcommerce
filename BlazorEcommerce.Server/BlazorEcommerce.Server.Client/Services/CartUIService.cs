@@ -4,7 +4,7 @@ using BlazorEcommerce.Domain.Models;
 using Blazored.LocalStorage;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.CartService
+namespace BlazorEcommerce.Server.Client.Services
 {
     public sealed class CartUIService(
         ILocalStorageService localStorage,

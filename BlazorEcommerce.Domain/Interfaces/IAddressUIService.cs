@@ -1,6 +1,4 @@
-﻿using BlazorEcommerce.Domain.Models;
-
-namespace BlazorEcommerce.Server.Client.Services.AddressService
+﻿namespace BlazorEcommerce.Domain.Interfaces
 {
     public interface IAddressUIService
     {

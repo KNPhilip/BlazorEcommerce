@@ -1,42 +1,74 @@
-﻿using BlazorEcommerce.Domain.Interfaces;
+﻿using BlazorEcommerce.Domain.Dtos;
+using BlazorEcommerce.Domain.Interfaces;
 using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlazorEcommerce.Server.Services.CategoryService;
 
-public sealed class CategoryUIService(EcommerceContext _context) 
+public sealed class CategoryUIService(
+    ICategoryService categoryService) 
     : ICategoryUIService
 {
     public List<Category> Categories { get; set; } = [];
-    public List<Category> AdminCategories 
-    { 
-        get => throw new NotImplementedException(); 
-        set => throw new NotImplementedException(); 
-    }
+    public List<Category> AdminCategories { get; set; } = [];
 
     public event Action? OnChange;
 
     public async Task GetCategories()
     {
-        List<Category>? categories = await _context.Categories
-            .Where(c => !c.IsSoftDeleted && c.Visible).ToListAsync();
+        ResponseDto<List<Category>> categories = 
+            await categoryService.GetCategoriesAsync();
 
-        Categories = categories ?? [];
+        Categories = categories.Data ?? [];
     }
 
-    public Task AddCategory(Category category) => 
-        throw new NotImplementedException();
+    public async Task AddCategory(Category category)
+    {
+        ResponseDto<List<Category>> result = 
+            await categoryService.AddCategoryAsync(category);
 
-    public Category CreateNewCategory() =>
-        throw new NotImplementedException();
+        AdminCategories = result.Data ?? [];
+        await GetCategories();
+        OnChange!.Invoke();
+    }
 
-    public Task DeleteCategory(int categoryId) =>
-        throw new NotImplementedException();
+    public Category CreateNewCategory()
+    {
+        Category newCategory = new()
+        {
+            IsNew = true,
+            Editing = true
+        };
+        AdminCategories.Add(newCategory);
+        OnChange!.Invoke();
+        return newCategory;
+    }
 
-    public Task GetAdminCategories() =>
-        throw new NotImplementedException();
+    public async Task DeleteCategory(int categoryId)
+    {
+        ResponseDto<List<Category>> result = 
+            await categoryService.DeleteCategoryAsync(categoryId);
+        AdminCategories = result.Data ?? [];
+        await GetCategories();
+        OnChange!.Invoke();
+    }
 
-    public Task UpdateCategory(Category category) =>
-        throw new NotImplementedException();
+    public async Task GetAdminCategories()
+    {
+        ResponseDto<List<Category>> result = 
+            await categoryService.GetAdminCategoriesAsync();
+
+        if (result is not null)
+        {
+            AdminCategories = result.Data ?? [];
+        }
+    }
+
+    public async Task UpdateCategory(Category category)
+    {
+        ResponseDto<List<Category>> result = await categoryService
+            .UpdateCategoryAsync(category);
+        AdminCategories = result.Data ?? [];
+        await GetCategories();
+        OnChange!.Invoke();
+    }
 }

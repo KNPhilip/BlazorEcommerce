@@ -4,7 +4,7 @@ using BlazorEcommerce.Domain.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.AuthService
+namespace BlazorEcommerce.Server.Client.Services
 {
     public sealed class AuthUIService(
         AuthenticationStateProvider authStateProvider,

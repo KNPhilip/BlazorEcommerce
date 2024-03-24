@@ -1,11 +1,5 @@
 ﻿using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Server.Client.Services.AddressService;
-using BlazorEcommerce.Server.Client.Services.AuthService;
-using BlazorEcommerce.Server.Client.Services.CartService;
-using BlazorEcommerce.Server.Client.Services.CategoryService;
-using BlazorEcommerce.Server.Client.Services.OrderService;
-using BlazorEcommerce.Server.Client.Services.ProductService;
-using BlazorEcommerce.Server.Client.Services.ProductTypeService;
+using BlazorEcommerce.Server.Client.Services;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;

@@ -2,9 +2,9 @@
 using BlazorEcommerce.Domain.Models;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.CategoryService
+namespace BlazorEcommerce.Server.Client.Services
 {
-    public sealed class CategoryUIService(HttpClient http) 
+    public sealed class CategoryUIService(HttpClient http)
         : ICategoryUIService
     {
         public List<Category> Categories { get; set; } = [];

@@ -1,17 +1,18 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
+using BlazorEcommerce.Domain.Interfaces;
 using BlazorEcommerce.Domain.Models;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.ProductService
+namespace BlazorEcommerce.Server.Client.Services
 {
     public sealed class ProductUIService(HttpClient http) : IProductUIService
     {
         public List<Product> Products { get; set; } = [];
+        public List<Product> AdminProducts { get; set; } = [];
         public string Message { get; set; } = string.Empty;
         public int CurrentPage { get; set; } = 1;
         public int PageCount { get; set; } = 0;
         public string LastSearchTerm { get; set; } = string.Empty;
-        public List<Product> AdminProducts { get; set; } = [];
 
         public event Action? OnProductsChanged;
 
@@ -55,7 +56,7 @@ namespace BlazorEcommerce.Server.Client.Services.ProductService
         {
             List<Product>? result = categoryUrl is null
                 ? await http.GetFromJsonAsync<List<Product>>
-                    ("api/v1/products/featured") 
+                    ("api/v1/products/featured")
                 : await http.GetFromJsonAsync<List<Product>>
                     ($"api/v1/products/category/{categoryUrl}");
 

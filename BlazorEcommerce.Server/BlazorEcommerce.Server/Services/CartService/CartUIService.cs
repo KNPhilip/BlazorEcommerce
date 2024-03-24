@@ -16,7 +16,8 @@ public sealed class CartUIService(
     {
         if (await authService.IsUserAuthenticated())
         {
-            ResponseDto<int> result = await cartService.GetCartItemsCountAsync();
+            ResponseDto<int> result = await cartService
+                .GetCartItemsCountAsync();
             int count = result.Data;
 
             await localStorage.SetItemAsync
@@ -32,18 +33,132 @@ public sealed class CartUIService(
         }
     }
 
-    public Task AddToCart(CartItem cartItem) =>
-        throw new NotImplementedException();
+    public async Task AddToCart(CartItem cartItem)
+    {
+        if (await authService.IsUserAuthenticated())
+        {
+            await cartService.AddToCart(cartItem);
+        }
+        else
+        {
+            List<CartItem> cart = await localStorage
+                .GetItemAsync<List<CartItem>>("cart") ?? [];
 
-    public Task<List<CartProductResponseDto>> GetCartProducts() =>
-        throw new NotImplementedException();
+            CartItem? sameItem = cart.Find(x => x.ProductId == cartItem.ProductId
+            && x.ProductTypeId == cartItem.ProductTypeId);
+            if (sameItem is null)
+            {
+                cart.Add(cartItem);
+            }
+            else
+            {
+                sameItem.Quantity += cartItem.Quantity;
+            }
 
-    public Task RemoveProductFromCart(int productId, int productTypeId) =>
-        throw new NotImplementedException();
+            await localStorage.SetItemAsync("cart", cart);
+        }
+        await GetCartItemsCount();
+    }
 
-    public Task StoreCartItems(bool emptyLocalCart) =>
-        throw new NotImplementedException();
+    public async Task<List<CartProductResponseDto>> GetCartProducts()
+    {
+        if (await authService.IsUserAuthenticated())
+        {
+            ResponseDto<List<CartProductResponseDto>> result = 
+                await cartService.GetDbCartItems();
+            return result.Data ?? [];
+        }
+        else
+        {
+            List<CartItem>? cartItems = await localStorage
+                .GetItemAsync<List<CartItem>>("cart");
+            if (cartItems is null)
+            {
+                return [];
+            }
+            ResponseDto<List<CartProductResponseDto>> result = 
+                await cartService.GetCartProductsAsync(cartItems);
 
-    public Task UpdateQuantity(CartProductResponseDto product) =>
-        throw new NotImplementedException();
+            return result.Data ?? [];
+        }
+    }
+
+    public async Task RemoveProductFromCart(int productId, int productTypeId)
+    {
+        if (await authService.IsUserAuthenticated())
+        {
+            await cartService.RemoveItemFromCart(productId, productTypeId);
+        }
+        else
+        {
+            List<CartItem>? cart = await localStorage
+                .GetItemAsync<List<CartItem>>("cart");
+            if (cart is null)
+            {
+                return;
+            }
+
+            CartItem? cartItem = cart.Find(x => x.ProductId == productId
+                && x.ProductTypeId == productTypeId);
+
+            if (cartItem is not null)
+            {
+                cart.Remove(cartItem);
+                await localStorage.SetItemAsync("cart", cart);
+            }
+        }
+        await GetCartItemsCount();
+    }
+
+    public async Task StoreCartItems(bool emptyLocalCart)
+    {
+        List<CartItem>? localCart = await localStorage
+            .GetItemAsync<List<CartItem>>("cart");
+        if (localCart is null)
+        {
+            return;
+        }
+
+        await cartService.StoreCartItemsAsync(localCart);
+
+        if (emptyLocalCart)
+        {
+            await localStorage.RemoveItemAsync("cart");
+        }
+    }
+
+    public async Task UpdateQuantity(CartProductResponseDto product)
+    {
+        if (await authService.IsUserAuthenticated())
+        {
+            CartItem request = new()
+            {
+                ProductId = product.ProductId,
+                Quantity = product.Quantity,
+                ProductTypeId = product.ProductTypeId
+            };
+
+            await cartService.UpdateQuantity(request);
+        }
+        else
+        {
+            List<CartItem>? cart = await localStorage
+                .GetItemAsync<List<CartItem>>("cart");
+            if (cart is null)
+            {
+                return;
+            }
+
+            CartItem? cartItem = cart
+                .Find(x => x.ProductId == product.ProductId
+                    && x.ProductTypeId == product.ProductTypeId);
+
+            if (cartItem is not null)
+            {
+                cartItem.Quantity = product.Quantity;
+                await localStorage
+                    .SetItemAsync("cart", cart);
+            }
+        }
+    }
 }

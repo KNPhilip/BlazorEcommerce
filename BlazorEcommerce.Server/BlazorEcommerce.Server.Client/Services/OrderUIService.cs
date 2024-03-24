@@ -1,8 +1,9 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
+using BlazorEcommerce.Domain.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services.OrderService
+namespace BlazorEcommerce.Server.Client.Services
 {
     public sealed class OrderUIService(
         AuthenticationStateProvider authStateProvider,

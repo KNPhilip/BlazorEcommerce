@@ -80,9 +80,13 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 
 // Add services to the container
+builder.Services.AddScoped<IAddressUIService, AddressUIService>();
+builder.Services.AddScoped<IAuthUIService, AuthUIService>();
 builder.Services.AddScoped<ICartUIService, CartUIService>();
 builder.Services.AddScoped<ICategoryUIService, CategoryUIService>();
-builder.Services.AddScoped<IAuthUIService, AuthUIService>();
+builder.Services.AddScoped<IOrderUIService, OrderUIService>();
+builder.Services.AddScoped<IProductUIService, ProductUIService>();
+builder.Services.AddScoped<IProductTypeUIService, ProductTypeUIService>();
 
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

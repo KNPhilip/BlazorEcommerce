@@ -1,6 +1,4 @@
-﻿using BlazorEcommerce.Domain.Models;
-
-namespace BlazorEcommerce.Server.Client.Services.ProductService
+﻿namespace BlazorEcommerce.Domain.Interfaces
 {
     public interface IProductUIService
     {
