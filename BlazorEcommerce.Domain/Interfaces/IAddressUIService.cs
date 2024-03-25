@@ -1,8 +1,7 @@
-﻿namespace BlazorEcommerce.Domain.Interfaces
+﻿namespace BlazorEcommerce.Domain.Interfaces;
+
+public interface IAddressUIService
 {
-    public interface IAddressUIService
-    {
-        Task<Address> GetAddress();
-        Task<Address> AddOrUpdateAddress(Address address);
-    }
+    Task<Address> GetAddress();
+    Task<Address> AddOrUpdateAddress(Address address);
 }

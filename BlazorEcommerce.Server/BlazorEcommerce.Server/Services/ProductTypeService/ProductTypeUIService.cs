@@ -1,7 +1,6 @@
 ﻿using BlazorEcommerce.Domain.Dtos;
 using BlazorEcommerce.Domain.Interfaces;
 using BlazorEcommerce.Domain.Models;
-using static System.Net.WebRequestMethods;
 
 namespace BlazorEcommerce.Server.Services.ProductTypeService;
 
