@@ -2,7 +2,7 @@
 
 <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.ShopLayout)">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(ShopLayout)">
             <NotAuthorized>
                 <div class="container mt-5">
                     <h3>Whoops! You're not allowed to see this page.</h3>

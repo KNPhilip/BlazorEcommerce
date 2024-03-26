@@ -1,4 +1,5 @@
 ﻿@page "/product/{id:int}"
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
 
 @inject IProductUIService ProductUIService
 @inject ICartUIService CartUIService

@@ -26,4 +26,16 @@
     <UpToDateCheckInput Remove="Components\Pages\Test.razor.scss" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Layout\HomeButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Layout\NavMenu.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Layout\ShopLayout.razor.scss" />
+  </ItemGroup>
+
 </Project>

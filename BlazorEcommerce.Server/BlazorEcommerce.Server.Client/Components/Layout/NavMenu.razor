@@ -1,0 +1,120 @@
+﻿@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ICartUIService CartUIService
+@inject ICategoryUIService CategoryUIService
+
+<style>
+    .show-menu {
+        display: block;
+    }
+
+    .user-button {
+        margin-left: 0.5em;
+    }
+
+    .top-row a {
+        margin-left: 0;
+    }
+
+    .dropdown-item:hover {
+        background-color: white;
+    }
+
+    .bgclass {
+        background-color: #404040;
+        color: white;
+    }
+
+    .center {
+        width: 140px;
+    }
+</style>
+
+<div class="d-flex justify-content-between bgclass">
+    <div class="d-flex flex-row">
+        @foreach (Category category in CategoryUIService.Categories)
+        {
+            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo(category.Url))"
+                        Style="width: 140px;">@category.Name</MudNavLink>
+        }
+    </div>
+    <div class="d-flex flex-row">
+        <AuthorizeView>
+            <Authorized>
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("profile"))"
+                            Icon="@Icons.Material.Filled.People"
+                            Class="center"
+                            IconColor="Color.Warning">Your Profile</MudNavLink>
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("orders"))"
+                            Icon="@Icons.Material.Filled.Article"
+                            Class="center"
+                            IconColor="Color.Warning">Your Orders</MudNavLink>
+                <MudNavLink OnClick="Logout"
+                            Icon="@Icons.Material.Filled.Logout"
+                            Class="center"
+                            IconColor="Color.Warning">Logout</MudNavLink>
+            </Authorized>
+            <NotAuthorized>
+                <MudNavLink OnClick="Login"
+                            Icon="@Icons.Material.Filled.Login"
+                            Class="center"
+                            IconColor="Color.Warning">Login</MudNavLink>
+                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("register"))"
+                            Icon="@Icons.Material.Filled.AccountCircle"
+                            Class="center"
+                            IconColor="Color.Warning">Register</MudNavLink>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+
+    <AuthorizeView>
+        <Authorized>
+            <AdminMenu />
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private bool showUserMenu = false;
+
+    private string? UserMenuCssClass =>
+        showUserMenu ? "show-menu" : null;
+
+    protected sealed override async Task OnInitializedAsync()
+    {
+        await CategoryUIService.GetCategories();
+        CategoryUIService.OnChange += StateHasChanged;
+    }
+
+    private void Dispose()
+    {
+        CategoryUIService.OnChange -= StateHasChanged;
+    }
+
+    private void ToggleUserMenu()
+    {
+        showUserMenu = !showUserMenu;
+    }
+
+    private async Task HideUserMenu()
+    {
+        await Task.Delay(200);
+        showUserMenu = false;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await CartUIService.GetCartItemsCount();
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+    }
+}
