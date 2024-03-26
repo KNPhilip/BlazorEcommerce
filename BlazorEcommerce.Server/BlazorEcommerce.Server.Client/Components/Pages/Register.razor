@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@rendermode @(new InteractiveAutoRenderMode(prerender: false))
 
 @inject IAuthUIService AuthUIService
 
@@ -7,7 +8,7 @@
 <div class="container mt-5">
     <h3>Register</h3>
 
-    <EditForm Model="user" OnValidSubmit="HandleRegistration">
+    <EditForm Model="user" OnValidSubmit="HandleRegistration" FormName="Register">
         <DataAnnotationsValidator />
         <div class="mb-3">
             <label for="email">Email</label>

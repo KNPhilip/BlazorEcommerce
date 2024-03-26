@@ -1,5 +1,15 @@
 ﻿@inject AuthenticationStateProvider AuthStateProvider
 
+<style>
+.top-row a {
+  margin-left: 0 !important;
+}
+
+.dropdown-item:hover {
+  background-color: white;
+}
+</style>
+
 @if (authorized)
 {
     <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3" />

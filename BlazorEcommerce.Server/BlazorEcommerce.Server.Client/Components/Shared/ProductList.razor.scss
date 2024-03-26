@@ -1,16 +1,18 @@
 ﻿.media-img {
-    max-height: 200px;
-    max-width: 200px;
+    height: 100%;
+    max-width: 100%;
     border-radius: 6px;
     margin-bottom: 10px;
     transition: transform 0.2s;
+    object-fit: cover;
 
     &:hover {
-        transform: scale(1.1);
+        transform: scale(1.2);
     }
 }
 
 .media-img-wrapper {
+    height: 500px;
     width: 200px;
     text-align: center;
 }

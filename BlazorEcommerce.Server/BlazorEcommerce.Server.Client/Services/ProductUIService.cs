@@ -69,7 +69,9 @@ public sealed class ProductUIService(HttpClient http) : IProductUIService
         PageCount = 0;
 
         if (Products.Count == 0)
+        {
             Message = "No products found.";
+        }
 
         OnProductsChanged!.Invoke();
     }
@@ -96,7 +98,10 @@ public sealed class ProductUIService(HttpClient http) : IProductUIService
             CurrentPage = result.CurrentPage;
             PageCount = result.Pages;
         }
-        if (Products.Count == 0) Message = "No products found.";
+        if (Products.Count == 0)
+        {
+            Message = "No products found.";
+        }
         OnProductsChanged?.Invoke();
     }
 

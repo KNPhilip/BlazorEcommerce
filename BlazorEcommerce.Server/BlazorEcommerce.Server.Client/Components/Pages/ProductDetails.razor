@@ -5,10 +5,49 @@
 
 <PageTitle>Product details</PageTitle>
 
+<style>
+    .media-img {
+        height: 100%;
+        width: 100%;
+        transition: transform 0.2s;
+        object-fit: cover;
+    }
+
+        .media-img:hover {
+            transform: scale(1.04);
+        }
+
+    .media-img-wrapper {
+        border-radius: 6px;
+        display: inline-block;
+        overflow: hidden;
+        height: 400px;
+        width: 250px;
+        text-align: center;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+    }
+
+    /* media (max-width: 1023.98px) {
+      .media {
+        flex-direction: column;
+      }
+      .media-img {
+        max-width: 300px;
+      }
+      .media-img-wrapper {
+        width: 100%;
+        height: auto;
+      }
+    } */
+</style>
+
 <div class="container mt-5">
-    @if(product is null)
+    @if (product is null)
     {
-        if(string.IsNullOrEmpty(message))
+        if (string.IsNullOrEmpty(message))
         {
             <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
         }
@@ -20,25 +59,23 @@
     else
     {
         <div class="media">
-            <div class="media-img-wrapper mr-2">
-                @if(!string.IsNullOrEmpty(product.ImageUrl))
+            <div class="media-img-wrapper mr-4">
+                @if (!string.IsNullOrEmpty(product.ImageUrl))
                 {
                     <img class="media-img" src="@product.ImageUrl" alt="@product.Title" />
                 }
                 else
                 {
-                    <MudCarousel 
-                        Class="mud-width-full" 
-                        ItemsSource="@product.Images" 
-                        Style="height: 200px;"
-                    >
+                    <MudCarousel Class="mud-width-full"
+                                 ItemsSource="@product.Images"
+                                 Style="height: 200px;">
                         <ItemTemplate>
                             <MudImage Src="@context.Data"></MudImage>
                         </ItemTemplate>
                     </MudCarousel>
                 }
             </div>
-            <div class="media-body">
+            <div class="media-body ml-4">
                 <h2 class="mb-0">@product.Title</h2>
                 <p>@product.Description</p>
                 @if (product.Variants is not null && product.Variants.Count > 1)
@@ -99,10 +136,10 @@
     {
         ProductVariant? productVariant = GetSelectedVariant();
         CartItem cartItem = new()
-        {
-            ProductId = productVariant!.ProductId,
-            ProductTypeId = productVariant.ProductTypeId
-        };
+            {
+                ProductId = productVariant!.ProductId,
+                ProductTypeId = productVariant.ProductTypeId
+            };
 
         await CartUIService.AddToCart(cartItem);
     }
