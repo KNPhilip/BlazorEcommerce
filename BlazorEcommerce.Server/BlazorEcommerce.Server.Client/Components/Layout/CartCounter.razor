@@ -1,0 +1,44 @@
+﻿@inject ICartUIService CartUIService
+@inject ILocalStorageService LocalStorage
+@implements IDisposable
+
+<div class="mx-6 my-3">
+    @if (cartItemsCount == 0)
+    {
+        <a href="cart">
+            <MudIcon Href="cart" Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
+        </a>
+    }
+    else
+    {
+        <MudBadge Content="cartItemsCount" Color="Color.Error" Overlap="true">
+            <a href="cart">
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
+            </a>
+        </MudBadge>
+    }
+</div>
+
+@code {
+    private int cartItemsCount;
+
+    async Task<int> GetCartItemsCountAsync()
+    {
+        return await LocalStorage.GetItemAsync<int>("cartItemsCount");
+    }
+
+    protected sealed override void OnInitialized()
+    {
+        CartUIService.OnChange += StateHasChanged;
+    }
+
+    protected sealed override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        cartItemsCount = await GetCartItemsCountAsync();
+    }
+
+    public void Dispose()
+    {
+        CartUIService.OnChange -= StateHasChanged;
+    }
+}
