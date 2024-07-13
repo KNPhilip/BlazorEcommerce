@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorEcommerce.Server.Client\BlazorEcommerce.Server.Client.csproj" />
+    <ProjectReference Include="..\BlazorEcommerce.Server.Client\WebUI.Server.Client.csproj" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
