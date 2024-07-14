@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
-using BlazorEcommerce.Server.Services.MailService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Data;
+using WebUI.Server.Services.MailService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BlazorEcommerce.Server.Services.AuthService;
+namespace WebUI.Server.Services.AuthService;
 
 public sealed class AuthService(
     EcommerceContext context,

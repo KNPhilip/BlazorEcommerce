@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Dtos;
+﻿namespace Domain.Dtos;
 
 /// <summary>
 /// This is a special class for handling potential errors, successes, and data.

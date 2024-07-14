@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Dtos;
+﻿namespace Domain.Dtos;
 
 /// <summary>
 /// DTO for representing each item in a cart.

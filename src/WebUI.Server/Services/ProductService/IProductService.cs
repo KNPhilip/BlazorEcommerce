@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 
-namespace BlazorEcommerce.Server.Services.ProductService;
+namespace WebUI.Server.Services.ProductService;
 
 public interface IProductService
 {

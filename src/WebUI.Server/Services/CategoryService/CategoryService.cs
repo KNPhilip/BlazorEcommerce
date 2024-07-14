@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Services.CategoryService;
+namespace WebUI.Server.Services.CategoryService;
 
 public sealed class CategoryService(EcommerceContext context) : ICategoryService
 {

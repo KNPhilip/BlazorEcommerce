@@ -1,10 +1,10 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services;
+namespace WebUI.Server.Client.Services;
 
 public sealed class AuthUIService(
     AuthenticationStateProvider authStateProvider,

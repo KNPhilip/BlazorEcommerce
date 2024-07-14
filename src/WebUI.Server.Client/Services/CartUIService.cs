@@ -1,10 +1,10 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
 using Blazored.LocalStorage;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Server.Client.Services;
+namespace WebUI.Server.Client.Services;
 
 public sealed class CartUIService(
     ILocalStorageService localStorage,

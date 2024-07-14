@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BlazorEcommerce.Domain\BlazorEcommerce.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="Components\Pages\Test.razor.scss" />
   </ItemGroup>
 
@@ -36,6 +32,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Components\Layout\ShopLayout.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

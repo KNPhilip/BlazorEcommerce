@@ -1,8 +1,8 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
 
-namespace BlazorEcommerce.Server.Services.AddressService;
+namespace WebUI.Server.Services.AddressService;
 
 public sealed class AddressUIService(
     IAddressService addressService) : IAddressUIService

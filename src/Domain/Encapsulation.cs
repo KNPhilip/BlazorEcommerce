@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain;
+﻿namespace Domain;
 
 internal static class Encapsulation
 {

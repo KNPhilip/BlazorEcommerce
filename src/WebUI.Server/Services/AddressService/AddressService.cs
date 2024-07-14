@@ -1,10 +1,10 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
-using BlazorEcommerce.Server.Services.AuthService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Data;
+using WebUI.Server.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Services.AddressService;
+namespace WebUI.Server.Services.AddressService;
 
 public sealed class AddressService(EcommerceContext context, 
     IAuthService authService) : IAddressService

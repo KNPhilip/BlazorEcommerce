@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Dtos;
+﻿namespace Domain.Dtos;
 
 /// <summary>
 /// DTO representing the overview of an order.

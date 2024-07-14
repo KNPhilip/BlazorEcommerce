@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
+﻿using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 /// <summary>
 /// Controller Template - Contains the common definition for all controllers

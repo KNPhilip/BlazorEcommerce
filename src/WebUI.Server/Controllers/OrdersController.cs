@@ -1,8 +1,8 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Server.Services.OrderService;
+﻿using Domain.Dtos;
+using WebUI.Server.Services.OrderService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 public sealed class OrdersController(
     IOrderService orderService) : ControllerTemplate

@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Interfaces;
+﻿namespace Domain.Interfaces;
 
 public interface IAuthUIService
 {

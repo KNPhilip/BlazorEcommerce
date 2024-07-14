@@ -1,11 +1,11 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
-using BlazorEcommerce.Server.Services.AuthService;
-using BlazorEcommerce.Server.Services.CartService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Data;
+using WebUI.Server.Services.AuthService;
+using WebUI.Server.Services.CartService;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Services.OrderService;
+namespace WebUI.Server.Services.OrderService;
 
 public sealed class OrderService(
     EcommerceContext context,

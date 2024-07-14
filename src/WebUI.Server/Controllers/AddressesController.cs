@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Services.AddressService;
+﻿using Domain.Models;
+using WebUI.Server.Services.AddressService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 [Authorize]
 public sealed class AddressesController(

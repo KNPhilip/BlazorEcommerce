@@ -1,24 +1,24 @@
-using BlazorEcommerce.Server.Services.CartService;
-using BlazorEcommerce.Server.Services.CategoryService;
-using BlazorEcommerce.Server.Components;
+using WebUI.Server.Services.CartService;
+using WebUI.Server.Services.CategoryService;
+using WebUI.Server.Components;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using BlazorEcommerce.Server.Services.AuthService;
+using WebUI.Server.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
-using BlazorEcommerce.Server.Data;
+using WebUI.Server.Data;
 using Blazored.LocalStorage;
-using BlazorEcommerce.Server.Services.AddressService;
-using BlazorEcommerce.Server.Services.MailService;
-using BlazorEcommerce.Server.Services.OrderService;
-using BlazorEcommerce.Server.Services.PaymentService;
-using BlazorEcommerce.Server.Services.ProductService;
-using BlazorEcommerce.Server.Services.ProductTypeService;
+using WebUI.Server.Services.AddressService;
+using WebUI.Server.Services.MailService;
+using WebUI.Server.Services.OrderService;
+using WebUI.Server.Services.PaymentService;
+using WebUI.Server.Services.ProductService;
+using WebUI.Server.Services.ProductTypeService;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using BlazorEcommerce.Domain.Dtos;
+using Domain.Dtos;
 using MudBlazor.Services;
-using BlazorEcommerce.Domain.Interfaces;
+using Domain.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -98,8 +98,8 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 
-builder.Services.AddSingleton(builder.Configuration
-    .GetSection("MailSettings").Get<MailSettingsDto>());
+builder.Services.AddOptions<MailSettingsDto>().Bind(builder.Configuration
+    .GetSection(MailSettingsDto.SectionName));
 
 WebApplication app = builder.Build();
 
@@ -139,7 +139,9 @@ else
     // Strengthens implementation of TLS by enforcing the use of HTTPS
     app.Use(async (context, next) =>
     {
+#pragma warning disable ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
         context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+#pragma warning restore ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
         await next.Invoke();
     });
 }
@@ -165,6 +167,6 @@ app.UseAuthorization();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(BlazorEcommerce.Server.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(WebUI.Server.Client.Components._Imports).Assembly);
 
 app.Run();

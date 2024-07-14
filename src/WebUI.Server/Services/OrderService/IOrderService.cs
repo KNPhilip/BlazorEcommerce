@@ -1,6 +1,6 @@
-﻿using BlazorEcommerce.Domain.Dtos;
+﻿using Domain.Dtos;
 
-namespace BlazorEcommerce.Server.Services.OrderService;
+namespace WebUI.Server.Services.OrderService;
 
 public interface IOrderService
 {

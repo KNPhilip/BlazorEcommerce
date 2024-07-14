@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Models;
+﻿namespace Domain.Models;
 
 /// <summary>
 /// Represents the Order Item entity in the business domain.

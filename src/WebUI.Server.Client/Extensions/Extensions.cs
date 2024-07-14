@@ -1,10 +1,10 @@
-﻿using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Server.Client.Services;
+﻿using Domain.Interfaces;
+using WebUI.Server.Client.Services;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 
-namespace BlazorEcommerce.Server.Client.Extensions;
+namespace WebUI.Server.Client.Extensions;
 
 public static class Extensions
 {

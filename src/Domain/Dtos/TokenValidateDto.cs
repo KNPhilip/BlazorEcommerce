@@ -1,4 +1,4 @@
-﻿namespace BlazorEcommerce.Domain.Dtos;
+﻿namespace Domain.Dtos;
 
 /// <summary>
 /// DTO for validating a Password Reset Token for a specified user.

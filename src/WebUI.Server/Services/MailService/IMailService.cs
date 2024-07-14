@@ -1,6 +1,6 @@
-﻿using BlazorEcommerce.Domain.Dtos;
+﻿using Domain.Dtos;
 
-namespace BlazorEcommerce.Server.Services.MailService;
+namespace WebUI.Server.Services.MailService;
 
 public interface IMailService
 {

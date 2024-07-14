@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
+﻿using Domain.Dtos;
 using Stripe.Checkout;
 
-namespace BlazorEcommerce.Server.Services.PaymentService;
+namespace WebUI.Server.Services.PaymentService;
 
 public interface IPaymentService
 {

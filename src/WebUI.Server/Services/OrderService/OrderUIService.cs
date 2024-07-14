@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
 
-namespace BlazorEcommerce.Server.Services.OrderService;
+namespace WebUI.Server.Services.OrderService;
 
 public sealed class OrderUIService(
     IOrderService orderService) : IOrderUIService

@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Models;
 
-namespace BlazorEcommerce.Server.Services.CategoryService;
+namespace WebUI.Server.Services.CategoryService;
 
 public interface ICategoryService
 {

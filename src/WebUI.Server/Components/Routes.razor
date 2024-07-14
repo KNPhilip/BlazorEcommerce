@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager NavigationManager
 
-<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client.Components._Imports).Assembly }">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(ShopLayout)">
             <NotAuthorized>

@@ -1,11 +1,11 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Services.AuthService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Services.AuthService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 public sealed class AuthController(
     IAuthService authService) : ControllerTemplate

@@ -1,7 +1,7 @@
-﻿using BlazorEcommerce.Domain.Models;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Data;
+namespace WebUI.Server.Data;
 
 /// <summary>
 /// A database context instance, representing a session with the database 

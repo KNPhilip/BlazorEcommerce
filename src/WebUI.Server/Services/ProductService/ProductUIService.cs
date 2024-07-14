@@ -1,8 +1,8 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
 
-namespace BlazorEcommerce.Server.Services.ProductService;
+namespace WebUI.Server.Services.ProductService;
 
 public sealed class ProductUIService(
     IProductService productService) : IProductUIService

@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Services.CategoryService;
+﻿using Domain.Models;
+using WebUI.Server.Services.CategoryService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 public sealed class CategoriesController(
     ICategoryService categoryService) : ControllerTemplate

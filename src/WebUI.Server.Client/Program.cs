@@ -1,4 +1,4 @@
-using BlazorEcommerce.Server.Client.Extensions;
+using WebUI.Server.Client.Extensions;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);

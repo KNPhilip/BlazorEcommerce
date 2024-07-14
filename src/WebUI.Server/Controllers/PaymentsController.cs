@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Server.Services.PaymentService;
+﻿using WebUI.Server.Services.PaymentService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 public sealed class PaymentsController(
     IPaymentService paymentService) : ControllerTemplate

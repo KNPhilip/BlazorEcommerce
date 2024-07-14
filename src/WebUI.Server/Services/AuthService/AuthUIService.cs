@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Interfaces;
-using BlazorEcommerce.Domain.Models;
+﻿using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
 using System.Security.Claims;
 
-namespace BlazorEcommerce.Server.Services.AuthService;
+namespace WebUI.Server.Services.AuthService;
 
 public sealed class AuthUIService(
     IHttpContextAccessor httpContextAccessor,

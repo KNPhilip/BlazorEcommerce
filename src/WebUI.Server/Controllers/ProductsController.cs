@@ -1,10 +1,10 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Services.ProductService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Services.ProductService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorEcommerce.Server.Controllers;
+namespace WebUI.Server.Controllers;
 
 public sealed class ProductsController(
     IProductService productService) : ControllerTemplate

@@ -1,9 +1,9 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Data;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Services.ProductTypeService;
+namespace WebUI.Server.Services.ProductTypeService;
 
 public sealed class ProductTypeService(EcommerceContext context) : IProductTypeService
 {

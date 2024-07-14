@@ -1,6 +1,6 @@
-﻿using BlazorEcommerce.Domain.Models;
+﻿using Domain.Models;
 
-namespace BlazorEcommerce.Server.Data;
+namespace WebUI.Server.Data;
 
 internal static class SeedData
 {

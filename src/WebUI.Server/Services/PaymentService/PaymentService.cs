@@ -1,13 +1,13 @@
-﻿using BlazorEcommerce.Domain.Dtos;
-using BlazorEcommerce.Domain.Models;
-using BlazorEcommerce.Server.Services.AuthService;
-using BlazorEcommerce.Server.Services.CartService;
-using BlazorEcommerce.Server.Services.OrderService;
+﻿using Domain.Dtos;
+using Domain.Models;
+using WebUI.Server.Services.AuthService;
+using WebUI.Server.Services.CartService;
+using WebUI.Server.Services.OrderService;
 using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
 
-namespace BlazorEcommerce.Server.Services.PaymentService;
+namespace WebUI.Server.Services.PaymentService;
 
 public class PaymentService : IPaymentService
 {
