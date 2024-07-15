@@ -5,13 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebUI.Server.Services.ProductTypeService;
 
-public sealed class ProductTypeService(EcommerceContext context) : IProductTypeService
+public sealed class ProductTypeService(IDbContextFactory<EcommerceContext> contextFactory) 
+    : IProductTypeService
 {
-    private readonly EcommerceContext _context = context;
+    private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
 
     public async Task<ResponseDto<List<ProductType>>> GetProductTypesAsync()
     {
-        List<ProductType> productTypes = await _context.ProductTypes
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<ProductType> productTypes = await dbContext.ProductTypes
             .Where(pt => pt.IsSoftDeleted == false)
             .ToListAsync();
 
@@ -20,38 +23,46 @@ public sealed class ProductTypeService(EcommerceContext context) : IProductTypeS
 
     public async Task<ResponseDto<List<ProductType>>> AddProductType(ProductType productType)
     {
-        _context.ProductTypes.Add(productType);
-        await _context.SaveChangesAsync();
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        dbContext.ProductTypes.Add(productType);
+        await dbContext.SaveChangesAsync();
 
         return await GetProductTypesAsync();
     }
 
     public async Task<ResponseDto<List<ProductType>>> UpdateProductType(ProductType productType)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         ProductType? dbProductType = await GetProductTypeByIdAsync(productType.Id);
         if (dbProductType is null)
             return ResponseDto<List<ProductType>>.ErrorResponse("Product Type not found");
 
         dbProductType.Name = productType.Name;
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return await GetProductTypesAsync();
     }
 
     public async Task<ResponseDto<List<ProductType>>> DeleteProductType(int productTypeId)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         ProductType? dbProductType = await GetProductTypeByIdAsync(productTypeId);
         if (dbProductType is null)
             return ResponseDto<List<ProductType>>.ErrorResponse("Product Type not found");
 
         dbProductType.IsSoftDeleted = true;
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return await GetProductTypesAsync();
     }
 
     private async Task<ProductType?> GetProductTypeByIdAsync(int productTypeId)
     {
-        return await _context.ProductTypes.FindAsync(productTypeId); 
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        return await dbContext.ProductTypes.FindAsync(productTypeId); 
     }
 }

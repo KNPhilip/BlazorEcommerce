@@ -54,7 +54,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpContextAccessor();
 
 // Entity Framework Configuration
-builder.Services.AddDbContext<EcommerceContext>(options =>
+builder.Services.AddDbContextFactory<EcommerceContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
@@ -120,7 +120,7 @@ app.UseCspReportOnly(options => options
     .FormActions(s => s.Self())
     // Frame Ancestors makes X-Frame-Options obsolete
     .FrameAncestors(s => s.Self())
-    .ImageSources(s => s.Self().CustomSources("blob:", "https://upload.wikimedia.org"))
+    .ImageSources(s => s.Self().CustomSources("blob:", "https://upload.wikimedia.org", "https://en.wikipedia.org", "data:"))
     .ScriptSources(s => s.Self().CustomSources("https://localhost:55150").UnsafeEval())
 );
 #endregion

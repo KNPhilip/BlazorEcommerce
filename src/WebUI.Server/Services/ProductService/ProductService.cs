@@ -5,19 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebUI.Server.Services.ProductService;
 
-public sealed class ProductService(EcommerceContext context, 
+public sealed class ProductService(IDbContextFactory<EcommerceContext> contextFactory, 
     IHttpContextAccessor httpContextAccessor) : IProductService
 {
-    private readonly EcommerceContext _context = context;
+    private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<ResponseDto<Product>> GetProductAsync(int productId)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
         Product? product = null;
 
         if (_httpContextAccessor.HttpContext!.User.IsInRole("Admin"))
         {
-            product = await _context.Products
+            product = await dbContext.Products
                 .Include(p => p.Variants.Where(v => !v.IsSoftDeleted))
                 .ThenInclude(v => v.ProductType)
                 .Include(p => p.Images)
@@ -25,11 +26,11 @@ public sealed class ProductService(EcommerceContext context,
         }
         else
         {
-            product = await _context.Products
+            product = await dbContext.Products
                 .Include(p => p.Variants.Where(v => v.Visible && !v.IsSoftDeleted))
                 .ThenInclude(v => v.ProductType)
                 .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
+                .FirstOrDefaultAsync(p => p.Id == productId);
         }
         if (product is null)
         {
@@ -45,11 +46,13 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<List<Product>>> GetProductsAsync()
     {
-        List<Product> products = await _context.Products
-            .Where(p => p.Visible && !p.IsSoftDeleted)
-            .Include(p => p.Variants.Where(v => v.Visible && !v.IsSoftDeleted))
-            .Include(p => p.Images)
-            .ToListAsync();
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<Product> products = await dbContext.Products
+        .Where(p => p.Visible && !p.IsSoftDeleted)
+        .Include(p => p.Variants.Where(v => v.Visible && !v.IsSoftDeleted))
+        .Include(p => p.Images)
+        .ToListAsync();
 
         return products.Count > 0
             ? ResponseDto<List<Product>>.SuccessResponse(products)
@@ -58,7 +61,9 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<List<Product>>> GetProductsByCategoryAsync(string categoryUrl)
     {
-        List<Product> products = await _context.Products
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<Product> products = await dbContext.Products
             .Where(p => p.Visible && !p.IsSoftDeleted && p.Category!.Url
                 .ToLower().Equals(categoryUrl.ToLower()))
             .Include(p => p.Variants.Where(p => p.Visible && !p.IsSoftDeleted))
@@ -109,11 +114,13 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<ProductSearchResultDto>> SearchProductsAsync(string searchTerm, int page)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         Single pageResults = 2f;
         double pageCount = Math.Ceiling(
             (await FindProductsBySearchTextAsync(searchTerm)).Count / pageResults);
 
-        List<Product> products = await _context.Products
+        List<Product> products = await dbContext.Products
             .Where(p => p.Visible && !p.IsSoftDeleted 
                 && p.Title.Contains(searchTerm, 
                     StringComparison.CurrentCultureIgnoreCase) 
@@ -138,7 +145,9 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<List<Product>>> GetFeaturedProductsAsync()
     {
-        List<Product> response = await _context.Products
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<Product> response = await dbContext.Products
             .Where(p => p.Featured && p.Visible && !p.IsSoftDeleted)
             .Include(p => p.Variants.Where(v => v.Visible && !v.IsSoftDeleted))
             .Include(p => p.Images)
@@ -151,7 +160,9 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<List<Product>>> GetAdminProductsAsync()
     {
-        List<Product> response = await _context.Products
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<Product> response = await dbContext.Products
             .Where(p => !p.IsSoftDeleted)
             .Include(p => p.Variants.Where(v => !v.IsSoftDeleted))
             .ThenInclude(v => v.ProductType)
@@ -165,20 +176,24 @@ public sealed class ProductService(EcommerceContext context,
 
     public async Task<ResponseDto<Product>> CreateProductAsync(Product product)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         foreach (ProductVariant variant in product.Variants)
         {
             variant.ProductType = null;
         }
 
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
+        dbContext.Products.Add(product);
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<Product>.SuccessResponse(product);
     }
 
     public async Task<ResponseDto<Product>> UpdateProductAsync(Product product)
     {
-        Product? dbProduct = await _context.Products
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        Product? dbProduct = await dbContext.Products
             .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.Id == product.Id);
 
@@ -188,7 +203,7 @@ public sealed class ProductService(EcommerceContext context,
         }
 
         List<Image> productImages = dbProduct.Images;
-        _context.Images.RemoveRange(productImages);
+        dbContext.Images.RemoveRange(productImages);
 
         // TODO Might be wise to add Automapper / Mapster here
         dbProduct.Title = product.Title;
@@ -201,14 +216,14 @@ public sealed class ProductService(EcommerceContext context,
 
         foreach (ProductVariant variant in product.Variants)
         {
-            ProductVariant? dbVariant = await _context.ProductVariants
+            ProductVariant? dbVariant = await dbContext.ProductVariants
                 .SingleOrDefaultAsync(v => v.ProductId == variant.ProductId &&
                 v.ProductTypeId == variant.ProductTypeId);
 
             if (dbVariant is null)
             {
                 variant.ProductType = null;
-                _context.ProductVariants.Add(variant);
+                dbContext.ProductVariants.Add(variant);
             }
             else
             {
@@ -221,14 +236,16 @@ public sealed class ProductService(EcommerceContext context,
             }
         }
 
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<Product>.SuccessResponse(product);
     }
 
     public async Task<ResponseDto<bool>> DeleteProductsAsync(int productId)
     {
-        Product? dbProduct = await _context.Products.FindAsync(productId);
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        Product? dbProduct = await dbContext.Products.FindAsync(productId);
 
         if (dbProduct is null)
         {
@@ -236,14 +253,16 @@ public sealed class ProductService(EcommerceContext context,
         }
 
         dbProduct.IsSoftDeleted = true;
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<bool>.SuccessResponse(true);
     }
 
     private async Task<List<Product>> FindProductsBySearchTextAsync(string searchTerm)
     {
-        return await _context.Products
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        return await dbContext.Products
             .Where(p => p.Visible && !p.IsSoftDeleted 
                 && p.Title.Contains(searchTerm, 
                     StringComparison.CurrentCultureIgnoreCase) 

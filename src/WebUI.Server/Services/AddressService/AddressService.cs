@@ -6,16 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebUI.Server.Services.AddressService;
 
-public sealed class AddressService(EcommerceContext context, 
+public sealed class AddressService(IDbContextFactory<EcommerceContext> contextFactory, 
     IAuthService authService) : IAddressService
 {
-    private readonly EcommerceContext _context = context;
+    private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
     private readonly IAuthService _authService = authService;
 
     public async Task<ResponseDto<Address>> GetAddress()
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         int userId = _authService.GetNameIdFromClaims();
-        Address? address = await _context.Addresses
+        Address? address = await dbContext.Addresses
             .FirstOrDefaultAsync(a => a.UserId == userId);
 
         return address is not null
@@ -25,12 +27,14 @@ public sealed class AddressService(EcommerceContext context,
 
     public async Task<ResponseDto<Address>> AddOrUpdateAddress(Address address)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         Address response;
         Address? dbAddress = (await GetAddress()).Data;
         if (dbAddress is null)
         {
             address.UserId = _authService.GetNameIdFromClaims();
-            _context.Addresses.Add(address);
+            dbContext.Addresses.Add(address);
             response = address;
         }
         else
@@ -46,7 +50,7 @@ public sealed class AddressService(EcommerceContext context,
             response = dbAddress;
         }
 
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<Address>.SuccessResponse(response);
     } 

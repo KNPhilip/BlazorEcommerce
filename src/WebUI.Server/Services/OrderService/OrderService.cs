@@ -8,16 +8,18 @@ using Microsoft.EntityFrameworkCore;
 namespace WebUI.Server.Services.OrderService;
 
 public sealed class OrderService(
-    EcommerceContext context,
+    IDbContextFactory<EcommerceContext> contextFactory,
     ICartService cartService,
     IAuthService authService) : IOrderService
 {
-    private readonly EcommerceContext _context = context;
+    private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
     private readonly ICartService _cartService = cartService;
     private readonly IAuthService _authService = authService;
 
     public async Task<ResponseDto<bool>> PlaceOrder(int userId)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         List<CartProductResponseDto>? products = (await _cartService.GetDbCartItems(userId)).Data;
         decimal totalPrice = 0;
         products?.ForEach(product => totalPrice += product.Price * product.Quantity);
@@ -38,18 +40,20 @@ public sealed class OrderService(
             TotalPrice = product.Price * product.Quantity
         }));
 
-        _context.Orders.Add(order);
-        _context.CartItems.RemoveRange(_context.CartItems
+        dbContext.Orders.Add(order);
+        dbContext.CartItems.RemoveRange(dbContext.CartItems
             .Where(ci => ci.UserId == userId));
 
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<bool>.SuccessResponse(true);
     }
 
     public async Task<ResponseDto<OrderDetailsDto>> GetOrderDetailsAsync(int orderId)
     {
-        Order? order = await _context.Orders
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        Order? order = await dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .ThenInclude(p => p!.Images)
@@ -90,7 +94,9 @@ public sealed class OrderService(
 
     public async Task<ResponseDto<List<OrderOverviewDto>>> GetOrders()
     {
-        List<Order> orders = await _context.Orders
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        List<Order> orders = await dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .ThenInclude(p => p!.Images)

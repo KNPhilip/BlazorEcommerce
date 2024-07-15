@@ -12,19 +12,21 @@ using System.Text;
 namespace WebUI.Server.Services.AuthService;
 
 public sealed class AuthService(
-    EcommerceContext context,
+    IDbContextFactory<EcommerceContext> contextFactory,
     IConfiguration configuration,
     IHttpContextAccessor httpContextAccessor,
     IMailService mailService) : IAuthService
 {
-    private readonly EcommerceContext _context = context;
+    private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
     private readonly IConfiguration _configuration = configuration;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly IMailService _mailService = mailService;
 
     public async Task<ResponseDto<string>> Login(string email, string password)
     {
-        User? user = await _context.Users
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        User? user = await dbContext.Users
             .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
 
         if (user is null)
@@ -41,20 +43,24 @@ public sealed class AuthService(
 
     public async Task<ResponseDto<int>> Register(User user, string password)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         if (await UserExists(user.Email))
         {
             return ResponseDto<int>.ErrorResponse("User already exists.");
         }
 
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        dbContext.Users.Add(user);
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<int>.SuccessResponse(user.Id);
     }
 
     public async Task<ResponseDto<string>> CreateResetToken(User request)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         User? user = await GetUserByEmail(request.Email);
 
         if (user is null)
@@ -63,7 +69,7 @@ public sealed class AuthService(
                 $"There are no registered users with the email address {request.Email}");
         }
 
-        if (!String.IsNullOrEmpty(user.PasswordResetToken) && DateTime.Now < user.ResetTokenExpires)
+        if (!string.IsNullOrEmpty(user.PasswordResetToken) && DateTime.Now < user.ResetTokenExpires)
         {
             return ResponseDto<string>.ErrorResponse(
                 "There is an open reset request already! Please check your inbox or try again later");
@@ -71,7 +77,7 @@ public sealed class AuthService(
 
         user.PasswordResetToken = CreateRandomToken();
         user.ResetTokenExpires = DateTime.Now.AddHours(2);
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         SendMailDto mail = new()
         {
@@ -91,13 +97,15 @@ public sealed class AuthService(
 
     public async Task<ResponseDto<bool>> ResetPassword(string email, string newPassword, string resetToken)
     {
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
         ResponseDto<bool> response = await ValidateResetPasswordToken(email, resetToken);
         if (!response.Success)
         {
             return response;
         }
 
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        User? user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user is null)
         {
@@ -112,20 +120,22 @@ public sealed class AuthService(
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         user.PasswordResetToken = "";
         user.ResetTokenExpires = null;
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return response;
     }
 
     public async Task<ResponseDto<bool>> ValidateResetPasswordToken(string email, string resetToken)
     {
-        if (!await _context.Users.AnyAsync(user => user.PasswordResetToken
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        if (!await dbContext.Users.AnyAsync(user => user.PasswordResetToken
             .ToLower().Equals(resetToken.ToLower())))
         {
             return ResponseDto<bool>.ErrorResponse("Invalid reset token");
         }
 
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        User? user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user is null)
         {
@@ -141,12 +151,15 @@ public sealed class AuthService(
 
     public async Task<bool> UserExists(string email)
     {
-        return await _context.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+        return await dbContext.Users.AnyAsync(user => user.Email.ToLower().Equals(email.ToLower()));
     }
 
     public async Task<ResponseDto<bool>> ChangePassword(int userId, string newPassword)
     {
-        User? user = await _context.Users.FindAsync(userId);
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+
+        User? user = await dbContext.Users.FindAsync(userId);
 
         if (user is null)
         {
@@ -155,7 +168,7 @@ public sealed class AuthService(
 
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
-        await _context.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return ResponseDto<bool>.SuccessResponse(true);
     }
@@ -172,7 +185,8 @@ public sealed class AuthService(
 
     public async Task<User?> GetUserByEmail(string email)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+        using EcommerceContext dbContext = _contextFactory.CreateDbContext();
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
     }
 
     private static string CreateRandomToken()
