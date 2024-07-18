@@ -1,4 +1,5 @@
 ﻿@page "/cart"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject ICartUIService CartUIService
 @inject IOrderUIService OrderUIService

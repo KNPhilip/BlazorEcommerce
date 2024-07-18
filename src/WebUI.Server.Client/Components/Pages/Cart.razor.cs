@@ -9,14 +9,10 @@ public sealed partial class Cart
     string message = "Loading cart...";
     bool isAuthenticated = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
-        {
-            isAuthenticated = await AuthUIService.IsUserAuthenticated();
-            await LoadCart();
-            StateHasChanged();
-        }
+        isAuthenticated = await AuthUIService.IsUserAuthenticated();
+        await LoadCart();
     }
 
     private async Task RemoveProductFromCart(int productId, int productTypeId)
