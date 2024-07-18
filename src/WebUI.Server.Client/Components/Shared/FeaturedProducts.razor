@@ -92,15 +92,3 @@ else
         }
     </div>
 }
-
-@code {
-    protected override void OnInitialized()
-    {
-        ProductUIService.OnProductsChanged += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        ProductUIService.OnProductsChanged -= StateHasChanged;
-    }
-}

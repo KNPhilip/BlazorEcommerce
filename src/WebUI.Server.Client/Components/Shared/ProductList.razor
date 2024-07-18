@@ -83,32 +83,3 @@ else
            href="/search/@ProductUIService.LastSearchTerm/@i">@i</a>
     }
 }
-
-@code {
-    protected sealed override void OnInitialized()
-    {
-        ProductUIService.OnProductsChanged += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        ProductUIService.OnProductsChanged -= StateHasChanged;
-    }
-
-    public string GetPriceText(Product product)
-    {
-        List<ProductVariant> variants = product.Variants;
-
-        if (variants.Count == 0)
-        {
-            return string.Empty;
-        }
-        else if (variants.Count == 1)
-        {
-            return $"${variants[0].Price}";
-        }
-
-        decimal minPrice = variants.Min(v => v.Price);
-        return $"Starting at ${minPrice}";
-    }
-}

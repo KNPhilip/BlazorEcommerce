@@ -72,30 +72,3 @@ else
         <br />
     </EditForm>
 }
-
-@code {
-    Address? address = null;
-    bool editAddress = false;
-
-    protected sealed override async Task OnInitializedAsync()
-    {
-        address = await AddressUIService.GetAddress();
-    }
-
-    private async Task SubmitAddresss()
-    {
-        editAddress = false;
-        address = await AddressUIService.AddOrUpdateAddress(address!);
-    }
-
-    private void InitAddress()
-    {
-        address = new();
-        editAddress = true;
-    }
-
-    private void EditAddress()
-    {
-        editAddress = true;
-    }
-}

@@ -73,20 +73,3 @@ img {
         </table>
     }
 </div>
-
-@code {
-    protected sealed override async Task OnInitializedAsync()
-    {
-        await ProductUIService.GetAdminProducts();
-    }
-
-    private void EditProduct(int productId)
-    {
-        NavigationManager.NavigateTo($"admin/product/{productId}");
-    }
-
-    private void CreateProduct()
-    {
-        NavigationManager.NavigateTo($"admin/product");
-    }
-}

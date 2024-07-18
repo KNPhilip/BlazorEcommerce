@@ -32,16 +32,3 @@
         </div>
     </EditForm>
 </div>
-
-@code {
-    UserRegisterDto user = new();
-    string resultMessage = string.Empty;
-    string resultMessageCssClass = string.Empty;
-
-    private async Task HandleRegistration()
-    {
-        bool result = await AuthUIService.Register(user);
-        resultMessage = result ? "Successfully registered" : "Could not register, please try again.";
-        resultMessageCssClass = result ? "text-success" : "text-danger";
-    }
-}

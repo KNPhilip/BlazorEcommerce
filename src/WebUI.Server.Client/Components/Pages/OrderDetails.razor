@@ -69,15 +69,3 @@
         </div>
     }
 </div>
-
-@code {
-    [Parameter]
-    public int OrderId { get; set; }
-
-    OrderDetailsDto? order = null;
-
-    protected sealed override async Task OnInitializedAsync()
-    {
-        order = await OrderUIService.GetOrderDetails(OrderId);
-    }
-}

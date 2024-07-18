@@ -16,26 +16,3 @@
         <ProductList />
     }
 </div>
-
-@code {
-    [Parameter]
-    public string? CategoryUrl { get; set; }
-
-    [Parameter]
-    public string? SearchTerm { get; set; } = null;
-
-    [Parameter]
-    public int Page { get; set; } = 1;
-
-    protected sealed override async Task OnParametersSetAsync()
-    {
-        if (SearchTerm is not null)
-        {
-            await ProductUIService.SearchProducts(SearchTerm, Page);
-        }
-        else
-        {
-            await ProductUIService.GetProducts(CategoryUrl);
-        }
-    }
-}

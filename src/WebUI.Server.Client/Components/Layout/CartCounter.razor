@@ -18,27 +18,3 @@
         </MudBadge>
     }
 </div>
-
-@code {
-    private int cartItemsCount;
-
-    async Task<int> GetCartItemsCountAsync()
-    {
-        return await LocalStorage.GetItemAsync<int>("cartItemsCount");
-    }
-
-    protected sealed override void OnInitialized()
-    {
-        CartUIService.OnChange += StateHasChanged;
-    }
-
-    protected sealed override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        cartItemsCount = await GetCartItemsCountAsync();
-    }
-
-    public void Dispose()
-    {
-        CartUIService.OnChange -= StateHasChanged;
-    }
-}

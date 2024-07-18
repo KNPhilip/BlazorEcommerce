@@ -81,12 +81,3 @@
         }
     }
 </div>
-
-@code {
-    List<OrderOverviewDto>? orders = null;
-
-    protected sealed override async Task OnInitializedAsync()
-    {
-        orders = await OrderUIService.GetOrders();
-    }
-}
