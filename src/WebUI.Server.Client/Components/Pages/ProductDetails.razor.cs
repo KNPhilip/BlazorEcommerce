@@ -33,7 +33,8 @@ public sealed partial class ProductDetails
         CartItem cartItem = new()
         {
             ProductId = productVariant!.ProductId,
-            ProductTypeId = productVariant.ProductTypeId
+            ProductTypeId = productVariant.ProductTypeId,
+            Quantity = 1
         };
 
         await CartUIService.AddToCart(cartItem);
