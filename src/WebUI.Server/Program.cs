@@ -19,6 +19,8 @@ using Swashbuckle.AspNetCore.Filters;
 using Domain.Dtos;
 using MudBlazor.Services;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Components.Authorization;
+using WebUI.Server.Client;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -97,6 +99,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 builder.Services.AddOptions<MailSettingsDto>().Bind(builder.Configuration
     .GetSection(MailSettingsDto.SectionName));

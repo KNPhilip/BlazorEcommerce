@@ -2,6 +2,8 @@
 @page "/search/{SearchTerm}/{page:int}"
 @page "/{CategoryUrl}"
 
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 @inject IProductUIService ProductUIService
 
 <PageTitle>Home</PageTitle>
