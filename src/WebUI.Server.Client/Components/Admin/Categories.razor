@@ -55,9 +55,11 @@
                     <div class="col">
                         <InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
                     </div>
+
+                    @* TODO: Fix MudSwitch
                     <div class="col d-flex justify-content-center">
                         <MudSwitch Style="margin-left: 6px;" @bind-Checked="editingCategory.Visible" Color="Color.Info" />
-                    </div>
+                    </div> *@
                     <div class="col">
                         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Upload" Disabled="@(editingCategory.Name.Length <= 0 || editingCategory.Url.Length <= 0)" Color="Color.Info" aria-label="save" ButtonType="ButtonType.Submit" />
                         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Close" Color="Color.Error" aria-label="cancel" OnClick="CancelEditing" />

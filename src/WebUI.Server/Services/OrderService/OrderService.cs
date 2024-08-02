@@ -42,7 +42,7 @@ public sealed class OrderService(
 
         dbContext.Orders.Add(order);
         dbContext.CartItems.RemoveRange(dbContext.CartItems
-            .Where(ci => ci.UserId == userId));
+            .Where(ci => ci.UserId == /*userId*/Guid.NewGuid()));
 
         await dbContext.SaveChangesAsync();
 

@@ -101,8 +101,9 @@ public class PaymentService : IPaymentService
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
                 Session? session = stripeEvent.Data.Object as Session;
-                User? user = await _authService.GetUserByEmail(session?.CustomerEmail!);
-                await _orderService.PlaceOrder(user!.Id);
+                ApplicationUser? user = await _authService.GetUserByEmail(session?.CustomerEmail!);
+                // TODO: Replace old int id with identity user id
+                //await _orderService.PlaceOrder(user!.Id);
             }
 
             return ResponseDto<bool>.SuccessResponse(true);

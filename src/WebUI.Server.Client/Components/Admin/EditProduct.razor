@@ -85,8 +85,9 @@ img {
                     @bind-Value="product.Description" 
                 />
             </div>
+            @* TODO: Fix MudSwitch 
             <MudSwitch Class="mt-3" @bind-Checked="product.Featured" Label="Featured" Color="Color.Info" />
-            <MudSwitch Class="mb-3" @bind-Checked="product.Visible" Label="Visible" Color="Color.Info" />
+            <MudSwitch Class="mb-3" @bind-Checked="product.Visible" Label="Visible" Color="Color.Info" /> *@
             <MudText Class="mb-2 mt-4" Typo="Typo.h5">Images (at least one)</MudText>
             <div class="mb-3">
                 <MudTextField 
@@ -124,7 +125,8 @@ img {
                 }
             </div>
             <div class="mb-3">
-                <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFileChange" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0"
+@* TODO: Fix this code                
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFileChange" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0"
                    @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass">
                     <ButtonTemplate Context="wut">
                         <MudPaper Height="200px" Outlined="true" Class="@DragClass">
@@ -135,7 +137,7 @@ img {
                             }
                         </MudPaper>
                     </ButtonTemplate>
-                </MudFileUpload>
+                </MudFileUpload> *@
                 <MudToolBar DisableGutters="true" Class="gap-4 mt-3">
                     <MudButton OnClick="ClearImages" Disabled="@(product.Images.Count == 0 && string.IsNullOrEmpty(product.ImageUrl))" Color="Color.Error" Variant="Variant.Filled">Clear Images</MudButton>
                 </MudToolBar>

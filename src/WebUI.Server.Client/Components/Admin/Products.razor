@@ -1,5 +1,5 @@
 ﻿@page "/admin/products"
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
 
 @inject IProductUIService ProductUIService

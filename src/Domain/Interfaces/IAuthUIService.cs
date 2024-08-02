@@ -7,6 +7,6 @@ public interface IAuthUIService
     Task<bool> ChangePassword(UserChangePasswordDto request);
     Task<bool> ResetPassword(PasswordResetDto request);
     Task<bool> ValidateResetPasswordToken(TokenValidateDto request);
-    Task<string?> CreateResetToken(User request);
+    Task<string?> CreateResetToken(ApplicationUser request);
     Task<bool> IsUserAuthenticated();
 }

@@ -5,7 +5,7 @@ namespace WebUI.Server.Client.Components.Pages;
 
 public sealed partial class ForgotPassword
 {
-    private readonly User user = new();
+    private readonly ApplicationUser user = new();
 
     private async void SendMail()
     {

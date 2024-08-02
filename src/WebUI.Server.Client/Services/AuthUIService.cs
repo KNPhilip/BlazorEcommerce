@@ -53,7 +53,7 @@ public sealed class AuthUIService(
         return await result.Content.ReadFromJsonAsync<bool>();
     }
 
-    public async Task<string?> CreateResetToken(User request)
+    public async Task<string?> CreateResetToken(ApplicationUser request)
     {
         HttpResponseMessage result = await http
             .PostAsJsonAsync("api/v1/Auth/create-password-token", request);

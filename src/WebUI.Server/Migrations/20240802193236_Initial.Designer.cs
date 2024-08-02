@@ -12,7 +12,7 @@ using WebUI.Server.Data;
 namespace WebUI.Server.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20240713105625_Initial")]
+    [Migration("20240802193236_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace WebUI.Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -78,16 +78,89 @@ namespace WebUI.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Domain.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSoftDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.CartItem", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -136,7 +209,7 @@ namespace WebUI.Server.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8714),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8508),
                             IsSoftDeleted = false,
                             Name = "Books",
                             Url = "books",
@@ -145,7 +218,7 @@ namespace WebUI.Server.Migrations
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8717),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8512),
                             IsSoftDeleted = false,
                             Name = "Movies",
                             Url = "movies",
@@ -154,7 +227,7 @@ namespace WebUI.Server.Migrations
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8719),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8514),
                             IsSoftDeleted = false,
                             Name = "Video Games",
                             Url = "video-games",
@@ -278,7 +351,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8638),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8395),
                             Description = "The Hitchhiker's Guide to the Galaxy[note 1] (sometimes referred to as HG2G,[1] HHGTTG,[2] H2G2,[3] or tHGttG) is a comedy science fiction franchise created by Douglas Adams. Originally a 1978 radio comedy broadcast on BBC Radio 4, it was later adapted to other formats, including stage shows, novels, comic books, a 1981 TV series, a 1984 text-based computer game, and 2005 feature film.",
                             Featured = true,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/b/bd/H2G2_UK_front_cover.jpg",
@@ -290,7 +363,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8646),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8440),
                             Description = "Ready Player One is a 2011 science fiction novel, and the debut novel of American author Ernest Cline. The story, set in a dystopia in 2045, follows protagonist Wade Watts on his search for an Easter egg in a worldwide virtual reality game, the discovery of which would lead him to inherit the game creator's fortune. Cline sold the rights to publish the novel in June 2010, in a bidding war to the Crown Publishing Group (a division of Random House).[1] The book was published on August 16, 2011.[2] An audiobook was released the same day; it was narrated by Wil Wheaton, who was mentioned briefly in one of the chapters.[3][4]Ch. 20 In 2012, the book received an Alex Award from the Young Adult Library Services Association division of the American Library Association[5] and won the 2011 Prometheus Award.[6]",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/a/a4/Ready_Player_One_cover.jpg",
@@ -302,10 +375,10 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 3,
                             CategoryId = 1,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8649),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8444),
                             Description = "Nineteen Eighty-Four (also stylised as 1984) is a dystopian social science fiction novel and cautionary tale written by English writer George Orwell. It was published on 8 June 1949 by Secker & Warburg as Orwell's ninth and final book completed in his lifetime. Thematically, it centres on the consequences of totalitarianism, mass surveillance and repressive regimentation of people and behaviours within society.[2][3] Orwell, a democratic socialist, modelled the totalitarian government in the novel after Stalinist Russia and Nazi Germany.[2][3][4] More broadly, the novel examines the role of truth and facts within politics and the ways in which they are manipulated.",
                             Featured = false,
-                            ImageUrl = "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four#/media/File:1984_first_edition_cover.jpg",
+                            ImageUrl = "https://upload.wikimedia.org/wikipedia/en/5/51/1984_first_edition_cover.jpg",
                             IsSoftDeleted = false,
                             Title = "Nineteen Eighty-Four",
                             Visible = true
@@ -314,7 +387,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 4,
                             CategoryId = 2,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8652),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8446),
                             Description = "The Matrix is a 1999 science fiction action film written and directed by the Wachowskis, and produced by Joel Silver. Starring Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss, Hugo Weaving, and Joe Pantoliano, and as the first installment in the Matrix franchise, it depicts a dystopian future in which humanity is unknowingly trapped inside a simulated reality, the Matrix, which intelligent machines have created to distract humans while using their bodies as an energy source. When computer programmer Thomas Anderson, under the hacker alias \"Neo\", uncovers the truth, he \"is drawn into a rebellion against the machines\" along with other people who have been freed from the Matrix.",
                             Featured = true,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg",
@@ -326,7 +399,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 5,
                             CategoryId = 2,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8654),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8449),
                             Description = "Back to the Future is a 1985 American science fiction film directed by Robert Zemeckis. Written by Zemeckis and Bob Gale, it stars Michael J. Fox, Christopher Lloyd, Lea Thompson, Crispin Glover, and Thomas F. Wilson. Set in 1985, the story follows Marty McFly (Fox), a teenager accidentally sent back to 1955 in a time-traveling DeLorean automobile built by his eccentric scientist friend Doctor Emmett \"Doc\" Brown (Lloyd). Trapped in the past, Marty inadvertently prevents his future parents' meeting—threatening his very existence—and is forced to reconcile the pair and somehow get back to the future.",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/d/d2/Back_to_the_Future.jpg",
@@ -338,7 +411,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 6,
                             CategoryId = 2,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8657),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8451),
                             Description = "Toy Story is a 1995 American computer-animated comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. The first installment in the Toy Story franchise, it was the first entirely computer-animated feature film, as well as the first feature film from Pixar. The film was directed by John Lasseter (in his feature directorial debut), and written by Joss Whedon, Andrew Stanton, Joel Cohen, and Alec Sokolow from a story by Lasseter, Stanton, Pete Docter, and Joe Ranft. The film features music by Randy Newman, was produced by Bonnie Arnold and Ralph Guggenheim, and was executive-produced by Steve Jobs and Edwin Catmull. The film features the voices of Tom Hanks, Tim Allen, Don Rickles, Wallace Shawn, John Ratzenberger, Jim Varney, Annie Potts, R. Lee Ermey, John Morris, Laurie Metcalf, and Erik von Detten. Taking place in a world where anthropomorphic toys come to life when humans are not present, the plot focuses on the relationship between an old-fashioned pull-string cowboy doll named Woody and an astronaut action figure, Buzz Lightyear, as they evolve from rivals competing for the affections of their owner, Andy Davis, to friends who work together to be reunited with Andy after being separated from him.",
                             Featured = true,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
@@ -350,7 +423,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 7,
                             CategoryId = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8659),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8454),
                             Description = "Half-Life 2 is a 2004 first-person shooter game developed and published by Valve. Like the original Half-Life, it combines shooting, puzzles, and storytelling, and adds features such as vehicles and physics-based gameplay.",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/2/25/Half-Life_2_cover.jpg",
@@ -362,7 +435,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 8,
                             CategoryId = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8661),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8456),
                             Description = "Diablo II is an action role-playing hack-and-slash computer video game developed by Blizzard North and published by Blizzard Entertainment in 2000 for Microsoft Windows, Classic Mac OS, and macOS.",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/d/d5/Diablo_II_Coverart.png",
@@ -374,7 +447,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 9,
                             CategoryId = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8663),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8458),
                             Description = "Day of the Tentacle, also known as Maniac Mansion II: Day of the Tentacle, is a 1993 graphic adventure game developed and published by LucasArts. It is the sequel to the 1987 game Maniac Mansion.",
                             Featured = true,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/en/7/79/Day_of_the_Tentacle_artwork.jpg",
@@ -386,7 +459,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 10,
                             CategoryId = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8666),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8460),
                             Description = "The Xbox is a home video game console and the first installment in the Xbox series of video game consoles manufactured by Microsoft.",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/4/43/Xbox-console.jpg",
@@ -398,7 +471,7 @@ namespace WebUI.Server.Migrations
                         {
                             Id = 11,
                             CategoryId = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8668),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8462),
                             Description = "The Super Nintendo Entertainment System (SNES), also known as the Super NES or Super Nintendo, is a 16-bit home video game console developed by Nintendo that was released in 1990 in Japan and South Korea.",
                             Featured = false,
                             ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ee/Nintendo-Super-Famicom-Set-FL.jpg",
@@ -434,70 +507,70 @@ namespace WebUI.Server.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8844),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8607),
                             IsSoftDeleted = false,
                             Name = "Default"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8846),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8609),
                             IsSoftDeleted = false,
                             Name = "Paperback"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8847),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8610),
                             IsSoftDeleted = false,
                             Name = "E-Book"
                         },
                         new
                         {
                             Id = 4,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8848),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8611),
                             IsSoftDeleted = false,
                             Name = "Audiobook"
                         },
                         new
                         {
                             Id = 5,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8849),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8612),
                             IsSoftDeleted = false,
                             Name = "Stream"
                         },
                         new
                         {
                             Id = 6,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8851),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8613),
                             IsSoftDeleted = false,
                             Name = "Blu-ray"
                         },
                         new
                         {
                             Id = 7,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8852),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8614),
                             IsSoftDeleted = false,
                             Name = "VHS"
                         },
                         new
                         {
                             Id = 8,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8853),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8615),
                             IsSoftDeleted = false,
                             Name = "PC"
                         },
                         new
                         {
                             Id = 9,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8854),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8616),
                             IsSoftDeleted = false,
                             Name = "PlayStation"
                         },
                         new
                         {
                             Id = 10,
-                            DateCreated = new DateTime(2024, 7, 13, 10, 56, 25, 537, DateTimeKind.Utc).AddTicks(8855),
+                            DateCreated = new DateTime(2024, 8, 2, 19, 32, 36, 137, DateTimeKind.Utc).AddTicks(8617),
                             IsSoftDeleted = false,
                             Name = "Xbox"
                         });
@@ -685,7 +758,34 @@ namespace WebUI.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Models.User", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -693,50 +793,111 @@ namespace WebUI.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsSoftDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
+                    b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordResetToken")
+                    b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ResetTokenExpires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VerificationToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("VerificationTokenExpires")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Address", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Domain.Models.User", null)
-                        .WithOne("Address")
-                        .HasForeignKey("Domain.Models.Address", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Domain.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("Domain.Models.Image", b =>
@@ -803,6 +964,57 @@ namespace WebUI.Server.Migrations
                     b.Navigation("ProductType");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Domain.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Domain.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Domain.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
@@ -813,11 +1025,6 @@ namespace WebUI.Server.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Variants");
-                });
-
-            modelBuilder.Entity("Domain.Models.User", b =>
-                {
-                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

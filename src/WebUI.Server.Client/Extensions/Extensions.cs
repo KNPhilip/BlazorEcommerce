@@ -16,7 +16,7 @@ public static class Extensions
         services.AddCascadingAuthenticationState();
 
         services.AddScoped(sp => new HttpClient { BaseAddress = baseAddress });
-        services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+        services.AddScoped<AuthenticationStateProvider, ClientAuthStateProvider>();
         services.AddScoped<IAddressUIService, AddressUIService>();
         services.AddScoped<IAuthUIService, AuthUIService>();
         services.AddScoped<ICartUIService, CartUIService>();

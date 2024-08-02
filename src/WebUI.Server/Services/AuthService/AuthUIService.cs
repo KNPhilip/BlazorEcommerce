@@ -23,45 +23,51 @@ public sealed class AuthUIService(
 
     public async Task<bool> ChangePassword(UserChangePasswordDto request)
     {
-        ResponseDto<bool> result = await authService.ChangePassword(
-            int.Parse(httpContextAccessor.HttpContext!.User
-            .FindFirstValue(ClaimTypes.NameIdentifier)!), 
-            request.NewPassword);
-        return result.Data;
+        //ResponseDto<bool> result = await authService.ChangePassword(
+        //    int.Parse(httpContextAccessor.HttpContext!.User
+        //    .FindFirstValue(ClaimTypes.NameIdentifier)!), 
+        //    request.NewPassword);
+        //return result.Data;
+        return true;
     }
 
-    public async Task<string?> CreateResetToken(User request)
+    public async Task<string?> CreateResetToken(ApplicationUser request)
     {
-        ResponseDto<string> result = await authService
-            .CreateResetToken(request);
-        return result.Data;
+        //ResponseDto<string> result = await authService
+        //    .CreateResetToken(request);
+        //return result.Data;
+        return "";
     }
 
     public async Task<string?> Login(UserLoginDto request)
     {
-        ResponseDto<string> result = await authService
-            .Login(request.Email, request.Password);
-        return result.Data;
+        //ResponseDto<string> result = await authService
+        //    .Login(request.Email, request.Password);
+        //return result.Data;
+        return "";
     }
 
     public async Task<bool> Register(UserRegisterDto request)
     {
-        ResponseDto<int> result = await authService.Register(new User
-            { Email = request.Email }, request.Password);
-        return result.Success;
+        //ResponseDto<int> result = await authService.Register(new ApplicationUser
+        //    { Email = request.Email }, request.Password);
+        //return result.Success;
+        return true;
     }
 
     public async Task<bool> ResetPassword(PasswordResetDto request)
     {
-        ResponseDto<bool> result = await authService.ResetPassword(
-            request.UserEmail!, request.NewPassword, request.ResetToken!);
-        return result.Data;
+        //ResponseDto<bool> result = await authService.ResetPassword(
+        //    request.UserEmail!, request.NewPassword, request.ResetToken!);
+        //return result.Data;
+        return true;
     }
 
     public async Task<bool> ValidateResetPasswordToken(TokenValidateDto request)
     {
-        ResponseDto<bool> result = await authService
-            .ValidateResetPasswordToken(request.UserEmail!, request.ResetToken!);
-        return result.Data;
+        //ResponseDto<bool> result = await authService
+        //    .ValidateResetPasswordToken(request.UserEmail!, request.ResetToken!);
+        //return result.Data;
+        return true;
     }
 }

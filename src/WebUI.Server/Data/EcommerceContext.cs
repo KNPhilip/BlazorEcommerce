@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebUI.Server.Data;
@@ -13,7 +14,7 @@ namespace WebUI.Server.Data;
 /// </remarks>
 /// <param name="options">DbContextOptions of the EcommerceContext to be passed
 /// on to the base class.</param>
-public sealed class EcommerceContext : DbContext
+public sealed class EcommerceContext : IdentityDbContext<ApplicationUser>
 {
     public EcommerceContext(DbContextOptions<EcommerceContext> options) : base(options)
     {
@@ -53,6 +54,8 @@ public sealed class EcommerceContext : DbContext
 
         modelBuilder.Entity<OrderItem>()
             .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
+
+        base.OnModelCreating(modelBuilder);
     }
     #endregion
 
@@ -64,7 +67,6 @@ public sealed class EcommerceContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProductType> ProductTypes { get; set; }
     public DbSet<ProductVariant> ProductVariants { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }

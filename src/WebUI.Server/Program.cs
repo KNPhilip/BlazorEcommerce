@@ -1,9 +1,6 @@
 using WebUI.Server.Services.CartService;
 using WebUI.Server.Services.CategoryService;
 using WebUI.Server.Components;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using WebUI.Server.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 using WebUI.Server.Data;
@@ -20,7 +17,9 @@ using Domain.Dtos;
 using MudBlazor.Services;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
-using WebUI.Server.Client;
+using Microsoft.AspNetCore.Identity;
+using Domain.Models;
+using WebUI.Server.Components.Account;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +29,10 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddControllers();
 
@@ -55,26 +58,36 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddHttpContextAccessor();
 
-// Entity Framework Configuration
-builder.Services.AddDbContextFactory<EcommerceContext>(options =>
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = true;
+})
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<EcommerceContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration["TokenKey"]!)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddIdentityCookies();
+
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContextFactory<EcommerceContext>(options =>
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped(sp => new HttpClient 
 {
@@ -99,8 +112,6 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
-
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 builder.Services.AddOptions<MailSettingsDto>().Bind(builder.Configuration
     .GetSection(MailSettingsDto.SectionName));
@@ -129,11 +140,8 @@ app.UseCspReportOnly(options => options
 );
 #endregion
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseWebAssemblyDebugging();
 }
 else
@@ -172,5 +180,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(WebUI.Server.Client.Components._Imports).Assembly);
+
+app.MapAdditionalIdentityEndpoints();
 
 app.Run();

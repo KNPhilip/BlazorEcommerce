@@ -63,7 +63,7 @@ public sealed class CartService(IDbContextFactory<EcommerceContext> contextFacto
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
-        cartItems.ForEach(cartItem => cartItem.UserId = _authService.GetNameIdFromClaims());
+        cartItems.ForEach(cartItem => cartItem.UserId = /*_authService.GetNameIdFromClaims()*/Guid.NewGuid());
         dbContext.CartItems.AddRange(cartItems);
         await dbContext.SaveChangesAsync();
 
@@ -75,7 +75,7 @@ public sealed class CartService(IDbContextFactory<EcommerceContext> contextFacto
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
         return ResponseDto<int>.SuccessResponse((await dbContext.CartItems
-            .Where(ci => ci.UserId == _authService.GetNameIdFromClaims())
+            .Where(ci => ci.UserId == /*_authService.GetNameIdFromClaims()*/Guid.NewGuid())
             .ToListAsync()).Count);
     }
 
@@ -86,14 +86,14 @@ public sealed class CartService(IDbContextFactory<EcommerceContext> contextFacto
         userId ??= _authService.GetNameIdFromClaims();
 
         return await GetCartProductsAsync(await dbContext.CartItems
-            .Where(ci => ci.UserId == userId).ToListAsync());
+            .Where(ci => ci.UserId == /*userId*/Guid.NewGuid()).ToListAsync());
     }
 
     public async Task<ResponseDto<bool>> AddToCart(CartItem cartItem)
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
-        cartItem.UserId = _authService.GetNameIdFromClaims();
+        cartItem.UserId = /*_authService.GetNameIdFromClaims()*/Guid.NewGuid();
 
         CartItem? sameItem = await dbContext.CartItems
             .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
@@ -121,7 +121,7 @@ public sealed class CartService(IDbContextFactory<EcommerceContext> contextFacto
         CartItem? dbCartItem = await dbContext.CartItems
             .FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
             ci.ProductTypeId == cartItem.ProductTypeId &&
-            ci.UserId == _authService.GetNameIdFromClaims());
+            ci.UserId == /*_authService.GetNameIdFromClaims()*/Guid.NewGuid());
 
         if (dbCartItem is null)
         {
@@ -141,7 +141,7 @@ public sealed class CartService(IDbContextFactory<EcommerceContext> contextFacto
         CartItem? dbCartItem = await dbContext.CartItems
             .FirstOrDefaultAsync(ci => ci.ProductId == productId &&
             ci.ProductTypeId == productTypeId &&
-            ci.UserId == _authService.GetNameIdFromClaims());
+            ci.UserId == /*_authService.GetNameIdFromClaims()*/Guid.NewGuid());
 
         if (dbCartItem is null)
         {
