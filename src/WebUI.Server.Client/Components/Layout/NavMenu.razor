@@ -1,10 +1,9 @@
-﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
-
-@inject ILocalStorageService LocalStorage
+﻿@inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject ICartUIService CartUIService
 @inject ICategoryUIService CategoryUIService
+@implements IDisposable
 
 <style>
     .show-menu {
@@ -29,7 +28,11 @@
     }
 
     .center {
-        width: 140px;
+        width: 160px;
+    }
+
+    a:hover {
+        color: white;
     }
 </style>
 
@@ -37,32 +40,50 @@
     <div class="d-flex flex-row">
         @foreach (Category category in CategoryUIService.Categories)
         {
-            <MudNavLink OnClick="@(() => NavigationManager.NavigateTo(category.Url))"
-                        Style="width: 140px;">@category.Name</MudNavLink>
+            <MudNavLink Href="@category.Url" Style="width: 140px;">@category.Name</MudNavLink>
         }
     </div>
     <div class="d-flex flex-row">
         <AuthorizeView>
             <Authorized>
-                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("profile"))"
+                <MudNavLink Href="profile"
                             Icon="@Icons.Material.Filled.People"
                             Class="center"
                             IconColor="Color.Warning">Your Profile</MudNavLink>
-                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("orders"))"
+                <MudNavLink Href="orders"
                             Icon="@Icons.Material.Filled.Article"
                             Class="center"
                             IconColor="Color.Warning">Your Orders</MudNavLink>
-                <MudNavLink OnClick="Logout"
+@*                 <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("account/logout"))"
                             Icon="@Icons.Material.Filled.Logout"
                             Class="center"
-                            IconColor="Color.Warning">Logout</MudNavLink>
+                            IconColor="Color.Warning">Logout</MudNavLink> *@
+@*                 <div class="px-3">
+                    <NavLink class="nav-link" href="account/manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </NavLink>
+                </div>
+                <div class="px-3">
+                    <NavLink class="nav-link" href="orders">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Orders
+                    </NavLink>
+                </div> *@
+                <div class="px-3">
+                    <form action="account/logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-link">
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </Authorized>
             <NotAuthorized>
-                <MudNavLink OnClick="Login"
+                <MudNavLink Href="account/login"
                             Icon="@Icons.Material.Filled.Login"
                             Class="center"
                             IconColor="Color.Warning">Login</MudNavLink>
-                <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("register"))"
+                <MudNavLink Href="account/register"
                             Icon="@Icons.Material.Filled.AccountCircle"
                             Class="center"
                             IconColor="Color.Warning">Register</MudNavLink>
