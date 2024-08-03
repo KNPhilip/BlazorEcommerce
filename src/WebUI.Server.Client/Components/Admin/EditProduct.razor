@@ -1,6 +1,6 @@
 ﻿@page "/admin/product"
 @page "/admin/product/{id:int}"
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize(Roles = "Admin")]
 
 @inject NavigationManager NavigationManager

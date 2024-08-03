@@ -1,4 +1,4 @@
-﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -70,7 +70,7 @@
         </AuthorizeView>
     </div>
 
-    <AuthorizeView>
+    <AuthorizeView Roles="Admin">
         <Authorized>
             <AdminMenu />
         </Authorized>
