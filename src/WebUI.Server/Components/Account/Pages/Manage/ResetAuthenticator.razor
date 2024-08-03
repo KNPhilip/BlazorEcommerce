@@ -1,6 +1,4 @@
-﻿@page "/Account/Manage/ResetAuthenticator"
-
-@using Microsoft.AspNetCore.Identity
+﻿@page "/account/manage/resetauthenticator"
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -12,6 +10,7 @@
 
 <StatusMessage />
 <h3>Reset authenticator key</h3>
+
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
@@ -28,24 +27,3 @@
         <button class="btn btn-danger" type="submit">Reset authenticator key</button>
     </form>
 </div>
-
-@code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    private async Task OnSubmitAsync()
-    {
-        var user = await UserAccessor.GetRequiredUserAsync(HttpContext);
-        await UserManager.SetTwoFactorEnabledAsync(user, false);
-        await UserManager.ResetAuthenticatorKeyAsync(user);
-        var userId = await UserManager.GetUserIdAsync(user);
-        Logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", userId);
-
-        await SignInManager.RefreshSignInAsync(user);
-
-        RedirectManager.RedirectToWithStatus(
-            "Account/Manage/EnableAuthenticator",
-            "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.",
-            HttpContext);
-    }
-}

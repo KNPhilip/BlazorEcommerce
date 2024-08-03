@@ -11,9 +11,6 @@ using System.Security.Claims;
 
 namespace WebUI.Server.Components.Account;
 
-// This is a server-side AuthenticationStateProvider that revalidates the security stamp for the connected user
-// every 30 minutes an interactive circuit is connected. It also uses PersistentComponentState to flow the
-// authentication state to the client which is then fixed for the lifetime of the WebAssembly application.
 internal sealed class PersistingRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider
 {
     private readonly IServiceScopeFactory scopeFactory;
@@ -44,15 +41,14 @@ internal sealed class PersistingRevalidatingAuthenticationStateProvider : Revali
     protected override async Task<bool> ValidateAuthenticationStateAsync(
         AuthenticationState authenticationState, CancellationToken cancellationToken)
     {
-        // Get the user manager from a new scope to ensure it fetches fresh data
-        await using var scope = scopeFactory.CreateAsyncScope();
+        await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         return await ValidateSecurityStampAsync(userManager, authenticationState.User);
     }
 
     private async Task<bool> ValidateSecurityStampAsync(UserManager<ApplicationUser> userManager, ClaimsPrincipal principal)
     {
-        var user = await userManager.GetUserAsync(principal);
+        ApplicationUser? user = await userManager.GetUserAsync(principal);
         if (user is null)
         {
             return false;
@@ -63,8 +59,8 @@ internal sealed class PersistingRevalidatingAuthenticationStateProvider : Revali
         }
         else
         {
-            var principalStamp = principal.FindFirstValue(options.ClaimsIdentity.SecurityStampClaimType);
-            var userStamp = await userManager.GetSecurityStampAsync(user);
+            string? principalStamp = principal.FindFirstValue(options.ClaimsIdentity.SecurityStampClaimType);
+            string userStamp = await userManager.GetSecurityStampAsync(user);
             return principalStamp == userStamp;
         }
     }
@@ -81,15 +77,15 @@ internal sealed class PersistingRevalidatingAuthenticationStateProvider : Revali
             throw new UnreachableException($"Authentication state not set in {nameof(OnPersistingAsync)}().");
         }
 
-        var authenticationState = await authenticationStateTask;
-        var principal = authenticationState.User;
+        AuthenticationState authenticationState = await authenticationStateTask;
+        ClaimsPrincipal principal = authenticationState.User;
 
-        if (principal.Identity?.IsAuthenticated == true)
+        if (principal.Identity?.IsAuthenticated is true)
         {
-            var userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
-            var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
+            string? userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
+            string? email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
 
-            if (userId != null && email != null)
+            if (userId is not null && email is not null)
             {
                 state.PersistAsJson(nameof(UserInfoDto), new UserInfoDto()
                 {
