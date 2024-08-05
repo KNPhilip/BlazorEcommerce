@@ -16,7 +16,8 @@ public sealed class AddressService(IDbContextFactory<EcommerceContext> contextFa
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
-        int userId = _authService.GetNameIdFromClaims();
+        string userId = await _authService.GetUserIdAsync();
+        
         Address? address = await dbContext.Addresses
             .FirstOrDefaultAsync(a => a.UserId == userId);
 
@@ -33,7 +34,7 @@ public sealed class AddressService(IDbContextFactory<EcommerceContext> contextFa
         Address? dbAddress = (await GetAddress()).Data;
         if (dbAddress is null)
         {
-            address.UserId = _authService.GetNameIdFromClaims();
+            address.UserId = await _authService.GetUserIdAsync();
             dbContext.Addresses.Add(address);
             response = address;
         }

@@ -4,6 +4,7 @@ using WebUI.Server.Data;
 using WebUI.Server.Services.AuthService;
 using WebUI.Server.Services.CartService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace WebUI.Server.Services.OrderService;
 
@@ -16,7 +17,7 @@ public sealed class OrderService(
     private readonly ICartService _cartService = cartService;
     private readonly IAuthService _authService = authService;
 
-    public async Task<ResponseDto<bool>> PlaceOrder(int userId)
+    public async Task<ResponseDto<bool>> PlaceOrder(string userId)
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
@@ -42,7 +43,7 @@ public sealed class OrderService(
 
         dbContext.Orders.Add(order);
         dbContext.CartItems.RemoveRange(dbContext.CartItems
-            .Where(ci => ci.UserId == /*userId*/Guid.NewGuid()));
+            .Where(ci => ci.UserId == userId));
 
         await dbContext.SaveChangesAsync();
 
@@ -53,14 +54,15 @@ public sealed class OrderService(
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
+        string userId = await _authService.GetUserIdAsync();
+
         Order? order = await dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .ThenInclude(p => p!.Images)
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.ProductType)
-            .Where(o => o.UserId == _authService
-                .GetNameIdFromClaims() && o.Id == orderId)
+            .Where(o => o.UserId == userId && o.Id == orderId)
             .OrderByDescending(o => o.OrderDate)
             .FirstOrDefaultAsync();
 
@@ -96,11 +98,13 @@ public sealed class OrderService(
     {
         using EcommerceContext dbContext = _contextFactory.CreateDbContext();
 
+        string userId = await _authService.GetUserIdAsync();
+
         List<Order> orders = await dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .ThenInclude(p => p!.Images)
-            .Where(o => o.UserId == _authService.GetNameIdFromClaims())
+            .Where(o => o.UserId == userId)
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
 

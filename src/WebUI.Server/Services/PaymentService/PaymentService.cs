@@ -35,9 +35,7 @@ public class PaymentService : IPaymentService
 
     public async Task<string> FakeOrderCompletion()
     {
-        int userId = int.Parse
-            (_httpContextAccessor.HttpContext?.User?
-            .FindFirstValue(ClaimTypes.NameIdentifier)!);
+        string userId = await _authService.GetUserIdAsync();
 
         await _orderService.PlaceOrder(userId);
 
@@ -101,9 +99,8 @@ public class PaymentService : IPaymentService
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
                 Session? session = stripeEvent.Data.Object as Session;
-                ApplicationUser? user = await _authService.GetUserByEmail(session?.CustomerEmail!);
-                // TODO: Replace old int id with identity user id
-                //await _orderService.PlaceOrder(user!.Id);
+                ApplicationUser? user = await _authService.GetUserByEmail(session!.CustomerEmail);
+                await _orderService.PlaceOrder(user!.Id);
             }
 
             return ResponseDto<bool>.SuccessResponse(true);

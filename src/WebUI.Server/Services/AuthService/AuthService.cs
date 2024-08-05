@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebUI.Server.Services.AuthService;
 
@@ -15,12 +16,13 @@ public sealed class AuthService(
     IDbContextFactory<EcommerceContext> contextFactory,
     IConfiguration configuration,
     IHttpContextAccessor httpContextAccessor,
-    IMailService mailService) : IAuthService
+    IMailService mailService, UserManager<ApplicationUser> userManager) : IAuthService
 {
     private readonly IDbContextFactory<EcommerceContext> _contextFactory = contextFactory;
     private readonly IConfiguration _configuration = configuration;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly IMailService _mailService = mailService;
+    private readonly UserManager<ApplicationUser> userManager = userManager;
 
     //public async Task<ResponseDto<string>> Login(string email, string password)
     //{
@@ -167,9 +169,12 @@ public sealed class AuthService(
         return ResponseDto<bool>.SuccessResponse(true);
     }
 
-    public int GetNameIdFromClaims()
+    public async Task<string> GetUserIdAsync()
     {
-        return int.Parse(_httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        ApplicationUser user = await userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User)
+            ?? throw new Exception("User not found.");
+
+        return user.Id;
     }
 
     public string? GetUserEmail()

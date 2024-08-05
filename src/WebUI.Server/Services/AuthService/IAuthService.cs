@@ -11,7 +11,7 @@ public interface IAuthService
     //Task<ResponseDto<string>> CreateResetToken(ApplicationUser request);
     //Task<ResponseDto<bool>> ValidateResetPasswordToken(string email, string resetToken);
     //Task<ResponseDto<bool>> ResetPassword(string email, string newPassword, string resetToken);
-    int GetNameIdFromClaims();
+    Task<string> GetUserIdAsync();
     string? GetUserEmail();
     Task<ApplicationUser?> GetUserByEmail(string email);
 }
