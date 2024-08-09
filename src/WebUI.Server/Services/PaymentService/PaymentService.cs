@@ -39,7 +39,7 @@ public class PaymentService : IPaymentService
 
         await _orderService.PlaceOrder(userId);
 
-        return "https://localhost:7010/order-success/fake";
+        return "https://localhost:7240/order-success/fake";
     }
 
     public async Task<Session> CreateCheckoutSession()
@@ -77,8 +77,8 @@ public class PaymentService : IPaymentService
             ],
             LineItems = lineItems,
             Mode = "payment",
-            SuccessUrl = "https://localhost:7010/order-success",
-            CancelUrl = "https://localhost:7010/cart"
+            SuccessUrl = "https://localhost:7240/order-success",
+            CancelUrl = "https://localhost:7240/cart"
         };
 
         SessionService service = new();

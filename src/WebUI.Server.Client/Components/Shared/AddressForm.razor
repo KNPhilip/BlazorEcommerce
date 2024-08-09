@@ -1,4 +1,5 @@
-﻿@inject IAddressUIService AddressUIService
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject IAddressUIService AddressUIService
 
 @if (address is null)
 {

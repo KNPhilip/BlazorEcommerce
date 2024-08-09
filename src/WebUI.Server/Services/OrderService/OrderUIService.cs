@@ -1,14 +1,16 @@
 ﻿using Domain.Dtos;
 using Domain.Interfaces;
 using Microsoft.Identity.Client;
+using WebUI.Server.Services.AuthService;
 
 namespace WebUI.Server.Services.OrderService;
 
-public sealed class OrderUIService(IOrderService orderService, IHttpContextAccessor httpContextAccessor
-    ) : IOrderUIService
+public sealed class OrderUIService(IHttpContextAccessor httpContextAccessor, IOrderService orderService,
+    IAuthService authService) : IOrderUIService
 {
-    private readonly IOrderService _orderService = orderService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IOrderService _orderService = orderService;
+    private readonly IAuthService _authService = authService;
 
     public async Task<OrderDetailsDto> GetOrderDetails(int orderId)
     {
@@ -29,7 +31,9 @@ public sealed class OrderUIService(IOrderService orderService, IHttpContextAcces
         await Task.Run(() => {});
         if (IsUserAuthenticated())
         {
-            return "https://localhost:7010/order-success/fake";
+            string userId = await _authService.GetUserIdAsync();
+            await _orderService.PlaceOrder(userId);
+            return "https://localhost:7240/order-success/fake";
         }
         else
         {
