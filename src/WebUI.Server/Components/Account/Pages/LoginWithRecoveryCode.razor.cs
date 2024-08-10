@@ -36,7 +36,7 @@ public sealed partial class LoginWithRecoveryCode
         else if (result.IsLockedOut)
         {
             Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
+            RedirectManager.RedirectTo("account/lockout");
         }
         else
         {

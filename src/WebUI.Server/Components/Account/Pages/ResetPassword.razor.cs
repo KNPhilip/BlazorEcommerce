@@ -23,7 +23,7 @@ public sealed partial class ResetPassword
     {
         if (Code is null)
         {
-            RedirectManager.RedirectTo("Account/InvalidPasswordReset");
+            RedirectManager.RedirectTo("account/invalidpasswordreset");
         }
 
         Input.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));

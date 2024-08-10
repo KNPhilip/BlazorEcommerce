@@ -37,13 +37,13 @@ public sealed partial class ExternalLogin
     {
         if (RemoteError is not null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", $"Error from external provider: {RemoteError}", HttpContext);
+            RedirectManager.RedirectToWithStatus("account/login", $"Error from external provider: {RemoteError}", HttpContext);
         }
 
         ExternalLoginInfo? info = await SignInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus("account/login", "Error loading external login information.", HttpContext);
         }
 
         externalLoginInfo = info;
@@ -56,7 +56,7 @@ public sealed partial class ExternalLogin
                 return;
             }
 
-            RedirectManager.RedirectTo("Account/Login");
+            RedirectManager.RedirectTo("account/login");
         }
     }
 
@@ -78,7 +78,7 @@ public sealed partial class ExternalLogin
         }
         else if (result.IsLockedOut)
         {
-            RedirectManager.RedirectTo("Account/Lockout");
+            RedirectManager.RedirectTo("account/lockout");
         }
 
         if (externalLoginInfo.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
@@ -108,13 +108,13 @@ public sealed partial class ExternalLogin
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                 string callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                    NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+                    NavigationManager.ToAbsoluteUri("account/confirmemail").AbsoluteUri,
                     new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
                 await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
                 if (UserManager.Options.SignIn.RequireConfirmedAccount)
                 {
-                    RedirectManager.RedirectTo("Account/RegisterConfirmation", new() { ["email"] = Input.Email });
+                    RedirectManager.RedirectTo("account/registerconfirmation", new() { ["email"] = Input.Email });
                 }
 
                 await SignInManager.SignInAsync(user, isPersistent: false, externalLoginInfo.LoginProvider);

@@ -54,7 +54,7 @@ public sealed partial class EnableAuthenticator
         }
         else
         {
-            RedirectManager.RedirectToWithStatus("Account/Manage/TwoFactorAuthentication", message, HttpContext);
+            RedirectManager.RedirectToWithStatus("account/manage/twofactorauthentication", message, HttpContext);
         }
     }
 

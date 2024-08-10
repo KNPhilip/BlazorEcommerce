@@ -27,7 +27,7 @@ public sealed partial class ConfirmEmailChange
         if (UserId is null || Email is null || Code is null)
         {
             RedirectManager.RedirectToWithStatus(
-                "Account/Login", "Error: Invalid email change confirmation link.", HttpContext);
+                "account/login", "Error: Invalid email change confirmation link.", HttpContext);
         }
 
         ApplicationUser? user = await UserManager.FindByIdAsync(UserId);

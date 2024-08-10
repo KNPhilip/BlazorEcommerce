@@ -23,7 +23,7 @@ public sealed partial class SetPassword
         bool hasPassword = await UserManager.HasPasswordAsync(user);
         if (hasPassword)
         {
-            RedirectManager.RedirectTo("Account/Manage/ChangePassword");
+            RedirectManager.RedirectTo("account/manage/changepassword");
         }
     }
 

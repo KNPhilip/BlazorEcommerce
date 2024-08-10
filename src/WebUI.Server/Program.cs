@@ -66,6 +66,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EcommerceContext>()

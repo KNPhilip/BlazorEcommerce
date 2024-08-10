@@ -17,18 +17,18 @@ public sealed partial class ForgotPassword
         ApplicationUser? user = await UserManager.FindByEmailAsync(Input.Email);
         if (user is null || !(await UserManager.IsEmailConfirmedAsync(user)))
         {
-            RedirectManager.RedirectTo("Account/ForgotPasswordConfirmation");
+            RedirectManager.RedirectTo("account/forgotpasswordconfirmation");
         }
 
         string code = await UserManager.GeneratePasswordResetTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         string callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri("Account/ResetPassword").AbsoluteUri,
+            NavigationManager.ToAbsoluteUri("account/resetpassword").AbsoluteUri,
             new Dictionary<string, object?> { ["code"] = code });
 
         await EmailSender.SendPasswordResetLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        RedirectManager.RedirectTo("Account/ForgotPasswordConfirmation");
+        RedirectManager.RedirectTo("account/forgotpasswordconfirmation");
     }
 
     private sealed class InputModel
