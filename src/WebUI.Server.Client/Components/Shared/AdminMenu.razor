@@ -1,0 +1,22 @@
+﻿@inject AuthenticationStateProvider AuthStateProvider
+@attribute [Authorize(Roles = "Admin")]
+
+<style>
+.top-row a {
+  margin-left: 0 !important;
+}
+
+.dropdown-item:hover {
+  background-color: white;
+}
+</style>
+
+@if (authorized)
+{
+    <MudDivider DividerType="DividerType.Inset" Class="mt-3 mb-3" />
+    <MudNavGroup Title="Admin" Expanded="true" Icon="@Icons.Material.Filled.AdminPanelSettings">
+        <MudNavLink Href="admin/categories" Icon="@Icons.Material.Filled.Edit">Categories</MudNavLink>
+        <MudNavLink Href="admin/product-types" Icon="@Icons.Material.Filled.Edit">Product Types</MudNavLink>
+        <MudNavLink Href="admin/products" Icon="@Icons.Material.Filled.Edit">Products</MudNavLink>
+    </MudNavGroup>
+}

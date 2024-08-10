@@ -1,0 +1,51 @@
+﻿@inject NavigationManager NavigationManager
+@inject IProductUIService ProductUIService
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<style>
+    .input-group {
+        display: flex;
+        align-items: center;
+        width: 300px;
+    }
+
+    .form-control {
+        position: relative;
+        flex: 1;
+        height: 38px;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+</style>
+
+<div class="input-group">
+    <input class="form-control"
+           type="search"
+           list="products"
+           placeholder="Search..."
+           @bind="@searchTerm"
+           @bind:event="oninput"
+           @onkeyup="HandleSearch"
+           @ref="searchInput" />
+    <datalist id="products">
+        @foreach (string suggestion in suggestions)
+        {
+            <option>@suggestion</option>
+        }
+    </datalist>
+    <div class="input-group-append">
+        <button class="btn btn-primary" @onclick="SearchProducts">
+            Search
+        </button>
+    </div>
+</div>

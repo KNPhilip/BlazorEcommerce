@@ -1,0 +1,25 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <NavLink class="nav-link" href="account/manage" Match="NavLinkMatch.All">Profile</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="account/manage/email">Email</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="account/manage/changepassword">Password</NavLink>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li class="nav-item">
+            <NavLink class="nav-link" href="account/manage/externallogins">External logins</NavLink>
+        </li>
+    }
+    <li class="nav-item">
+        <NavLink class="nav-link" href="account/manage/twofactorauthentication">Two-factor authentication</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="account/manage/personaldata">Personal data</NavLink>
+    </li>
+</ul>

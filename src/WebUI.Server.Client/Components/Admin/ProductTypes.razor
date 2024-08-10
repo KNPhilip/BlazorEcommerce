@@ -1,0 +1,37 @@
+﻿@page "/admin/product-types"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin")]
+
+@inject IProductTypeUIService ProductTypeUIService
+@implements IDisposable
+
+<div class="container mt-5">
+    <MudText Typo="Typo.h3">Product Types</MudText>
+
+    @foreach(ProductType productType in ProductTypeUIService.ProductTypes)
+    {
+        @if (productType.Editing)
+        {
+            <EditForm Model="editingProductType" OnSubmit="UpdateProductType">
+                <div class="d-flex justify-content-between mt-3">
+                    <InputText @bind-Value="editingProductType!.Name" class="form-control" style="max-width: 400px;"></InputText>
+                    <div>
+                        <MudIconButton ButtonType="ButtonType.Submit" Disabled="@(editingProductType.Name.Length <= 0)" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Save" Color="Color.Info" aria-label="save"></MudIconButton>
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Close" Color="Color.Error" aria-label="cancel" OnClick="CancelEditing"></MudIconButton>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <div class="d-flex justify-content-between mt-3">
+                <MudText>@productType.Name</MudText>
+                <div>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingProductType is null)" Color="Color.Info" aria-label="edit" OnClick="@(() => EditProductType(productType))"></MudIconButton>
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingProductType is null)" Color="Color.Error" aria-label="delete" OnClick="@(() => DeleteProductType(productType.Id))"></MudIconButton>
+                </div>
+            </div>
+        }
+    }
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingProductType is null)" Color="Color.Info" aria-label="create" OnClick="CreateNewProductType">Add new Product Type</MudButton>
+</div>

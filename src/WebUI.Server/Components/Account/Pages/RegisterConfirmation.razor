@@ -1,0 +1,24 @@
+﻿@page "/account/registerconfirmation"
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Register confirmation</PageTitle>
+
+<h1>Register confirmation</h1>
+
+<StatusMessage Message="@statusMessage" />
+
+@if (emailConfirmationLink is not null)
+{
+    <p>
+        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
+        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
+    </p>
+}
+else
+{
+    <p>Please check your email to confirm your account.</p>
+}

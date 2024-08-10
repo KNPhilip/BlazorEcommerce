@@ -1,0 +1,9 @@
+﻿@page "/account/confirmemail"
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Confirm email</PageTitle>
+
+<h1>Confirm email</h1>
+<StatusMessage Message="@statusMessage" />

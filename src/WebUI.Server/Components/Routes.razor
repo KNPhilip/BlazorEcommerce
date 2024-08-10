@@ -1,0 +1,15 @@
+﻿@inject NavigationManager NavigationManager
+
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client.Components._Imports).Assembly }">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(ShopLayout)">
+            <NotAuthorized>
+                <div class="container mt-5">
+                    <h3>Whoops! You're not allowed to see this page.</h3>
+                    <h5>Please <a @onclick="Login" style="color:dodgerblue; cursor:pointer;">login</a> or <a href="register" style="color:dodgerblue; cursor:pointer;">register</a>.</h5>
+                </div>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>
