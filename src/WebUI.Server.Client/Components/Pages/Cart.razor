@@ -1,0 +1,97 @@
+﻿@page "/cart"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ICartUIService CartUIService
+@inject IOrderUIService OrderUIService
+@inject IAuthUIService AuthUIService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Shopping cart</PageTitle>
+
+<style>
+.wrapper {
+  display: flex;
+  padding: 6px;
+}
+
+.image-wrapper {
+  width: 150px;
+  text-align: center;
+}
+
+.image {
+  max-height: 150px;
+  max-width: 150px;
+  padding: 6px;
+}
+
+.name {
+  flex-grow: 1;
+  padding: 6px;
+}
+
+.cart-product-price {
+  font-weight: 600;
+  text-align: right;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  padding: 0px;
+  color: red;
+  font-size: 12px;
+}
+
+.btn-delete:hover {
+  text-decoration: underline;
+}
+
+.input-quantity {
+  width: 70px;
+}
+</style>
+
+<div class="container mt-5">
+    <h3>Shopping Cart</h3>
+
+    @if (cartProducts is null || cartProducts.Count == 0)
+    {
+        <span>@message</span>
+    }
+    else
+    {
+        <div>
+            @foreach (CartProductResponseDto product in cartProducts)
+            {
+                <div class="wrapper">
+                    <div class="image-wrapper">
+                        <img src="@product.ImageUrl" class="image" />
+                    </div>
+                    <div class="name">
+                        <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
+                        <span>@product.ProductType</span>
+                        <input type="number" value="@product.Quantity" 
+                        @onchange="@((ChangeEventArgs e) => UpdateQuantity(e, product))" 
+                        class="form-control input-quantity"
+                        min="1" />
+                        <br/>
+                        <button class="btn-delete" @onclick="@(() => 
+                            RemoveProductFromCart(product.ProductId, product.ProductTypeId))">Remove from Cart</button>
+                    </div>
+                    <div class="cart-product-price">$@(product.Price * product.Quantity)</div>
+                </div>
+            }
+                <div class="cart-product-price wrapper">
+                    Total: (@cartProducts.Count): $@cartProducts.Sum(product => product.Price * product.Quantity)
+                </div>
+                @if (isAuthenticated)
+                {
+                    <br />
+                    <h5>Delivery Address</h5>
+                    <AddressForm />
+                }
+            <button @onclick="PlaceOrder" class="btn btn-success mt-2 mb-2">Checkout</button>
+        </div>
+    }
+</div>

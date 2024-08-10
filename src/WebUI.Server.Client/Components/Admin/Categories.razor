@@ -1,0 +1,90 @@
+﻿@page "/admin/categories"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = "Admin")]
+
+@inject ICategoryUIService CategoryUIService
+@implements IDisposable
+
+<style>
+.header {
+  display: flex;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
+
+.row {
+  display: flex;
+  padding: 6px;
+}
+
+.col {
+  flex: 1;
+}
+
+.col button {
+  margin: 3px;
+}
+
+.col-visible {
+  text-align: center;
+}
+</style>
+
+<div class="container mt-5">
+    <MudText Typo="Typo.h3">Categories</MudText>
+
+    <div class="header">
+        <div class="col">Name</div>
+        <div class="col">Url</div>
+        <div class="col">Visible</div>
+        <div class="col"></div>
+    </div>
+
+    @foreach (Category category in CategoryUIService.AdminCategories)
+    {
+        @if (category.Editing)
+        {
+            <EditForm Model="editingCategory" OnSubmit="UpdateCategory">
+                <div class="row">
+                    <div class="col">
+                        <InputText @bind-Value="editingCategory!.Name" class="form-control"></InputText>
+                    </div>
+                    <div class="col">
+                        <InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
+                    </div>
+
+                    @* TODO: Fix MudSwitch
+                    <div class="col d-flex justify-content-center">
+                        <MudSwitch Style="margin-left: 6px;" @bind-Checked="editingCategory.Visible" Color="Color.Info" />
+                    </div> *@
+                    <div class="col">
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Upload" Disabled="@(editingCategory.Name.Length <= 0 || editingCategory.Url.Length <= 0)" Color="Color.Info" aria-label="save" ButtonType="ButtonType.Submit" />
+                        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Close" Color="Color.Error" aria-label="cancel" OnClick="CancelEditing" />
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    @category.Name
+                </div>
+                <div class="col" style="text-align: center;">
+                    @category.Url
+                </div>
+                <div class="col col-visible">
+                    <MudIcon Icon="@(category.Visible ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="Color.Info"></MudIcon>
+                </div>
+                <div class="col">
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Edit" Disabled="!(editingCategory is null)" Color="Color.Info" aria-label="edit" OnClick="(() => EditCategory(category))" />
+                    <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Delete" Disabled="!(editingCategory is null)" Color="Color.Error" aria-label="delete" OnClick="(() => DeleteCategory(category.Id))" />
+                </div>
+            </div>
+        }
+    }
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="mt-3" Disabled="!(editingCategory is null)" Color="Color.Info" aria-label="create" OnClick="CreateNewCategory">Add new Category</MudButton>
+</div>

@@ -1,0 +1,20 @@
+﻿@inject ICartUIService CartUIService
+@inject ILocalStorageService LocalStorage
+@implements IDisposable
+
+<div class="mx-6 my-3">
+    @if (cartItemsCount == 0)
+    {
+        <a href="cart">
+            <MudIcon Href="cart" Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
+        </a>
+    }
+    else
+    {
+        <MudBadge Content="cartItemsCount" Color="Color.Error" Overlap="true">
+            <a href="cart">
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Size="Size.Large" />
+            </a>
+        </MudBadge>
+    }
+</div>
