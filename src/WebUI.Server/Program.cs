@@ -180,7 +180,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(WebUI.Server.Client.Components._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(WebUI.Client.Components._Imports).Assembly);
 
 app.MapAdditionalIdentityEndpoints();
 

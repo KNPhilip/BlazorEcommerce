@@ -1,0 +1,94 @@
+﻿@inject IProductUIService ProductUIService
+@implements IDisposable
+
+<style>
+.media-img {
+  height: 100%;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+  object-fit: cover;
+}
+
+.media-img:hover {
+  transform: scale(1.04);
+}
+
+a {
+    color: var(--mud-palette-text-primary);
+}
+
+a:hover {
+    color: var(--mud-palette-text-primary);
+}
+
+.media-img-wrapper {
+  border-radius: 6px;
+  display: inline-block;
+  overflow: hidden;
+  height: 400px;
+  width: 250px;
+  text-align: center;
+}
+
+.page-selection {
+  margin-right: 15px;
+  margin-bottom: 30px;
+}
+
+/* media (max-width: 1023.98px) {
+  .media {
+    flex-direction: column;
+  }
+  .media {
+    flex-direction: column;
+  }
+  .media-img-wrapper {
+    width: 100%;
+    height: auto;
+  }
+} */
+</style>
+
+@if (ProductUIService.Products is null || ProductUIService.Products.Count == 0)
+{
+    <span>@ProductUIService.Message</span>
+}
+else
+{
+    <ul class="list-unstyled">
+        @foreach (Product product in ProductUIService.Products)
+        {
+            <li class="media my-3">
+                <div class="media-img-wrapper mr-2">
+                    <a href="/product/@product.Id">
+                        @if(!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img class="media-img" src="@product.ImageUrl" alt="@product.Title" />
+                        }
+                        else if(product.Images.Count > 0)
+                        {
+                            <img class="media-img" src="@product.Images[0].Data" alt="@product.Title" />
+                        }
+                    </a>
+                </div>
+                <div class="media-body mx-5 px-5 my-2">
+                    <a href="/product/@product.Id">
+                        <h3 class="mb-0">@product.Title</h3>
+                    </a>
+                    <p style="font-size: 16px">@product.Description</p>
+                    <h4 class="price">
+                        @GetPriceText(product)
+                    </h4>
+                </div>
+            </li>
+        }
+    </ul>
+    for (int i = 1; i <= ProductUIService.PageCount; i++)
+    {
+        <a class="btn 
+            @(i == ProductUIService.CurrentPage ? "btn-info" : "btn-outline")
+            page-selection"
+           href="/search/@ProductUIService.LastSearchTerm/@i">@i</a>
+    }
+}
