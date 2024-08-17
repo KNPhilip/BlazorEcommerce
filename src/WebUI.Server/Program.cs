@@ -22,6 +22,13 @@ using Domain.Models;
 using WebUI.Server.Components.Account;
 using System.Reflection;
 
+// --- CSS isolation issue ---
+// --- Other code is at the bottom of the page. ---
+Assembly assembly;
+
+assembly = typeof(Program).Assembly;
+__packageId = assembly.GetCustomAttribute<AssemblyPackageIdAttribute>()?.PackageId ?? "WebUI.Server";
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ASP.NET Configuration
@@ -187,17 +194,11 @@ app.MapAdditionalIdentityEndpoints();
 
 app.Run();
 
+// --- CSS isolation issue ---
+// --- Other code is at the top of the page. ---
 public sealed partial class Program
 {
     private static string? __packageId;
-
-    public static void Main(string[] args)
-    {
-        Assembly assembly;
-
-        assembly = typeof(Program).Assembly;
-        __packageId = assembly.GetCustomAttribute<AssemblyPackageIdAttribute>()?.PackageId ?? "WebUI.Server";
-    }
 
     public static string PackageId
     {
