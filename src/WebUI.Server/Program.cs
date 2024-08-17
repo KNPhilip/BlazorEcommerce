@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Domain.Models;
 using WebUI.Server.Components.Account;
+using System.Reflection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -185,3 +186,27 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
+
+public sealed partial class Program
+{
+    private static string? __packageId;
+
+    public static void Main(string[] args)
+    {
+        Assembly assembly;
+
+        assembly = typeof(Program).Assembly;
+        __packageId = assembly.GetCustomAttribute<AssemblyPackageIdAttribute>()?.PackageId ?? "WebUI.Server";
+    }
+
+    public static string PackageId
+    {
+        get
+        {
+            lock (__packageId!)
+            {
+                return __packageId;
+            }
+        }
+    }
+}

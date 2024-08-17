@@ -35,4 +35,17 @@
     <ProjectReference Include="..\WebUI.Client\WebUI.Client.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+	<PackageId>WebUI.Server</PackageId>
+  </PropertyGroup>
+
+  <Target Name="WritePackageId" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <PackageAttributes Include="AssemblyPackageId">
+        <_Parameter1>$(PackageId)</_Parameter1>
+      </PackageAttributes>
+    </ItemGroup>
+    <WriteCodeFragment Language="C#" OutputDirectory="$(ProjectDir)\Properties" OutputFile="PackageId.cs" ContinueOnError="false" AssemblyAttributes="@(PackageAttributes)" />
+  </Target>
+
 </Project>
