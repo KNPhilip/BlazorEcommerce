@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI.Server", "src\WebUI.Server\WebUI.Server.csproj", "{FD4E3FC8-3E88-47AF-A245-91C072C3F557}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI.Server.Client", "src\WebUI.Server.Client\WebUI.Server.Client.csproj", "{8DC06FC9-D8AE-4C88-AA7C-3CD0ED5C005E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI.Client", "src\WebUI.Client\WebUI.Client.csproj", "{8DC06FC9-D8AE-4C88-AA7C-3CD0ED5C005E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

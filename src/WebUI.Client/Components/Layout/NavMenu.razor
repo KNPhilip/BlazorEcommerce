@@ -1,0 +1,69 @@
+﻿@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ICartUIService CartUIService
+@inject ICategoryUIService CategoryUIService
+@implements IDisposable
+
+<div class="d-flex justify-content-between bgclass">
+    <div class="d-flex flex-row">
+        @foreach (Category category in CategoryUIService.Categories)
+        {
+            <MudNavLink Href="@category.Url" Style="width: 140px;">@category.Name</MudNavLink>
+        }
+    </div>
+    <div class="d-flex flex-row">
+        <AuthorizeView>
+            <Authorized>
+                <MudNavLink Href="profile"
+                            Icon="@Icons.Material.Filled.People"
+                            Class="center"
+                            IconColor="Color.Warning">Your Profile</MudNavLink>
+                <MudNavLink Href="orders"
+                            Icon="@Icons.Material.Filled.Article"
+                            Class="center"
+                            IconColor="Color.Warning">Your Orders</MudNavLink>
+@*                 <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("account/logout"))"
+                            Icon="@Icons.Material.Filled.Logout"
+                Class="center"
+                Style="color: white;"
+                            IconColor="Color.Warning">Logout</MudNavLink> *@
+@*                 <div class="px-3">
+                    <NavLink class="nav-link" href="account/manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </NavLink>
+                </div>
+                <div class="px-3">
+                    <NavLink class="nav-link" href="orders">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Orders
+                    </NavLink>
+                </div> *@
+                <div class="px-3">
+                    <form action="account/logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-link">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <MudNavLink Href="account/login"
+                            Icon="@Icons.Material.Filled.Login"
+                            Class="center"
+                            IconColor="Color.Warning">Login</MudNavLink>
+                <MudNavLink Href="account/register"
+                            Icon="@Icons.Material.Filled.AccountCircle"
+                            Class="center"
+                            IconColor="Color.Warning">Register</MudNavLink>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <AdminMenu />
+        </Authorized>
+    </AuthorizeView>
+</div>

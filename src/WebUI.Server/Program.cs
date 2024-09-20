@@ -20,6 +20,14 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Domain.Models;
 using WebUI.Server.Components.Account;
+using System.Reflection;
+
+// --- CSS isolation issue ---
+// --- Other code is at the bottom of the page. ---
+Assembly assembly;
+
+assembly = typeof(Program).Assembly;
+__packageId = assembly.GetCustomAttribute<AssemblyPackageIdAttribute>()?.PackageId ?? "WebUI.Server";
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -180,8 +188,26 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(WebUI.Server.Client.Components._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(WebUI.Client.Components._Imports).Assembly);
 
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
+
+// --- CSS isolation issue ---
+// --- Other code is at the top of the page. ---
+public sealed partial class Program
+{
+    private static string? __packageId;
+
+    public static string PackageId
+    {
+        get
+        {
+            lock (__packageId!)
+            {
+                return __packageId;
+            }
+        }
+    }
+}

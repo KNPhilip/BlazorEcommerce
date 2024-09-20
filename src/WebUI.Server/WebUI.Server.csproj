@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\Pages\Error.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Pages\Error.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
@@ -24,7 +32,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebUI.Server.Client\WebUI.Server.Client.csproj" />
+    <ProjectReference Include="..\WebUI.Client\WebUI.Client.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+	<PackageId>WebUI.Server</PackageId>
+  </PropertyGroup>
+
+  <Target Name="WritePackageId" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <PackageAttributes Include="AssemblyPackageId">
+        <_Parameter1>$(PackageId)</_Parameter1>
+      </PackageAttributes>
+    </ItemGroup>
+    <WriteCodeFragment Language="C#" OutputDirectory="$(ProjectDir)\Properties" OutputFile="PackageId.cs" ContinueOnError="false" AssemblyAttributes="@(PackageAttributes)" />
+  </Target>
 
 </Project>
