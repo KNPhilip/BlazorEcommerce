@@ -7,15 +7,15 @@
 <PageTitle>Thank you!</PageTitle>
 
 <style>
-h1 {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-weight: bold;
-}﻿
+    h1 {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-weight: bold;
+    }
 
-.container {
-  display: flex;
-  padding: 6px 20px;
-}
+    .container {
+        display: flex;
+        padding: 6px 20px;
+    }
 </style>
 
 <div class="container mt-5">
@@ -24,7 +24,9 @@ h1 {
     <span>Thank you for your order! You can check your orders <a href="orders">here</a>.</span>
     @if (Status == "fake")
     {
-        <br /><br />
+        <br />
+
+        <br />
         <h3>Please note:</h3>
         <span>Your order did not go through Stripe (actual payment). This is because this will likely be an example site. In this case, it doesnt make sense to have Stripe implemented, since the user (you) is not supposed to actually buy anything. So in case there is no API key for Stripe, this is shown and your order is "fake completed".</span>
     }

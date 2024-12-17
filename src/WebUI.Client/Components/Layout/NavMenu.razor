@@ -5,58 +5,50 @@
 @inject ICategoryUIService CategoryUIService
 @implements IDisposable
 
-<div class="d-flex justify-content-between bgclass">
+<style>
+    .nav-text {
+        display: inline-block;
+        width: 160px;
+        color: black;
+        font-weight: 500;
+        text-align: center;
+        padding: 0.8rem 0.8rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.5s ease;
+    }
+
+    .nav-text:hover {
+        opacity: 0.5;
+    }
+</style>
+
+<div class="d-flex justify-content-between" style="background-color: gray">
     <div class="d-flex flex-row">
         @foreach (Category category in CategoryUIService.Categories)
         {
-            <MudNavLink Href="@category.Url" Style="width: 140px;">@category.Name</MudNavLink>
+            <a href="@category.Url" class="nav-text">@category.Name</a>
         }
     </div>
     <div class="d-flex flex-row">
         <AuthorizeView>
             <Authorized>
-                <MudNavLink Href="profile"
-                            Icon="@Icons.Material.Filled.People"
-                            Class="center"
-                            IconColor="Color.Warning">Your Profile</MudNavLink>
-                <MudNavLink Href="orders"
-                            Icon="@Icons.Material.Filled.Article"
-                            Class="center"
-                            IconColor="Color.Warning">Your Orders</MudNavLink>
-@*                 <MudNavLink OnClick="@(() => NavigationManager.NavigateTo("account/logout"))"
-                            Icon="@Icons.Material.Filled.Logout"
-                Class="center"
-                Style="color: white;"
-                            IconColor="Color.Warning">Logout</MudNavLink> *@
-@*                 <div class="px-3">
-                    <NavLink class="nav-link" href="account/manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="px-3">
-                    <NavLink class="nav-link" href="orders">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Orders
-                    </NavLink>
-                </div> *@
-                <div class="px-3">
+                <a href="profile" class="nav-text">Your Profile</a>
+                <a href="orders" class="nav-text">Your Orders</a>
+                <div>
                     <form action="account/logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
+                        <button type="submit" class="nav-text">
                             Logout
                         </button>
                     </form>
                 </div>
             </Authorized>
             <NotAuthorized>
-                <MudNavLink Href="account/login"
-                            Icon="@Icons.Material.Filled.Login"
-                            Class="center"
-                            IconColor="Color.Warning">Login</MudNavLink>
-                <MudNavLink Href="account/register"
-                            Icon="@Icons.Material.Filled.AccountCircle"
-                            Class="center"
-                            IconColor="Color.Warning">Register</MudNavLink>
+                <div href="account/login" class="nav-text">Login</div>
+                <div href="account/register" class="nav-text">Register</div>
             </NotAuthorized>
         </AuthorizeView>
     </div>

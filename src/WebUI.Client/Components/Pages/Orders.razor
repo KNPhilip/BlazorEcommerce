@@ -6,63 +6,63 @@
 <PageTitle>Orders</PageTitle>
 
 <style>
-.wrapper {
-  display: flex;
-  padding: 6px;
-  border: 1px solid;
-  border-color: lightgray;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
+    .wrapper {
+        display: flex;
+        padding: 6px;
+        border: 1px solid;
+        border-color: lightgray;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
 
-.image-wrapper {
-  width: 150px;
-  text-align: center;
-}
+    .image-wrapper {
+        width: 150px;
+        text-align: center;
+    }
 
-.image {
-  max-height: 150px;
-  max-width: 150px;
-  padding: 6px;
-  border-radius: 5px;
-}
+    .image {
+        max-height: 150px;
+        max-width: 150px;
+        padding: 6px;
+        border-radius: 5px;
+    }
 
-.details {
-  flex-grow: 1;
-  padding: 6px;
-}
+    .details {
+        flex-grow: 1;
+        padding: 6px;
+    }
 
-.order-price {
-  font-weight: 600;
-  font-size: 1.2rem;
-  text-align: right;
-  color: limegreen;
-  text-shadow: 1px 1px 2px black;
-}
+    .order-price {
+        font-weight: 600;
+        font-size: 1.2rem;
+        text-align: right;
+        color: limegreen;
+        text-shadow: 1px 1px 2px black;
+    }
 
-.show-more {
-  text-decoration: none;
-}
+    .show-more {
+        text-decoration: none;
+    }
 </style>
 
 <div class="container mt-5">
     <h3>Orders</h3>
 
-    @if (orders is null) 
+    @if (orders is null)
     {
         <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
     }
-    else if (orders.Count <= 0) 
+    else if (orders.Count <= 0)
     {
         <span>You have no orders, yet.</span>
     }
     else
     {
-        foreach(OrderOverviewDto order in orders)
+        foreach (OrderOverviewDto order in orders)
         {
             <div class="wrapper">
                 <div class="image-wrapper">
-                    @if(!string.IsNullOrEmpty(order.ProductImageUrl))
+                    @if (!string.IsNullOrEmpty(order.ProductImageUrl))
                     {
                         <img src="@order.ProductImageUrl" class="image" />
                     }
