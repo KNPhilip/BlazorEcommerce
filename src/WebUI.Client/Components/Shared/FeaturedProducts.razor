@@ -1,0 +1,89 @@
+﻿@inject IProductUIService ProductUIService
+@implements IDisposable
+
+<style>
+.customContainer {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
+}
+
+.media-img-wrapper {
+  height: 250px;
+  width: 170px;
+  text-align: center;
+  padding: 10px;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  transition: transform 0.3s;
+  object-fit: cover;
+}
+
+img:hover {
+  transform: scale(1.1) rotate(2deg);
+}
+
+.featured-product {
+  width: 200px;
+  margin: 10px;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+</style>
+
+<center><h2>Featured Products:</h2></center>
+
+@if(ProductUIService.Products is null || ProductUIService.Products.Count == 0)
+{
+    if(string.IsNullOrEmpty(ProductUIService.Message))
+    {
+        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        <span>@ProductUIService.Message</span>
+    }
+}
+else
+{
+    <div class="customContainer">
+        @foreach (Product product in ProductUIService.Products)
+        {
+            @if (product.Featured)
+            {
+                <div class="featured-product">
+                    <div class="flex flex-center">
+                        <a href="product/@product.Id">
+                            <div class="media-img-wrapper">
+                                @if(!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl">
+                                }
+                                else if(product.Images.Count > 0)
+                                {
+                                    <img src="@product.Images[0].Data" />
+                                }
+                            </div>
+                        </a>
+                    </div>
+                    <h4>
+                        <a href="product/@product.Id">@product.Title</a>
+                    </h4>
+                    @if(product.Variants is not null && product.Variants.Count > 0)
+                    {
+                        <h5 class="price">
+                            $@product.Variants[0].Price
+                        </h5>
+                    }
+                </div>
+            }
+        }
+    </div>
+}

@@ -1,0 +1,62 @@
+﻿@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ICartUIService CartUIService
+@inject ICategoryUIService CategoryUIService
+@implements IDisposable
+
+<style>
+    .nav-text {
+        display: inline-block;
+        width: 160px;
+        color: black;
+        font-weight: 500;
+        text-align: center;
+        padding: 0.8rem 0.8rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.5s ease;
+    }
+
+    .nav-text:hover {
+        opacity: 0.5;
+        color: var(--mud-palette-text-primary);
+    }
+</style>
+
+<div class="d-flex justify-content-between" style="background-color: gray">
+    <div class="d-flex flex-row">
+        @foreach (Category category in CategoryUIService.Categories)
+        {
+            <a href="@category.Url" class="nav-text">@category.Name</a>
+        }
+    </div>
+    <div class="d-flex flex-row">
+        <AuthorizeView>
+            <Authorized>
+                <a href="profile" class="nav-text">Your Profile</a>
+                <a href="orders" class="nav-text">Your Orders</a>
+                <div>
+                    <form action="account/logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-text">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <a href="account/login" class="nav-text">Login</a>
+                <a href="account/register" class="nav-text">Register</a>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <AdminMenu />
+        </Authorized>
+    </AuthorizeView>
+</div>

@@ -1,0 +1,38 @@
+﻿@page "/order-success"
+@page "/order-success/{status}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject ICartUIService CartUIService
+
+<PageTitle>Thank you!</PageTitle>
+
+<style>
+    h1 {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-weight: bold;
+    }
+
+    .container {
+        display: flex;
+        padding: 6px 20px;
+    }
+
+    #order-link {
+        color: cornflowerblue;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container mt-5 d-flex flex-column">
+    <h1>Thank you!</h1>
+    <h3>You just purchased some products!</h3>
+    <span>Thank you for your order! You can check your orders <a href="orders" id="order-link">here</a>.</span>
+    @if (Status == "fake")
+    {
+        <br />
+
+        <br />
+        <h3>Please note:</h3>
+        <span>Your order did not go through Stripe (actual payment). This is because this will likely be an example site. In this case, it doesnt make sense to have Stripe implemented, since the user (you) is not supposed to actually buy anything. So in case there is no API key for Stripe, this is shown and your order is "fake completed".</span>
+    }
+</div>
