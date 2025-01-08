@@ -21,6 +21,7 @@
 
     .nav-text:hover {
         opacity: 0.5;
+        color: var(--mud-palette-text-primary);
     }
 </style>
 
@@ -47,8 +48,8 @@
                 </div>
             </Authorized>
             <NotAuthorized>
-                <div href="account/login" class="nav-text">Login</div>
-                <div href="account/register" class="nav-text">Register</div>
+                <a href="account/login" class="nav-text">Login</a>
+                <a href="account/register" class="nav-text">Register</a>
             </NotAuthorized>
         </AuthorizeView>
     </div>

@@ -16,12 +16,17 @@
         display: flex;
         padding: 6px 20px;
     }
+
+    #order-link {
+        color: cornflowerblue;
+        font-weight: bold;
+    }
 </style>
 
-<div class="container mt-5">
+<div class="container mt-5 d-flex flex-column">
     <h1>Thank you!</h1>
     <h3>You just purchased some products!</h3>
-    <span>Thank you for your order! You can check your orders <a href="orders">here</a>.</span>
+    <span>Thank you for your order! You can check your orders <a href="orders" id="order-link">here</a>.</span>
     @if (Status == "fake")
     {
         <br />
