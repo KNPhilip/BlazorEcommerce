@@ -22,11 +22,7 @@ using Domain.Models;
 using WebUI.Server.Components.Account;
 using System.Reflection;
 
-// --- CSS isolation issue ---
-// --- Other code is at the bottom of the page. ---
-Assembly assembly;
-
-assembly = typeof(Program).Assembly;
+Assembly assembly = typeof(Program).Assembly;
 __packageId = assembly.GetCustomAttribute<AssemblyPackageIdAttribute>()?.PackageId ?? "WebUI.Server";
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -103,7 +99,6 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri(builder.Configuration["BaseUri"]!) 
 });
 
-// Add services to the container
 builder.Services.AddScoped<IAddressUIService, AddressUIService>();
 builder.Services.AddScoped<IAuthUIService, AuthUIService>();
 builder.Services.AddScoped<ICartUIService, CartUIService>();
@@ -127,27 +122,18 @@ builder.Services.AddOptions<MailSettingsDto>().Bind(builder.Configuration
 
 WebApplication app = builder.Build();
 
-#region Security Headers
-// Referrer Policy Header - Controls included information on navigation
 app.UseReferrerPolicy(options => options.SameOrigin());
-// X Content Type Options Header - Prevents MIME-sniffing of the content type
-// app.UseXContentTypeOptions();
-// X Frame Options Header - Defends against attacks like clickjacking by banning framing on the site
 app.UseXfo(options => options.Deny());
-// X-Xss Protection Header (Old) - Protection from XSS attacks by analyzing the page and blocking seemingly malicious stuff
 app.UseXXssProtection(options => options.EnabledWithBlockMode());
-// Content Security Policy Header - Whitelists certain content and prevents other malicious assets (new XSS Protection)
 app.UseCspReportOnly(options => options
     .BlockAllMixedContent()
     .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://fonts.googleapis.com"))
     .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com"))
     .FormActions(s => s.Self())
-    // Frame Ancestors makes X-Frame-Options obsolete
     .FrameAncestors(s => s.Self())
     .ImageSources(s => s.Self().CustomSources("blob:", "https://upload.wikimedia.org", "https://en.wikipedia.org", "data:"))
     .ScriptSources(s => s.Self().CustomSources("https://localhost:55150").UnsafeEval())
 );
-#endregion
 
 if (app.Environment.IsDevelopment())
 {
@@ -156,13 +142,11 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // HTTP Strict Transport Security Header:
-    // Strengthens implementation of TLS by enforcing the use of HTTPS
     app.Use(async (context, next) =>
     {
-#pragma warning disable ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
+        #pragma warning disable ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
         context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-#pragma warning restore ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
+        #pragma warning restore ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
         await next.Invoke();
     });
 }
@@ -194,8 +178,6 @@ app.MapAdditionalIdentityEndpoints();
 
 app.Run();
 
-// --- CSS isolation issue ---
-// --- Other code is at the top of the page. ---
 public sealed partial class Program
 {
     private static string? __packageId;

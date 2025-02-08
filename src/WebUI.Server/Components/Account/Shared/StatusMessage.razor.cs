@@ -9,6 +9,9 @@ public sealed partial class StatusMessage
     [Parameter]
     public string? Message { get; set; }
 
+    [Parameter]
+    public bool IsError { get; set; }
+
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
