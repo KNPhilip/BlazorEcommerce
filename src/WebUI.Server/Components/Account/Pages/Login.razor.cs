@@ -7,28 +7,29 @@ namespace WebUI.Server.Components.Account.Pages;
 
 public sealed partial class Login
 {
-    private string? errorMessage;
+    private string? statusMessage = string.Empty;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private LoginForm? Form { get; set; }
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Form ??= new();
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
     }
 
-    public async Task LoginUser()
+    public async Task LoginUserAsync()
     {
-        SignInResult result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        SignInResult result = await SignInManager.PasswordSignInAsync(Form!.Email, Form.Password, Form.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
@@ -36,9 +37,8 @@ public sealed partial class Login
         }
         else if (result.RequiresTwoFactor)
         {
-            RedirectManager.RedirectTo(
-                "account/loginwith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            RedirectManager.RedirectTo("account/loginwith2fa",
+                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Form.RememberMe });
         }
         else if (result.IsLockedOut)
         {
@@ -47,11 +47,40 @@ public sealed partial class Login
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            statusMessage = "Invalid login attempt.";
         }
     }
 
-    private sealed class InputModel
+    //public async Task ResendEmailConfirmationAsync(string email)
+    //{
+    //    if (new EmailAddressAttribute().IsValid(email))
+    //    {
+    //        isError = true;
+    //        statusMessage = "You need to enter a valid email address to confirm your email.";
+    //        return;
+    //    }
+
+    //    ApplicationUser? user = await UserManager.FindByEmailAsync(email);
+    //    if (user is null)
+    //    {
+    //        isError = false;
+    //        statusMessage = "Verification email sent. Please check your email.";
+    //        return;
+    //    }
+
+    //    string userId = await UserManager.GetUserIdAsync(user);
+    //    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+    //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+    //    string callbackUrl = NavigationManager.GetUriWithQueryParameters(
+    //    NavigationManager.ToAbsoluteUri("account/confirmemail").AbsoluteUri,
+    //        new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+    //    await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
+
+    //    isError = false;
+    //    statusMessage = "Verification email sent. Please check your email.";
+    //}
+
+    private sealed class LoginForm
     {
         [Required]
         [EmailAddress]

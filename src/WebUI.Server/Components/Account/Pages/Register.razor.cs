@@ -33,7 +33,7 @@ public sealed partial class Register
 
         if (!result.Succeeded)
         {
-            identityErrors = result.Errors;
+            identityErrors = TransformErrorMessaging(result.Errors);
             return;
         }
 
@@ -50,8 +50,7 @@ public sealed partial class Register
 
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
-            RedirectManager.RedirectTo(
-                "account/registerconfirmation",
+            RedirectManager.RedirectTo("account/registerconfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
 
@@ -81,6 +80,13 @@ public sealed partial class Register
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
         return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
+
+    private static IEnumerable<IdentityError> TransformErrorMessaging(IEnumerable<IdentityError> errors)
+    {
+        IdentityError? userExistsError = errors.FirstOrDefault(x => 
+            x.Description.StartsWith("Email '") && x.Description.EndsWith("' is already taken."));
+        return userExistsError is null ? errors : [userExistsError];
     }
 
     private sealed class InputModel

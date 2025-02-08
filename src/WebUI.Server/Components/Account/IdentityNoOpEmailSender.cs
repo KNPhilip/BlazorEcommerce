@@ -6,7 +6,7 @@ namespace WebUI.Server.Components.Account;
 
 internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUser>
 {
-    private readonly IEmailSender emailSender = new NoOpEmailSender();
+    private readonly NoOpEmailSender emailSender = new();
 
     public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) =>
         emailSender.SendEmailAsync(email, "Confirm your email", $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.");

@@ -8,16 +8,16 @@ namespace WebUI.Server.Components.Account.Pages;
 
 public sealed partial class ResetPassword
 {
+    private bool? ResetSuccessful;
     private IEnumerable<IdentityError>? identityErrors;
-
+    private string? Message => identityErrors is null 
+        ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private ResetPasswordForm Form { get; set; } = new();
 
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
-
-    private string? Message => identityErrors is null 
-        ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     protected override void OnInitialized()
     {
@@ -25,30 +25,39 @@ public sealed partial class ResetPassword
         {
             RedirectManager.RedirectTo("account/invalidpasswordreset");
         }
-
-        Input.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
+        Form.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
     }
 
     private async Task OnValidSubmitAsync()
     {
-        if (await UserManager.FindByEmailAsync(Input.Email) is null)
+        try
         {
-            RedirectManager.RedirectTo("account/resetpasswordconfirmation");
-        }
+            Domain.Models.ApplicationUser user = await UserManager
+                .FindByEmailAsync(Form.Email) ?? throw new Exception();
+            IdentityResult resetResult = await UserManager.ResetPasswordAsync(user, Form.Code, Form.Password);
 
-        if ((await UserManager.ResetPasswordAsync(await UserManager
-            .FindByEmailAsync(Input.Email) ?? throw new Exception("Could not reset password of that user."),
-                Input.Code, Input.Password)).Succeeded)
+            if (resetResult.Succeeded)
+            {
+                ResetSuccessful = true;
+            }
+            else
+            {
+                identityErrors = resetResult.Errors;
+                ResetSuccessful = false;
+            }
+        }
+        catch (Exception)
         {
-            RedirectManager.RedirectTo("account/resetpasswordconfirmation");
+            IdentityError error = new()
+            {
+                Description = "Invalid token."
+            };
+            identityErrors = [error];
+            ResetSuccessful = false;
         }
-
-        identityErrors = (await UserManager.ResetPasswordAsync(
-            await UserManager.FindByEmailAsync(Input.Email) ?? throw new Exception("Could not reset password of that user."),
-                Input.Code, Input.Password)).Errors;
     }
 
-    private sealed class InputModel
+    private sealed class ResetPasswordForm
     {
         [Required]
         [EmailAddress]

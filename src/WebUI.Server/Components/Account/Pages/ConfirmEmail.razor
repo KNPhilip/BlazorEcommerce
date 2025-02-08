@@ -1,9 +1,14 @@
 ﻿@page "/account/confirmemail"
+@layout ShopLayout
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Confirm email</PageTitle>
 
-<h1>Confirm email</h1>
-<StatusMessage Message="@statusMessage" />
+<div class="d-flex justify-content-center mt-5">
+    <section class="w-25 p-3">
+        <h1>Confirm email</h1>
+        <StatusMessage Message="@statusMessage" />
+    </section>
+</div>
